@@ -20,10 +20,10 @@ import { useEffect, useState } from "react";
 const Login = () => {
 
   //-------------------------------
-  const [a, setA] = useState([{ password: "asdasa" }]);
+  const [a, setA] = useState( {response: "asdasa"} );
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch("https://random-data-api.com/api/v2/users");
+      const res = await fetch("https://shy-pear-catfish-cap.cyclic.app/");
       const data = await res.json();
       setA(data);
     };
@@ -170,9 +170,8 @@ const Login = () => {
               </NextLink>
             </Typography>
           </form>
+          {a.response}
         </Container>
-        I AM HERE !!
-        {a.password}
       </Box>
     </>
   );
