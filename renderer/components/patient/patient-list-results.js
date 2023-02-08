@@ -17,10 +17,9 @@ import {
   Typography,
 } from "@mui/material";
 
-export const PatientListResults = ({
-  ...rest
-}) => {
-  const { patientsList, selectedPatientIds, setSelectedPatientIds } = useContext(PatientsContext);
+export const PatientListResults = ({ ...rest }) => {
+  const { patientsList, selectedPatientIds, setSelectedPatientIds } =
+    useContext(PatientsContext);
   const [limit, setLimit] = useState(50);
   const [page, setPage] = useState(0);
 
