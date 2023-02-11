@@ -17,10 +17,10 @@ const isLoading = {
   phone: "loading",
 };
 const Customers = () => {
-  // Dependency value
+  // Create Dependency value to refresh list
   const [dependencyValue, setDependencyValue] = useState(1);
 
-  // Selected patients ids
+  // Create varibale to handle selected patients ids
   const [selectedPatientIds, setSelectedPatientIds] = useState([]);
 
   // Fetch patients data
@@ -53,7 +53,7 @@ const Customers = () => {
   return (
     <>
       <Head>
-        <title>Customers | Material Kit</title>
+        <title>Patients</title>
       </Head>
       <Box
         component="main"

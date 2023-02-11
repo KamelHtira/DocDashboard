@@ -13,16 +13,28 @@ import { Download as DownloadIcon } from "../../icons/download";
 import { DeletePatientPopup } from "./delete-patient-popup";
 import { useState, createContext, useContext } from "react";
 import { PatientsContext } from "../../pages/patients";
+import { AddPatientPopup } from "./add-patient-popup";
+import { ipcRenderer } from "electron";
 
 export const DeletePatientsPopupContext = createContext(null);
 export const AddPatientsPopupContext = createContext(null);
 
-export const PatientListToolbar = (props) => {
-  // Get selected patients and patients list
-  const { selectedPatientIds, patientsList} = useContext(PatientsContext);
+function downloadCSV() {
+  try {
+    ipcRenderer.send("download",{payload:{url:"https://shy-pear-catfish-cap.cyclic.app/download/patients?fileName=test.txt"}})
+  } catch (error) {
+    console.log(error);
+  }
+}
 
-  // Set "show" delete popup value
+export const PatientListToolbar = (props) => {
+  // Set "show" variable for DeletePatientPopup
   const [showDeletePatientsPopup, setShowDeletePatientsPopup] = useState(false);
+
+  // Set "show" variable for DeletePatientPopup
+  const [showAddPatientsPopup, setShowAddPatientsPopup] = useState(false);
+
+  //test
 
   return (
     <Box {...props}>
@@ -39,12 +51,32 @@ export const PatientListToolbar = (props) => {
           Patients
         </Typography>
         <Box sx={{ m: 1 }}>
-          <Button startIcon={<DownloadIcon fontSize="small" />} sx={{ mr: 1 }}>
+          <Button
+            onClick={() => {
+              downloadCSV();
+            }}
+            startIcon={<DownloadIcon fontSize="small" />}
+            sx={{ mr: 1 }}
+          >
             Export
           </Button>
-          <Button color="primary" variant="contained">
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={() => {
+              setShowAddPatientsPopup(true);
+            }}
+          >
             Add Patients
           </Button>
+          <AddPatientsPopupContext.Provider
+            value={{
+              showAddPatientsPopup,
+              setShowAddPatientsPopup,
+            }}
+          >
+            <AddPatientPopup />
+          </AddPatientsPopupContext.Provider>
 
           <Button
             sx={{ marginLeft: "10px" }}
@@ -62,7 +94,7 @@ export const PatientListToolbar = (props) => {
               setShowDeletePatientsPopup,
             }}
           >
-            <DeletePatientPopup/>
+            <DeletePatientPopup />
           </DeletePatientsPopupContext.Provider>
         </Box>
       </Box>

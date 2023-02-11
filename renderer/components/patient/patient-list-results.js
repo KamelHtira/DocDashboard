@@ -2,7 +2,6 @@ import { useState, useContext } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import PropTypes from "prop-types";
 import { PatientsContext } from "../../pages/patients.js";
-import { format } from "date-fns";
 import {
   Avatar,
   Box,
@@ -96,10 +95,10 @@ export const PatientListResults = ({ ...rest }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {patientsList.slice(0, limit).map((patient) => (
+              {patientsList.slice(0, limit).map((patient,index) => (
                 <TableRow
                   hover
-                  key={patient._id}
+                  key={index}
                   selected={selectedPatientIds.indexOf(patient._id) !== -1}
                 >
                   <TableCell padding="checkbox">
@@ -142,8 +141,4 @@ export const PatientListResults = ({ ...rest }) => {
       />
     </Card>
   );
-};
-
-PatientListResults.propTypes = {
-  patients: PropTypes.array.isRequired,
 };

@@ -1,5 +1,6 @@
 import { app } from 'electron';
 import serve from 'electron-serve';
+import { ipcMain } from 'electron';
 import { createWindow } from './helpers';
 
 const isProd: boolean = process.env.NODE_ENV === 'production';
@@ -13,7 +14,7 @@ if (isProd) {
 (async () => {
   await app.whenReady();
 
-  const mainWindow = createWindow('mainWindow', {
+  const mainWindow = createWindow('mainWin', {
     width: 1400,
     height: 700,
     center: true,
@@ -24,6 +25,12 @@ if (isProd) {
   } else {
     const port = process.argv[2];
     await mainWindow.loadURL(`http://localhost:${port}/login`);
+
+    // handle download event
+    ipcMain.on("download",(event,{payload})=>{
+      console.log(payload.url);
+      mainWindow.webContents.downloadURL('http://localhost:3001/download/patients?fileName=test.csv');
+    })
     mainWindow.webContents.openDevTools();
   }
 })();

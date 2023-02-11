@@ -1,18 +1,14 @@
 import {
   Box,
   Button,
-  Card,
-  CardContent,
-  TextField,
-  InputAdornment,
-  SvgIcon,
   Typography,
   Modal,
 } from "@mui/material";
-import { useEffect, useState, useContext } from "react";
+import { useContext } from "react";
 import { PatientsContext } from "../../pages/patients";
 import { DeletePatientsPopupContext } from "./patient-list-toolbar";
 
+// [Will be moved]
 const style = {
   position: "absolute",
   top: "50%",
@@ -25,6 +21,7 @@ const style = {
   borderRadius: "8px",
 };
 
+// [Will be moved]
 function getSelectedPatientsEmails(patientsList,selectedPatientIds) {
   let ArrayOfSelectedPatientEmails = [];
   patientsList.map((patient) => {
@@ -36,7 +33,11 @@ function getSelectedPatientsEmails(patientsList,selectedPatientIds) {
 }
 
 export const DeletePatientPopup = () => {
-  // [ContextAPI] Get "selectedPatientIds" and patientsList
+  /* [ContextAPI]
+   "selectedPatientIds" send delete requests
+   "patientsList" to get mails 
+    getter and setter for dependency value to refresh component after request sent
+   */
   const {
     selectedPatientIds,
     patientsList,
@@ -44,13 +45,15 @@ export const DeletePatientPopup = () => {
     setDependencyValue,
   } = useContext(PatientsContext);
 
-  // [ContextAPI] Get "show" state and setState
+  /* [ContextAPI]
+   getter and setter for "show" variable to handle closing and opening DeletePatientPopup from PatientListToolbar
+  */
   const { showDeletePatientsPopup, setShowDeletePatientsPopup } = useContext(
     DeletePatientsPopupContext
   );
 
   // Delete Request
-  async function deleteSelectedPatients() {
+  async function deleteSelectedPatientsAPI() {
     try {
       const body = JSON.stringify({
         patientIds: selectedPatientIds,
@@ -64,7 +67,7 @@ export const DeletePatientPopup = () => {
         }
       ).then((res) => {
         res.json();
-        setDependencyValue(dependencyValue + 1);
+        setDependencyValue(!dependencyValue);
       });
       console.log(data);
     } catch (err) {
@@ -119,7 +122,7 @@ export const DeletePatientPopup = () => {
           ) : (
             <Button
               onClick={() => {
-                deleteSelectedPatients();
+                deleteSelectedPatientsAPI();
                 setShowDeletePatientsPopup(false);
               }}
               color="error"

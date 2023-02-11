@@ -20,12 +20,17 @@ import { useEffect, useState } from "react";
 const Login = () => {
 
   //-------------------------------
-  const [a, setA] = useState( {response: "asdasa"} );
+  const [checkServerState, setcheckServerState] = useState( {response: "Checking Server State.. "} );
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch("https://shy-pear-catfish-cap.cyclic.app/");
-      const data = await res.json();
-      setA(data);
+      try {
+        const res = await fetch("https://shy-pear-catfish-cap.cyclic.app/");
+        const data = await res.json();
+        setcheckServerState(data);  
+      } catch (error) {
+        setcheckServerState("ERROR while connecting to server");
+      }
+      
     };
     fetchData();
   }, []);
@@ -170,7 +175,7 @@ const Login = () => {
               </NextLink>
             </Typography>
           </form>
-          {a.response}
+          {checkServerState.response}
         </Container>
       </Box>
     </>
