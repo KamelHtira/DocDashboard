@@ -2,6 +2,7 @@ import Head from "next/head";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { useFormik } from "formik";
+import axios from 'axios';
 import * as Yup from "yup";
 import {
   Box,
@@ -12,8 +13,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Facebook as FacebookIcon } from "../icons/facebook";
 import { Google as GoogleIcon } from "../icons/google";
 import { useEffect, useState } from "react";
 
@@ -44,9 +43,29 @@ const Login = () => {
       password: Yup.string().max(255).required("Password is required"),
     }),
     onSubmit: () => {
-      router.push("/");
-    },
+     //send a post request with the login data to the server
+      const { email, password } = formik.values;
+      axios
+        .post('http://localhost:3001/login', { email, password })
+        .then((response) => {
+          if (response.status === 200) {
+            router.push("/");
+          }
+          else{
+            formik.setSubmitting(false);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          formik.setSubmitting(false);
+        })
+    }
   });
+
+
+  
+
+   
 
   return (
     <>
@@ -63,14 +82,6 @@ const Login = () => {
         }}
       >
         <Container maxWidth="sm">
-          <NextLink href="/" passHref>
-            <Button
-              component="a"
-              startIcon={<ArrowBackIcon fontSize="small" />}
-            >
-              Dashboard
-            </Button>
-          </NextLink>
           <form onSubmit={formik.handleSubmit}>
             <Box sx={{ my: 3 }}>
               <Typography color="textPrimary" variant="h4">
@@ -80,19 +91,7 @@ const Login = () => {
                 Sign in on the internal platform
               </Typography>
             </Box>
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={6}>
-                <Button
-                  color="info"
-                  fullWidth
-                  startIcon={<FacebookIcon />}
-                  onClick={formik.handleSubmit}
-                  size="large"
-                  variant="contained"
-                >
-                  Login with Facebook
-                </Button>
-              </Grid>
+         
               <Grid item xs={12} md={6}>
                 <Button
                   fullWidth
@@ -105,7 +104,7 @@ const Login = () => {
                   Login with Google
                 </Button>
               </Grid>
-            </Grid>
+           
             <Box
               sx={{
                 pb: 1,
