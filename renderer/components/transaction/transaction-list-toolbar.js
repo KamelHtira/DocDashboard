@@ -10,31 +10,29 @@ import {
 } from "@mui/material";
 import { Search as SearchIcon } from "../../icons/search";
 import { Download as DownloadIcon } from "../../icons/download";
-import { DeletePatientPopup } from "./delete-patient-popup";
-import { useState, createContext } from "react";
-import { AddPatientPopup } from "./add-patient-popup";
-import { ipcRenderer } from "electron";
-import { backendURL } from "../../utils/constants";
+import { DeleteTransactionPopup } from "./delete-transaction-popup";
+import { useState, createContext, useContext } from "react";
+import { AddTransactionPopup } from "./add-transaction-popup";
+import { downloadCSV } from "../../utils/functions";
+import { TransactionsContext } from "../../pages/transactions";
 
-export const DeletePatientsPopupContext = createContext(null);
-export const AddPatientsPopupContext = createContext(null);
+export const DeleteTransactionsPopupContext = createContext(null);
+export const AddTransactionsPopupContext = createContext(null);
 
-function downloadCSV() {
-  try {
-    ipcRenderer.send("download",{payload:{url:`${backendURL}/download/patients?fileName=test.txt`}})
-  } catch (error) {
-    console.log(error);
-  }
-}
+export const TransactionListToolbar = (props) => {
 
-export const PatientListToolbar = (props) => {
-  // Set "show" variable for DeletePatientPopup
-  const [showDeletePatientsPopup, setShowDeletePatientsPopup] = useState(false);
+  /* [ContextAPI]
+   "transactionsList" to export data
+   */
+  const { selectedTransactionIds } = useContext(TransactionsContext);
 
-  // Set "show" variable for DeletePatientPopup
-  const [showAddPatientsPopup, setShowAddPatientsPopup] = useState(false);
+  // Set "show" variable for DeleteTransactionPopup
+  const [showDeleteTransactionsPopup, setShowDeleteTransactionsPopup] =
+    useState(false);
 
-  //test
+  // Set "show" variable for DeleteTransactionPopup
+  const [showAddTransactionsPopup, setShowAddTransactionsPopup] =
+    useState(false);
 
   return (
     <Box {...props}>
@@ -48,12 +46,12 @@ export const PatientListToolbar = (props) => {
         }}
       >
         <Typography sx={{ m: 1 }} variant="h4">
-          Patients
+          Transactions
         </Typography>
         <Box sx={{ m: 1 }}>
           <Button
             onClick={() => {
-              downloadCSV();
+              downloadCSV(selectedTransactionIds);
             }}
             startIcon={<DownloadIcon fontSize="small" />}
             sx={{ mr: 1 }}
@@ -64,38 +62,38 @@ export const PatientListToolbar = (props) => {
             color="primary"
             variant="contained"
             onClick={() => {
-              setShowAddPatientsPopup(true);
+              setShowAddTransactionsPopup(true);
             }}
           >
-            Add Patients
+            Add Transactions
           </Button>
-          <AddPatientsPopupContext.Provider
+          <AddTransactionsPopupContext.Provider
             value={{
-              showAddPatientsPopup,
-              setShowAddPatientsPopup,
+              showAddTransactionsPopup,
+              setShowAddTransactionsPopup,
             }}
           >
-            <AddPatientPopup />
-          </AddPatientsPopupContext.Provider>
+            <AddTransactionPopup />
+          </AddTransactionsPopupContext.Provider>
 
           <Button
             sx={{ marginLeft: "10px" }}
             color="error"
             variant="contained"
             onClick={() => {
-              setShowDeletePatientsPopup(true);
+              setShowDeleteTransactionsPopup(true);
             }}
           >
-            Delete Patients
+            Delete Transactions
           </Button>
-          <DeletePatientsPopupContext.Provider
+          <DeleteTransactionsPopupContext.Provider
             value={{
-              showDeletePatientsPopup,
-              setShowDeletePatientsPopup,
+              showDeleteTransactionsPopup,
+              setShowDeleteTransactionsPopup,
             }}
           >
-            <DeletePatientPopup />
-          </DeletePatientsPopupContext.Provider>
+            <DeleteTransactionPopup />
+          </DeleteTransactionsPopupContext.Provider>
         </Box>
       </Box>
       <Box sx={{ mt: 3 }}>
@@ -113,7 +111,7 @@ export const PatientListToolbar = (props) => {
                     </InputAdornment>
                   ),
                 }}
-                placeholder="Search patient"
+                placeholder="Search transaction"
                 variant="outlined"
               />
             </Box>

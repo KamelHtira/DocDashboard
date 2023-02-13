@@ -1,9 +1,7 @@
 import { useState, useContext } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import PropTypes from "prop-types";
 import { PatientsContext } from "../../pages/patients.js";
 import {
-  Avatar,
   Box,
   Card,
   Checkbox,

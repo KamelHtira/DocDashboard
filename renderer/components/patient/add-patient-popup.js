@@ -13,6 +13,7 @@ import { useFormik } from "formik";
 import { useContext, useState } from "react";
 import { PatientsContext } from "../../pages/patients";
 import { AddPatientsPopupContext } from "./patient-list-toolbar";
+import { backendURL } from "../../utils/constants";
 import * as Yup from "yup";
 
 // [Will be moved]
@@ -74,7 +75,7 @@ export const AddPatientPopup = () => {
     try {
       const body = JSON.stringify(data);
       const res = await fetch(
-        `https://shy-pear-catfish-cap.cyclic.app/patients`,
+        `${backendURL}/patients`,
         {
           method: "POST",
           headers: { "content-Type": "application/json" },

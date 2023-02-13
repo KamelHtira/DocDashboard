@@ -7,30 +7,8 @@ import {
 import { useContext } from "react";
 import { PatientsContext } from "../../pages/patients";
 import { DeletePatientsPopupContext } from "./patient-list-toolbar";
-
-// [Will be moved]
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  p: 4,
-  borderRadius: "8px",
-};
-
-// [Will be moved]
-function getSelectedPatientsEmails(patientsList,selectedPatientIds) {
-  let ArrayOfSelectedPatientEmails = [];
-  patientsList.map((patient) => {
-    if (selectedPatientIds.includes(patient._id)) {
-      ArrayOfSelectedPatientEmails.push(patient.email);
-    }
-  });
-  return ArrayOfSelectedPatientEmails;
-}
+import { getSelectedPatientsEmails } from "../../utils/functions";
+import { style, backendURL } from "../../utils/constants";
 
 export const DeletePatientPopup = () => {
   /* [ContextAPI]
@@ -59,7 +37,7 @@ export const DeletePatientPopup = () => {
         patientIds: selectedPatientIds,
       });
       const data = await fetch(
-        `https://shy-pear-catfish-cap.cyclic.app/patients`,
+        `${backendURL}/patients`,
         {
           method: "DELETE",
           headers: { "content-Type": "application/json" },

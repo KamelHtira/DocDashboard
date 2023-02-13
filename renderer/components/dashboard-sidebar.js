@@ -8,6 +8,7 @@ import { ChartBar as ChartBarIcon } from '../icons/chart-bar';
 import { Cog as CogIcon } from '../icons/cog';
 import { Selector as SelectorIcon } from '../icons/selector';
 import { ShoppingBag as ShoppingBagIcon } from '../icons/shopping-bag';
+import PaymentsIcon from '@mui/icons-material/Payments';
 import { User as UserIcon } from '../icons/user';
 import { Users as UsersIcon } from '../icons/users';
 import { Logo } from './logo';
@@ -23,6 +24,11 @@ const items = [
     href: '/patients',
     icon: (<UsersIcon fontSize="small" />),
     title: 'Patients'
+  },
+  {
+    href: '/transactions',
+    icon: (<PaymentsIcon fontSize="small" />),
+    title: 'Transactions'
   },
   {
     href: '/products',
