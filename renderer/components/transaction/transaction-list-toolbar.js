@@ -16,13 +16,14 @@ import { AddTransactionPopup } from "./add-transaction-popup";
 import { downloadCSV } from "../../utils/functions";
 import { TransactionsContext } from "../../pages/transactions";
 
+
 export const DeleteTransactionsPopupContext = createContext(null);
 export const AddTransactionsPopupContext = createContext(null);
 
 export const TransactionListToolbar = (props) => {
 
   /* [ContextAPI]
-   "transactionsList" to export data
+   Get "selectedTransactionIds" to export data
    */
   const { selectedTransactionIds } = useContext(TransactionsContext);
 

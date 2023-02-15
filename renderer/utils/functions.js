@@ -53,6 +53,26 @@ function getSelectedTransactionsIdsAmount(
   return ArrayOfSelectedTransactionAmounts;
 }
 
+function getTransactionById(transactionsList, id) {
+  let matchedTransaction = {
+    amount: "ID not found",
+    type: "N/A",
+    date: "N/A",
+    description: "N/A",
+  };
+  transactionsList.map((currentTransaction) => {
+    if (currentTransaction._id === id) {
+      matchedTransaction = {
+        amount: currentTransaction.amount,
+        type: currentTransaction.type,
+        date: currentTransaction.date,
+        description: currentTransaction.description,
+      };
+    }
+  });
+  return matchedTransaction;
+}
+
 function downloadCSV(data) {
   try {
     ipcRenderer.send("download", {
@@ -69,5 +89,6 @@ export {
   generateTransactionsTypeStype,
   parseDateString,
   getSelectedTransactionsIdsAmount,
-  downloadCSV
+  downloadCSV,
+  getTransactionById,
 };

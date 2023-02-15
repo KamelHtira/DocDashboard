@@ -19,13 +19,11 @@ const patientIsLoading = {
 };
 
 const transactionIsLoading = {
-  firstName: "loading..",
-  lastName: "",
-  address: "loading..",
-  age: "loading..",
-  email: "loading..",
-  phone: "loading",
+  amount: "loading..",
+  type: "loading..",
+  date: "loading..",
+  description: "loading..",
 };
 
-const backendURL = "https://shy-pear-catfish-cap.cyclic.app";
+const backendURL = "https://angry-gold-tam.cyclic.app";
 export { style, backendURL, patientIsLoading, transactionIsLoading };

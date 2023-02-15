@@ -12,27 +12,22 @@ import { Search as SearchIcon } from "../../icons/search";
 import { Download as DownloadIcon } from "../../icons/download";
 import { DeletePatientPopup } from "./delete-patient-popup";
 import { useState, createContext } from "react";
-import { AddPatientPopup } from "./add-patient-popup";
-import { ipcRenderer } from "electron";
-import { backendURL } from "../../utils/constants";
+import { downloadCSV } from "../../utils/constants";
+import { useRouter } from "next/router";
 
 export const DeletePatientsPopupContext = createContext(null);
-export const AddPatientsPopupContext = createContext(null);
-
-function downloadCSV() {
-  try {
-    ipcRenderer.send("download",{payload:{url:`${backendURL}/download/patients?fileName=test.txt`}})
-  } catch (error) {
-    console.log(error);
-  }
-}
+// [WILL BE DELETED]
+// export const AddPatientsPopupContext = createContext(null);
 
 export const PatientListToolbar = (props) => {
   // Set "show" variable for DeletePatientPopup
   const [showDeletePatientsPopup, setShowDeletePatientsPopup] = useState(false);
 
-  // Set "show" variable for DeletePatientPopup
-  const [showAddPatientsPopup, setShowAddPatientsPopup] = useState(false);
+  const router = useRouter()
+
+  // [WILL BE DELETED]
+  //  Set "show" variable for DeletePatientPopup
+  //  const [showAddPatientsPopup, setShowAddPatientsPopup] = useState(false);
 
   //test
 
@@ -64,19 +59,21 @@ export const PatientListToolbar = (props) => {
             color="primary"
             variant="contained"
             onClick={() => {
-              setShowAddPatientsPopup(true);
+              router.push("/patient/addPatient")
             }}
           >
             Add Patients
           </Button>
-          <AddPatientsPopupContext.Provider
+
+          {/* [WILL BE DELETED] 
+           <AddPatientsPopupContext.Provider
             value={{
               showAddPatientsPopup,
               setShowAddPatientsPopup,
             }}
           >
             <AddPatientPopup />
-          </AddPatientsPopupContext.Provider>
+          </AddPatientsPopupContext.Provider> */}
 
           <Button
             sx={{ marginLeft: "10px" }}

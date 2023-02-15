@@ -12,9 +12,15 @@ import {
   TablePagination,
   TableRow,
   Typography,
+  Button
 } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import { useRouter } from "next/router.js";
 
 export const PatientListResults = ({ ...rest }) => {
+
+  const router = useRouter()
+
   const { patientsList, selectedPatientIds, setSelectedPatientIds } =
     useContext(PatientsContext);
   const [limit, setLimit] = useState(50);
@@ -90,6 +96,7 @@ export const PatientListResults = ({ ...rest }) => {
                 <TableCell>Address</TableCell>
                 <TableCell>Phone</TableCell>
                 <TableCell>Age</TableCell>
+                <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -122,6 +129,15 @@ export const PatientListResults = ({ ...rest }) => {
                   <TableCell>{patient.address}</TableCell>
                   <TableCell>{patient.phone}</TableCell>
                   <TableCell>{patient.age}</TableCell>
+                  <TableCell padding="checkbox">
+                    <Button
+                      onClick={() => {
+                        router.push(`patient/${patient._id}`)
+                      }}
+                    >
+                      <EditIcon></EditIcon>
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

@@ -4,7 +4,7 @@ import { ipcMain } from "electron";
 import { createWindow } from "./helpers";
 
 
-const isProd: boolean = process.env.NODE_ENV === "production";
+const isProd = process.env.NODE_ENV === "production";
 
 if (isProd) {
   serve({ directory: "app" });
@@ -29,22 +29,9 @@ if (isProd) {
 
     // handle download event
     ipcMain.on("download", (event, { payload }) => {
-      console.log(payload.url);
-      fetch(payload.url, {
-        method: "POST",
-        body: JSON.stringify(payload.data),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => response.json())
-        .then((json) => {
-          mainWindow.webContents.downloadURL(json.download_url);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      
     });
+    
     mainWindow.webContents.openDevTools();
   }
 })();

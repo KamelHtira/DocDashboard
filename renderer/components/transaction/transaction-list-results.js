@@ -1,8 +1,9 @@
-import { useState, useContext } from "react";
+import { useState, useContext, createContext } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { TransactionsContext } from "../../pages/transactions.js";
 import {
   Box,
+  Button,
   Card,
   Checkbox,
   Table,
@@ -14,8 +15,16 @@ import {
   Typography,
 } from "@mui/material";
 import { generateTransactionsTypeStype } from "../../utils/functions.js";
+import EditIcon from "@mui/icons-material/Edit";
+import { EditTransactionPopup } from "./edit-transaction-popup";
+
+export const EditTransactionsPopupContext = createContext(null);
 
 export const TransactionListResults = ({ ...rest }) => {
+  // Set "show" variable for EditTransactionPopup
+  const [showEditTransactionsPopup, setShowEditTransactionsPopup] =
+    useState({show:false,id:null});
+
   const {
     transactionsList,
     selectedTransactionIds,
@@ -97,8 +106,10 @@ export const TransactionListResults = ({ ...rest }) => {
                 <TableCell>Type</TableCell>
                 <TableCell>Date</TableCell>
                 <TableCell>Description</TableCell>
+                <TableCell></TableCell>
               </TableRow>
             </TableHead>
+
             <TableBody>
               {transactionsList.slice(0, limit).map((transaction, index) => (
                 <TableRow
@@ -127,7 +138,7 @@ export const TransactionListResults = ({ ...rest }) => {
                       }}
                     >
                       <Typography color="textPrimary" variant="body1">
-                        {transaction.amount} dt
+                        {transaction.amount}{isNaN(transaction.amount)?"":" dt"}
                       </Typography>
                     </Box>
                   </TableCell>
@@ -139,11 +150,33 @@ export const TransactionListResults = ({ ...rest }) => {
                     </Typography>
                   </TableCell>
                   <TableCell>{transaction.date}</TableCell>
-                  <TableCell>{transaction.description}</TableCell>
+                  <TableCell
+                    sx={{
+                      width: "40%",
+                      whiteSpace: "normal",
+                      wordWrap: "break-word",
+                    }}
+                  >
+                    {transaction.description}
+                  </TableCell>
+                  <TableCell padding="checkbox">
+                    <Button
+                      onClick={() => {
+                        setShowEditTransactionsPopup({show:true,id:transaction._id});
+                      }}
+                    >
+                      <EditIcon></EditIcon>
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
+          <EditTransactionsPopupContext.Provider
+            value={{ showEditTransactionsPopup, setShowEditTransactionsPopup }}
+          >
+            {showEditTransactionsPopup.show ? <EditTransactionPopup /> : ""}
+          </EditTransactionsPopupContext.Provider>
         </Box>
       </PerfectScrollbar>
       <TablePagination
