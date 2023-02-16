@@ -1,5 +1,6 @@
 import { parse, isDate } from "date-fns";
-import { ipcRenderer } from "electron";
+import { shell } from "electron";
+
 import { backendURL } from "./constants";
 
 function parseDateString(value, originalValue) {
@@ -73,22 +74,37 @@ function getTransactionById(transactionsList, id) {
   return matchedTransaction;
 }
 
-function downloadCSV(data) {
-  try {
-    ipcRenderer.send("download", {
-      payload: { url: `${backendURL}/download/`, data: data },
-    });
-  } catch (error) {
-    console.log(error);
-  }
+function filterDataFromIds(data, ids) {
+  let ArrayOfSelectedTransaction = [];
+  data.map((transaction) => {
+    if (ids.includes(transaction._id)) {
+      ArrayOfSelectedTransaction.push(transaction);
+    }
+  });
+  return ArrayOfSelectedTransaction;
 }
 
+// Get export download link
+const getDownloadLink = async (ids, data) => {
+  if (ids) {
+    const downloadLink = await fetch(`${backendURL}/download`, {
+      method: "POST",
+      headers: { "content-Type": "application/json" },
+      body: JSON.stringify(filterDataFromIds(data, ids)),
+    });
+    if (downloadLink.ok) {
+      const res = await downloadLink.json();
+      shell.openExternal(res.downloadLink);
+    }
+  }
+};
 
 export {
   getSelectedPatientsEmails,
   generateTransactionsTypeStype,
   parseDateString,
   getSelectedTransactionsIdsAmount,
-  downloadCSV,
   getTransactionById,
+  getDownloadLink,
+  filterDataFromIds,
 };

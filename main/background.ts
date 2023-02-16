@@ -1,6 +1,5 @@
 import { app } from "electron";
 import serve from "electron-serve";
-import { ipcMain } from "electron";
 import { createWindow } from "./helpers";
 
 
@@ -17,7 +16,7 @@ if (isProd) {
 
   const mainWindow = createWindow("mainWin", {
     width: 1400,
-    height: 700,
+    height: 720,
     center: true,
   });
 
@@ -26,11 +25,6 @@ if (isProd) {
   } else {
     const port = process.argv[2];
     await mainWindow.loadURL(`http://localhost:${port}/login`);
-
-    // handle download event
-    ipcMain.on("download", (event, { payload }) => {
-      
-    });
     
     mainWindow.webContents.openDevTools();
   }

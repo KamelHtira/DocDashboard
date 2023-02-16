@@ -16,6 +16,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Facebook as FacebookIcon } from "../icons/facebook";
 import { Google as GoogleIcon } from "../icons/google";
 import { useEffect, useState } from "react";
+import { backendURL } from "../utils/constants";
 
 const Login = () => {
 
@@ -24,7 +25,7 @@ const Login = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("https://shy-pear-catfish-cap.cyclic.app/");
+        const res = await fetch(`${backendURL}/`);
         const data = await res.json();
         setcheckServerState(data);  
       } catch (error) {

@@ -13,19 +13,20 @@ import { Download as DownloadIcon } from "../../icons/download";
 import { DeleteTransactionPopup } from "./delete-transaction-popup";
 import { useState, createContext, useContext } from "react";
 import { AddTransactionPopup } from "./add-transaction-popup";
-import { downloadCSV } from "../../utils/functions";
+import { getDownloadLink } from "../../utils/functions";
 import { TransactionsContext } from "../../pages/transactions";
-
 
 export const DeleteTransactionsPopupContext = createContext(null);
 export const AddTransactionsPopupContext = createContext(null);
 
-export const TransactionListToolbar = (props) => {
 
+
+
+export const TransactionListToolbar = (props) => {
   /* [ContextAPI]
    Get "selectedTransactionIds" to export data
    */
-  const { selectedTransactionIds } = useContext(TransactionsContext);
+  const { selectedTransactionIds,transactionsList } = useContext(TransactionsContext);
 
   // Set "show" variable for DeleteTransactionPopup
   const [showDeleteTransactionsPopup, setShowDeleteTransactionsPopup] =
@@ -52,7 +53,7 @@ export const TransactionListToolbar = (props) => {
         <Box sx={{ m: 1 }}>
           <Button
             onClick={() => {
-              downloadCSV(selectedTransactionIds);
+              getDownloadLink(selectedTransactionIds,transactionsList);
             }}
             startIcon={<DownloadIcon fontSize="small" />}
             sx={{ mr: 1 }}
