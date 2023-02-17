@@ -12,7 +12,7 @@ import { Search as SearchIcon } from "../../icons/search";
 import { Download as DownloadIcon } from "../../icons/download";
 import { DeletePatientPopup } from "./delete-patient-popup";
 import { useState, createContext, useContext } from "react";
-import { getDownloadLink } from "../../utils/functions";
+import { sendDownloadEvent } from "../../utils/functions";
 import { useRouter } from "next/router";
 import { PatientsContext } from "../../pages/patients";
 
@@ -49,7 +49,7 @@ export const PatientListToolbar = (props) => {
         <Box sx={{ m: 1 }}>
           <Button
             onClick={() => {
-              getDownloadLink(selectedPatientIds, patientsList);
+              sendDownloadEvent(selectedPatientIds, patientsList);
             }}
             startIcon={<DownloadIcon fontSize="small" />}
             sx={{ mr: 1 }}

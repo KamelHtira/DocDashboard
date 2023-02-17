@@ -13,7 +13,7 @@ import { Download as DownloadIcon } from "../../icons/download";
 import { DeleteTransactionPopup } from "./delete-transaction-popup";
 import { useState, createContext, useContext } from "react";
 import { AddTransactionPopup } from "./add-transaction-popup";
-import { getDownloadLink } from "../../utils/functions";
+import { sendDownloadEvent } from "../../utils/functions";
 import { TransactionsContext } from "../../pages/transactions";
 
 export const DeleteTransactionsPopupContext = createContext(null);
@@ -53,7 +53,7 @@ export const TransactionListToolbar = (props) => {
         <Box sx={{ m: 1 }}>
           <Button
             onClick={() => {
-              getDownloadLink(selectedTransactionIds,transactionsList);
+              sendDownloadEvent(selectedTransactionIds,transactionsList)
             }}
             startIcon={<DownloadIcon fontSize="small" />}
             sx={{ mr: 1 }}

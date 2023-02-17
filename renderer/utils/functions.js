@@ -1,7 +1,11 @@
 import { parse, isDate } from "date-fns";
 import { shell } from "electron";
-
 import { backendURL } from "./constants";
+import { ipcRenderer } from "electron";
+
+
+
+
 
 function parseDateString(value, originalValue) {
   const parsedDate = isDate(originalValue)
@@ -84,20 +88,9 @@ function filterDataFromIds(data, ids) {
   return ArrayOfSelectedTransaction;
 }
 
-// Get export download link
-const getDownloadLink = async (ids, data) => {
-  if (ids) {
-    const downloadLink = await fetch(`${backendURL}/download`, {
-      method: "POST",
-      headers: { "content-Type": "application/json" },
-      body: JSON.stringify(filterDataFromIds(data, ids)),
-    });
-    if (downloadLink.ok) {
-      const res = await downloadLink.json();
-      shell.openExternal(res.downloadLink);
-    }
-  }
-};
+function sendDownloadEvent(ids,data) {
+  ipcRenderer.send("download", filterDataFromIds(data, ids));
+}
 
 export {
   getSelectedPatientsEmails,
@@ -105,6 +98,6 @@ export {
   parseDateString,
   getSelectedTransactionsIdsAmount,
   getTransactionById,
-  getDownloadLink,
   filterDataFromIds,
+  sendDownloadEvent
 };
