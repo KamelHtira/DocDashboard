@@ -18,17 +18,7 @@ import { useEffect, useState } from "react";
 
 const Login = () => {
 
-  //-------------------------------
-  const [a, setA] = useState( {response: "asdasa"} );
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch("https://shy-pear-catfish-cap.cyclic.app/");
-      const data = await res.json();
-      setA(data);
-    };
-    fetchData();
-  }, []);
-  //-------------------------------
+
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
@@ -46,8 +36,9 @@ const Login = () => {
      //send a post request with the login data to the server
       const { email, password } = formik.values;
       axios
-        .post('http://localhost:3001/login', { email, password })
+        .post(`${backendURL}/login`, { email, password })
         .then((response) => {
+          console.log(response);
           if (response.status === 200) {
             router.push("/");
           }
@@ -70,7 +61,7 @@ const Login = () => {
   return (
     <>
       <Head>
-        <title>Login | Material Kit</title>
+        <title>Login</title>
       </Head>
       <Box
         component="main"
@@ -169,7 +160,7 @@ const Login = () => {
               </NextLink>
             </Typography>
           </form>
-          {a.response}
+
         </Container>
       </Box>
     </>
