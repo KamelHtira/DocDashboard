@@ -15,10 +15,26 @@ import {
 } from "@mui/material";
 import { Google as GoogleIcon } from "../icons/google";
 import { useEffect, useState } from "react";
+import { backendURL } from "../utils/constants";
 
 const Login = () => {
 
-
+  //-------------------------------
+  const [checkServerState, setcheckServerState] = useState( {response: "Checking Server State.. "} );
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`${backendURL}/`);
+        const data = await res.json();
+        setcheckServerState(data);  
+      } catch (error) {
+        setcheckServerState("ERROR while connecting to server");
+      }
+      
+    };
+    fetchData();
+  }, []);
+  //-------------------------------
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
@@ -160,7 +176,7 @@ const Login = () => {
               </NextLink>
             </Typography>
           </form>
-
+          {checkServerState.response}
         </Container>
       </Box>
     </>

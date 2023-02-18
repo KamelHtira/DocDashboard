@@ -8,6 +8,7 @@ import { ChartBar as ChartBarIcon } from '../icons/chart-bar';
 import { Cog as CogIcon } from '../icons/cog';
 import { Selector as SelectorIcon } from '../icons/selector';
 import { ShoppingBag as ShoppingBagIcon } from '../icons/shopping-bag';
+import PaymentsIcon from '@mui/icons-material/Payments';
 import { User as UserIcon } from '../icons/user';
 import { Users as UsersIcon } from '../icons/users';
 import { Logo } from './logo';
@@ -23,6 +24,11 @@ const items = [
     href: '/patients',
     icon: (<UsersIcon fontSize="small" />),
     title: 'Patients'
+  },
+  {
+    href: '/transactions',
+    icon: (<PaymentsIcon fontSize="small" />),
+    title: 'Transactions'
   },
   {
     href: '/products',
@@ -71,7 +77,7 @@ export const DashboardSidebar = (props) => {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          height: '100%'
+          height: '100%',
         }}
       >
         <div>
@@ -83,14 +89,14 @@ export const DashboardSidebar = (props) => {
               <a>
                 <Logo
                   sx={{
-                    height: 42,
-                    width: 42
+                    height: 100,
+                    width: 100
                   }}
                 />
               </a>
             </NextLink>
           </Box>
-          <Box sx={{ px: 2 }}>
+          {/* <Box sx={{ px: 2 }}>
             <Box
               sx={{
                 alignItems: 'center',
@@ -127,7 +133,7 @@ export const DashboardSidebar = (props) => {
                 }}
               />
             </Box>
-          </Box>
+          </Box> */}
         </div>
         <Divider
           sx={{
@@ -146,7 +152,7 @@ export const DashboardSidebar = (props) => {
           ))}
         </Box>
         <Divider sx={{ borderColor: '#2D3748' }} />
-        <Box
+        {/* <Box
           sx={{
             px: 2,
             py: 3
@@ -180,7 +186,7 @@ export const DashboardSidebar = (props) => {
               MedDashboard.com
             </Button>
           </NextLink>
-        </Box>
+        </Box> */}
       </Box>
     </>
   );
@@ -194,7 +200,7 @@ export const DashboardSidebar = (props) => {
           sx: {
             backgroundColor: 'neutral.900',
             color: '#FFFFFF',
-            width: 280
+            width: 250
           }
         }}
         variant="permanent"
@@ -213,7 +219,7 @@ export const DashboardSidebar = (props) => {
         sx: {
           backgroundColor: 'neutral.900',
           color: '#FFFFFF',
-          width: 280
+          width: 250
         }
       }}
       sx={{ zIndex: (theme) => theme.zIndex.appBar + 100 }}

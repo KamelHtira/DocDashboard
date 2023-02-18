@@ -1,10 +1,7 @@
 import { useState, useContext } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import PropTypes from "prop-types";
 import { PatientsContext } from "../../pages/patients.js";
-import { format } from "date-fns";
 import {
-  Avatar,
   Box,
   Card,
   Checkbox,
@@ -15,9 +12,15 @@ import {
   TablePagination,
   TableRow,
   Typography,
+  Button
 } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import { useRouter } from "next/router.js";
 
 export const PatientListResults = ({ ...rest }) => {
+
+  const router = useRouter()
+
   const { patientsList, selectedPatientIds, setSelectedPatientIds } =
     useContext(PatientsContext);
   const [limit, setLimit] = useState(50);
@@ -93,13 +96,14 @@ export const PatientListResults = ({ ...rest }) => {
                 <TableCell>Address</TableCell>
                 <TableCell>Phone</TableCell>
                 <TableCell>Age</TableCell>
+                <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {patientsList.slice(0, limit).map((patient) => (
+              {patientsList.slice(0, limit).map((patient,index) => (
                 <TableRow
                   hover
-                  key={patient._id}
+                  key={index}
                   selected={selectedPatientIds.indexOf(patient._id) !== -1}
                 >
                   <TableCell padding="checkbox">
@@ -125,6 +129,15 @@ export const PatientListResults = ({ ...rest }) => {
                   <TableCell>{patient.address}</TableCell>
                   <TableCell>{patient.phone}</TableCell>
                   <TableCell>{patient.age}</TableCell>
+                  <TableCell padding="checkbox">
+                    <Button
+                      onClick={() => {
+                        router.push(`patient/${patient._id}`)
+                      }}
+                    >
+                      <EditIcon></EditIcon>
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -142,8 +155,4 @@ export const PatientListResults = ({ ...rest }) => {
       />
     </Card>
   );
-};
-
-PatientListResults.propTypes = {
-  patients: PropTypes.array.isRequired,
 };
