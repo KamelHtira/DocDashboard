@@ -2,7 +2,7 @@ import Head from "next/head";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { useFormik } from "formik";
-import axios from 'axios';
+import axios from "axios";
 import * as Yup from "yup";
 import {
   Box,
@@ -18,19 +18,20 @@ import { useEffect, useState } from "react";
 import { backendURL } from "../utils/constants";
 
 const Login = () => {
-
+  const [errorMsg, setErrorMsg] = useState("");
   //-------------------------------
-  const [checkServerState, setcheckServerState] = useState( {response: "Checking Server State.. "} );
+  const [checkServerState, setcheckServerState] = useState({
+    response: "Checking Server State.. ",
+  });
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await fetch(`${backendURL}/`);
         const data = await res.json();
-        setcheckServerState(data);  
+        setcheckServerState(data);
       } catch (error) {
         setcheckServerState("ERROR while connecting to server");
       }
-      
     };
     fetchData();
   }, []);
@@ -38,8 +39,8 @@ const Login = () => {
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
-      email: "demo@devias.io",
-      password: "Password123",
+      email: "hedihmida2@gmail.com",
+      password: "",
     },
     validationSchema: Yup.object({
       email: Yup.string()
@@ -48,31 +49,32 @@ const Login = () => {
         .required("Email is required"),
       password: Yup.string().max(255).required("Password is required"),
     }),
-    onSubmit: () => {
-     //send a post request with the login data to the server
-      const { email, password } = formik.values;
-      axios
-        .post(`${backendURL}/login`, { email, password })
-        .then((response) => {
-          console.log(response);
-          if (response.status === 200) {
-            router.push("/");
-          }
-          else{
-            formik.setSubmitting(false);
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          formik.setSubmitting(false);
-        })
-    }
+    onSubmit: async () => {
+      //send a post request with the login data to the server
+      try {
+        const body = JSON.stringify({
+          email: formik.values.email,
+          password: formik.values.password,
+        });
+        const data = await fetch(`${backendURL}/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: body,
+        });
+        const response = await data.json();
+        console.log(response);
+        setErrorMsg(response.msg)
+        if (data.ok) {
+          router.push("/");
+        } else {
+          
+        }
+        
+      } catch (err) {
+        console.log(err);
+      }
+    },
   });
-
-
-  
-
-   
 
   return (
     <>
@@ -98,20 +100,20 @@ const Login = () => {
                 Sign in on the internal platform
               </Typography>
             </Box>
-         
-              <Grid item xs={12} md={6}>
-                <Button
-                  fullWidth
-                  color="error"
-                  startIcon={<GoogleIcon />}
-                  onClick={formik.handleSubmit}
-                  size="large"
-                  variant="contained"
-                >
-                  Login with Google
-                </Button>
-              </Grid>
-           
+
+            <Grid item xs={12} md={6}>
+              <Button
+                fullWidth
+                color="error"
+                startIcon={<GoogleIcon />}
+                onClick={formik.handleSubmit}
+                size="large"
+                variant="contained"
+              >
+                Login with Google
+              </Button>
+            </Grid>
+
             <Box
               sx={{
                 pb: 1,
@@ -160,20 +162,8 @@ const Login = () => {
                 Sign In Now
               </Button>
             </Box>
-            <Typography color="textSecondary" variant="body2">
-              Don&apos;t have an account?{" "}
-              <NextLink href="/register">
-                <Link
-                  to="/register"
-                  variant="subtitle2"
-                  underline="hover"
-                  sx={{
-                    cursor: "pointer",
-                  }}
-                >
-                  Sign Up
-                </Link>
-              </NextLink>
+            <Typography color={errorMsg!="Login successful"?"error":"success.main"} variant="body1" align="center">
+              {errorMsg}
             </Typography>
           </form>
           {checkServerState.response}
