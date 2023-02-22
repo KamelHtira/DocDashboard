@@ -177,8 +177,8 @@ const AccountProfileDetails = (props) => {
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                 >
-                  <MenuItem value={"Homme"}>Homme</MenuItem>
-                  <MenuItem value={"Femme"}>Femme</MenuItem>
+                  <MenuItem value={"H"}>Homme</MenuItem>
+                  <MenuItem value={"F"}>Femme</MenuItem>
                 </Select>
               </FormControl>
             </Grid>

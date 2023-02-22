@@ -24,6 +24,15 @@ function getSelectedPatientsEmails(patientsList, selectedPatientIds) {
   });
   return ArrayOfSelectedPatientEmails;
 }
+
+function getPatientsFullNames(patientsList) {
+  let ArrayOfPatientsFullNames = [];
+  patientsList.map((patient) => {
+    ArrayOfPatientsFullNames.push(patient.firstName+" "+patient.lastName);
+  });
+  return ArrayOfPatientsFullNames;
+}
+
 const generateTransactionsTypeStype = (type) => {
   if (type == "Income") {
     return {
@@ -92,12 +101,29 @@ function sendDownloadEvent(ids,data) {
   ipcRenderer.send("download", filterDataFromIds(data, ids));
 }
 
+function hoursAgo(dateStr) {
+  var date = new Date(dateStr);
+  var now = new Date();
+  var diffMs = now - date;
+  var diffDays = Math.floor(diffMs / 86400000); // 86400000 = 1000 * 60 * 60 * 24
+  var diffHrs = Math.floor((diffMs % 86400000) / 3600000); // 3600000 = 1000 * 60 * 60
+  var result = '';
+  if (diffDays > 0) {
+    result += diffDays + 'd ';
+  }
+  result += diffHrs + 'hr ago';
+  return result;
+}
+
+
 export {
   getSelectedPatientsEmails,
+  getPatientsFullNames,
   generateTransactionsTypeStype,
   parseDateString,
   getSelectedTransactionsIdsAmount,
   getTransactionById,
   filterDataFromIds,
-  sendDownloadEvent
+  sendDownloadEvent,
+  hoursAgo
 };

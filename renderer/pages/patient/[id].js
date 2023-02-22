@@ -76,7 +76,7 @@ const AccountProfileDetails = (props) => {
 
   // [Formik] edit patient
   const formik = useFormik({
-    initialValues: currentPatient,
+    initialValues: {...currentPatient,sexe:"H"},
     enableReinitialize: true,
     validationSchema: Yup.object({
       email: Yup.string()
@@ -186,7 +186,7 @@ const AccountProfileDetails = (props) => {
                   name="sexe"
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
-                  value={formik.values.sexe || "H"}
+                  value={formik.values.sexe}
                   variant="outlined"
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"

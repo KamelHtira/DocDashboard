@@ -32,7 +32,7 @@ export const TransactionListToolbar = (props) => {
   const [showDeleteTransactionsPopup, setShowDeleteTransactionsPopup] =
     useState(false);
 
-  // Set "show" variable for DeleteTransactionPopup
+  // Set "show" variable for AddTransactionPopup
   const [showAddTransactionsPopup, setShowAddTransactionsPopup] =
     useState(false);
 

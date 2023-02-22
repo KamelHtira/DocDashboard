@@ -1,3 +1,5 @@
+
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -25,5 +27,48 @@ const transactionIsLoading = {
   description: "loading..",
 };
 
+const appointmentIsLoading = [
+  {
+    id: "loading..",
+    firstName: "loading..",
+    lastName: "",
+    age: "loading..",
+    createdAt: "loading..",
+    appointmentDate: "loading..",
+    description: "loading..",
+    phone: "loading..",
+    type: "P",
+  },
+  {
+    id: "loading..",
+    firstName: "loading..",
+    lastName: "",
+    age: "loading..",
+    createdAt: "loading..",
+    appointmentDate: "loading..",
+    description: "loading..",
+    phone: "loading..",
+    type: "C",
+  },
+  {
+    id: "loading..",
+    firstName: "loading..",
+    lastName: "",
+    age: "loading..",
+    createdAt: "loading..",
+    appointmentDate: "loading..",
+    description: "loading..",
+    phone: "loading..",
+    type: "Q",
+  },
+];
+
 const backendURL = "https://angry-gold-tam.cyclic.app";
-export { style, backendURL, patientIsLoading, transactionIsLoading };
+
+export {
+  style,
+  backendURL,
+  patientIsLoading,
+  transactionIsLoading,
+  appointmentIsLoading,
+};
