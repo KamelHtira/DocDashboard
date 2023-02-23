@@ -10,6 +10,9 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  Checkbox,
+  FormGroup,
+  Grid,
 } from "@mui/material";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import InputLabel from "@mui/material/InputLabel";
@@ -20,11 +23,10 @@ import { AppointmentsContext } from "../../pages/appointments";
 import { AddAppointmentsPopupContext } from "./appointment-list-toolbar";
 import { backendURL, style as s, style } from "../../utils/constants";
 import * as Yup from "yup";
-import { getPatientsFullNames, parseDateString } from "../../utils/functions";
+import { parseDateString } from "../../utils/functions";
 import moment from "moment";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
-import { FormLabel, Grid } from "@material-ui/core";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -34,6 +36,13 @@ export const AddAppointmentPopup = () => {
 
   const handleChangeRadioButton = (event) => {
     setValueRadioButton(event.target.value);
+  };
+
+  // Radio Button value
+  const [valueCheckBox, setValueCheckBox] = useState(true);
+
+  const handleChangeCheckBox = (event) => {
+    setValueCheckBox(!valueCheckBox);
   };
 
   // Consultaion Type value
@@ -46,43 +55,12 @@ export const AddAppointmentPopup = () => {
 
   // Async AutoComplete
   const [open, setOpen] = useState(false);
+  const [autoCompleteValue, setAutoCompleteValue] = useState(null);
   const [options, setOptions] = useState([]);
   const loading = open && options.length === 0;
-
-  useEffect(() => {
-    let active = true;
-
-    if (!loading) {
-      return undefined;
-    }
-
-    const fetchData = async () => {
-      try {
-        const res = await fetch(`${backendURL}/patients`);
-        const data = await res.json();
-        setOptions(data);
-      } catch (error) {
-        setOptions(["N/A"]);
-      }
-    };
-
-    (async () => {
-      if (active) {
-        fetchData();
-      }
-    })();
-
-    return () => {
-      active = false;
-    };
-  }, [loading]);
-
-  useEffect(() => {
-    if (!open) {
-      setOptions([]);
-    }
-  }, [open]);
-
+  const handleAutoCompleteValue = (event, value) => {
+    setAutoCompleteValue(value);
+  };
   // Date&Time picker
   const [value, setValue] = useState(moment(new Date()));
   const handleChange = (newValue) => {
@@ -132,6 +110,41 @@ export const AddAppointmentPopup = () => {
     }
   }
 
+  // autoComplete fetch patient
+  useEffect(() => {
+    let active = true;
+
+    if (!loading) {
+      return undefined;
+    }
+
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`${backendURL}/patients`);
+        const data = await res.json();
+        setOptions(data);
+      } catch (error) {
+        setOptions(["N/A"]);
+      }
+    };
+
+    (async () => {
+      if (active) {
+        fetchData();
+      }
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, [loading]);
+
+  useEffect(() => {
+    if (!open) {
+      setOptions([]);
+    }
+  }, [open]);
+
   // Add Request
   async function addAppointmentAPI(data) {
     try {
@@ -170,24 +183,65 @@ export const AddAppointmentPopup = () => {
   // [Formik] add appointment
   const formik = useFormik({
     initialValues: {
-      amount: "",
-      type: "",
-      date: "",
+      firstName: "",
+      lastName: "",
+      birthday: "",
+      appointmentDate: value,
       description: "",
+      phone: "",
+      type: valueConsultation,
+      sexe: "",
     },
+    enableReinitialize: true,
     validationSchema: Yup.object({
-      amount: Yup.number().required("Amount is required"),
+      firstName: Yup.string(),
+      lastName: Yup.string(),
+      appointmentDate: Yup.date(),
       description: Yup.string(),
-      date: Yup.date().transform(parseDateString),
+      birthday: Yup.date().transform(parseDateString),
       type: Yup.string().required("type is required"),
     }),
     onSubmit: () => {
       const body = {
-        amount: formik.values.amount,
         description: formik.values.description,
-        date: formik.values.date,
-        type: formik.values.type,
       };
+
+      // add consultation type
+      // Q : Queued Consultation without appointment date
+      if (valueConsultation == "C") {
+        body = {
+          ...body,
+          appointmentDate: moment(value).format(),
+          type: valueConsultation,
+        };
+      } else {
+        body = {
+          ...body,
+          appointmentDate:null,
+          type: valueConsultation,
+        };
+      }
+
+      if (valueRadioButton == "new") {
+        body = {
+          ...body,
+          firstName: formik.values.firstName,
+          lastName: formik.values.lastName,
+          birthday: moment(formik.values.birthday).format(),
+          sexe: formik.values.sexe,
+        };
+      } else if (valueRadioButton == "exist") {
+        body = {
+          ...body,
+          firstName: autoCompleteValue.firstName,
+          lastName: autoCompleteValue.lastName,
+          birthday: moment(autoCompleteValue.birthday).format(),
+          sexe: autoCompleteValue.sexe,
+        };
+      }
+      console.log(autoCompleteValue);
+      console.log(body);
+      formik.setSubmitting(false);
       addAppointmentAPI(body);
     },
   });
@@ -312,14 +366,12 @@ export const AddAppointmentPopup = () => {
                   onClose={() => {
                     setOpen(false);
                   }}
-                  isOptionEqualToValue={(option, value) =>
-                    option.firstName + " " + option.lastName === value
-                  }
                   getOptionLabel={(option) =>
                     option.firstName + " " + option.lastName
                   }
                   options={options}
                   loading={loading}
+                  onChange={handleAutoCompleteValue}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -346,14 +398,16 @@ export const AddAppointmentPopup = () => {
                         fullWidth
                         size="small"
                         error={Boolean(
-                          formik.touched.date && formik.errors.date
+                          formik.touched.firstName && formik.errors.firstName
                         )}
-                        helperText={formik.touched.date && formik.errors.date}
+                        helperText={
+                          formik.touched.firstName && formik.errors.firstName
+                        }
                         label="Nom"
-                        name="date"
+                        name="firstName"
                         onBlur={formik.handleBlur}
                         onChange={formik.handleChange}
-                        value={formik.values.date}
+                        value={formik.values.firstName}
                         variant="outlined"
                       ></TextField>
                     </Grid>
@@ -362,14 +416,16 @@ export const AddAppointmentPopup = () => {
                         fullWidth
                         size="small"
                         error={Boolean(
-                          formik.touched.date && formik.errors.date
+                          formik.touched.lastName && formik.errors.lastName
                         )}
-                        helperText={formik.touched.date && formik.errors.date}
+                        helperText={
+                          formik.touched.lastName && formik.errors.lastName
+                        }
                         label="Prenom"
-                        name="date"
+                        name="lastName"
                         onBlur={formik.handleBlur}
                         onChange={formik.handleChange}
-                        value={formik.values.date}
+                        value={formik.values.lastName}
                         variant="outlined"
                       ></TextField>
                     </Grid>
@@ -378,14 +434,16 @@ export const AddAppointmentPopup = () => {
                         fullWidth
                         size="small"
                         error={Boolean(
-                          formik.touched.date && formik.errors.date
+                          formik.touched.birthday && formik.errors.birthday
                         )}
-                        helperText={formik.touched.date && formik.errors.date}
-                        label="Naissance MM/DD/YYYY"
-                        name="date"
+                        helperText={
+                          formik.touched.birthday && formik.errors.birthday
+                        }
+                        label="Date de Naissance"
+                        name="birthday"
                         onBlur={formik.handleBlur}
                         onChange={formik.handleChange}
-                        value={formik.values.date}
+                        value={formik.values.birthday}
                         variant="outlined"
                       ></TextField>
                     </Grid>
@@ -413,6 +471,20 @@ export const AddAppointmentPopup = () => {
                           <MenuItem value={"F"}>Femme</MenuItem>
                         </Select>
                       </FormControl>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <FormGroup>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              defaultChecked
+                              onChange={handleChangeCheckBox}
+                              value={valueCheckBox}
+                            />
+                          }
+                          label="Ajouter cette patient au base de donnee"
+                        />
+                      </FormGroup>
                     </Grid>
                   </Grid>
                 </>

@@ -18,6 +18,7 @@ import { backendURL, patientIsLoading } from "../../utils/constants";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { parseDateString } from "../../utils/functions";
 
 const AccountProfileDetails = (props) => {
   // Back to patients page
@@ -27,9 +28,7 @@ const AccountProfileDetails = (props) => {
     const fetchData = async () => {
       try {
         setCurrentPatient([patientIsLoading]);
-        const res = await fetch(
-          `${backendURL}/patients/${router.query.id}`
-        );
+        const res = await fetch(`${backendURL}/patients/${router.query.id}`);
         const data = await res.json();
         setCurrentPatient(data);
         console.log(data);
@@ -42,13 +41,14 @@ const AccountProfileDetails = (props) => {
             age: "N/A",
             email: "N/A",
             phone: "N/A",
+            
           },
         ]);
       }
     };
     fetchData();
   }, []);
-  
+
   // Edit Request
   async function editPatientAPI(data) {
     try {
@@ -60,7 +60,7 @@ const AccountProfileDetails = (props) => {
       });
       if (res.ok) {
         const json = await res.json();
-        setCurrentPatient(json)
+        setCurrentPatient(json);
         // show success message
         // showEditPatientResponseUI("success", json.firstName, json.lastName);
       } else {
@@ -76,7 +76,7 @@ const AccountProfileDetails = (props) => {
 
   // [Formik] edit patient
   const formik = useFormik({
-    initialValues: {...currentPatient,sexe:"H"},
+    initialValues: currentPatient,
     enableReinitialize: true,
     validationSchema: Yup.object({
       email: Yup.string()
@@ -85,7 +85,7 @@ const AccountProfileDetails = (props) => {
         .required("Email is required"),
       firstName: Yup.string().max(255).required("First Name is required"),
       lastName: Yup.string().max(255).required("Last Name is required"),
-      age: Yup.number(),
+      birthday: Yup.date().transform(parseDateString),
       sexe: Yup.string().required("sexe is required"),
     }),
     onSubmit: () => {
@@ -93,9 +93,10 @@ const AccountProfileDetails = (props) => {
         firstName: formik.values.firstName,
         lastName: formik.values.lastName,
         email: formik.values.email,
-        age: formik.values.age,
+        birthday: formik.values.birthday,
         address: formik.values.address,
         phone: formik.values.phone,
+        sexe: formik.values.sexe,
       };
       editPatientAPI(body);
     },
@@ -143,19 +144,22 @@ const AccountProfileDetails = (props) => {
               />
             </Grid>
             <Grid item md={4} xs={12}>
-              <TextField
+            <TextField
                 size="meduim"
-                error={Boolean(formik.touched.age && formik.errors.age)}
+                error={Boolean(
+                  formik.touched.birthday && formik.errors.birthday
+                )}
                 fullWidth
-                helperText={formik.touched.age && formik.errors.age}
-                label="Age"
+                helperText={formik.touched.birthday && formik.errors.birthday}
+                label="Last name"
                 margin="normal"
-                name="age"
+                name="birthday"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.age}
+                value={formik.values.birthday}
                 variant="outlined"
               />
+            
             </Grid>
             <Grid item md={8} xs={12}>
               <TextField
@@ -186,7 +190,7 @@ const AccountProfileDetails = (props) => {
                   name="sexe"
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
-                  value={formik.values.sexe}
+                  value={formik.values.sexe || "H"}
                   variant="outlined"
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"

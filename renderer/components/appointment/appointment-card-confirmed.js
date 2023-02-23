@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import {
-  Avatar,
+
   Box,
   Card,
   CardContent,

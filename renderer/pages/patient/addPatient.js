@@ -17,6 +17,7 @@ import { useFormik } from "formik";
 import { backendURL } from "../../utils/constants";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
+import { parseDateString } from "../../utils/functions";
 
 const AccountProfileDetails = (props) => {
   // Back to patients page
@@ -59,7 +60,7 @@ const AccountProfileDetails = (props) => {
       firstName: "",
       lastName: "",
       email: "",
-      age: "",
+      birthday: "",
       address: "",
       phone: "",
       sexe: "",
@@ -71,7 +72,7 @@ const AccountProfileDetails = (props) => {
         .required("Email is required"),
       firstName: Yup.string().max(255).required("First Name is required"),
       lastName: Yup.string().max(255).required("Last Name is required"),
-      age: Yup.number(),
+      birthday: Yup.date().transform(parseDateString).required("MM/DD/YYYY"),
       sexe: Yup.string().required("sexe is required"),
     }),
     onSubmit: () => {
@@ -79,9 +80,10 @@ const AccountProfileDetails = (props) => {
         firstName: formik.values.firstName,
         lastName: formik.values.lastName,
         email: formik.values.email,
-        age: formik.values.age,
+        birthday: formik.values.birthday,
         address: formik.values.address,
         phone: formik.values.phone,
+        sexe: formik.values.sexe,
       };
       addPatientAPI(body);
     },
@@ -131,15 +133,17 @@ const AccountProfileDetails = (props) => {
             <Grid item md={4} xs={12}>
               <TextField
                 size="meduim"
-                error={Boolean(formik.touched.age && formik.errors.age)}
+                error={Boolean(
+                  formik.touched.birthday && formik.errors.birthday
+                )}
                 fullWidth
-                helperText={formik.touched.age && formik.errors.age}
-                label="Age"
+                helperText={formik.touched.birthday && formik.errors.birthday}
+                label="Birthday"
                 margin="normal"
-                name="age"
+                name="birthday"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
-                value={formik.values.age}
+                value={formik.values.birthday}
                 variant="outlined"
               />
             </Grid>

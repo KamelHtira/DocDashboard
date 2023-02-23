@@ -1,5 +1,3 @@
-
-
 const style = {
   position: "absolute",
   top: "50%",
@@ -15,7 +13,7 @@ const patientIsLoading = {
   firstName: "loading..",
   lastName: "",
   address: "loading..",
-  age: "loading..",
+  birthday: "loading..",
   email: "loading..",
   phone: "loading",
 };

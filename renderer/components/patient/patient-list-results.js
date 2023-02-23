@@ -128,7 +128,7 @@ export const PatientListResults = ({ ...rest }) => {
                   <TableCell>{patient.email}</TableCell>
                   <TableCell>{patient.address}</TableCell>
                   <TableCell>{patient.phone}</TableCell>
-                  <TableCell>{patient.age}</TableCell>
+                  <TableCell>{patient.birthday}</TableCell>
                   <TableCell padding="checkbox">
                     <Button
                       onClick={() => {

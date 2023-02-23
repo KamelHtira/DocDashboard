@@ -17,7 +17,7 @@ function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
   return (
-    <div
+    <Box
       role="tabpanel"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
@@ -26,10 +26,10 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+          {children}
         </Box>
       )}
-    </div>
+    </Box>
   );
 }
 
@@ -61,36 +61,42 @@ export const AppointmentListResults = (props) => {
       <TabPanel value={value} index={0}>
         <Box sx={{ pt: 3 }}>
           <Grid container spacing={3}>
-          {products.map((appointment) => (
-              appointment.type == "Q" ?
-              <Grid item key={appointment.id} lg={4} md={6} xs={12}>
-                <AppointmentCardQueue appointment={appointment} />
-              </Grid>:""
-            ))}
+            {products.map(
+              (appointment, index) =>
+                appointment.type == "Q" && (
+                  <Grid key={index} item lg={4} md={6} xs={12}>
+                    <AppointmentCardQueue appointment={appointment} />
+                  </Grid>
+                )
+            )}
           </Grid>
         </Box>
       </TabPanel>
       <TabPanel value={value} index={1}>
         <Box sx={{ pt: 3 }}>
           <Grid container spacing={3}>
-            {products.map((appointment) => (
-              appointment.type == "C" ?
-              <Grid item key={appointment.id} lg={4} md={6} xs={12}>
-                <AppointmentCardConfirmed appointment={appointment} />
-              </Grid>:""
-            ))}
+          {products.map(
+              (appointment, index) =>
+                appointment.type == "Q" && (
+                  <Grid key={index} item lg={4} md={6} xs={12}>
+                    <AppointmentCardConfirmed appointment={appointment} />
+                  </Grid>
+                )
+            )}
           </Grid>
         </Box>
       </TabPanel>
       <TabPanel value={value} index={2}>
         <Box sx={{ pt: 3 }}>
           <Grid container spacing={3}>
-          {products.map((appointment) => (
-              appointment.type == "P" ?
-              <Grid item key={appointment.id} lg={4} md={6} xs={12}>
-                <AppointmentCardPending appointment={appointment} />
-              </Grid>:""
-            ))}
+          {products.map(
+              (appointment, index) =>
+                appointment.type == "Q" && (
+                  <Grid key={index} item lg={4} md={6} xs={12}>
+                    <AppointmentCardPending appointment={appointment} />
+                  </Grid>
+                )
+            )}
           </Grid>
         </Box>
       </TabPanel>

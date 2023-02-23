@@ -4,7 +4,7 @@ import { Box, Container } from "@mui/material";
 import { AppointmentListResults } from "../components/appointment/appointment-list-results";
 import { AppointmentListToolbar } from "../components/appointment/appointment-list-toolbar";
 import { createContext, useState, useEffect } from "react";
-import { appointmentIsLoading } from "../utils/constants";
+import { appointmentIsLoading, backendURL } from "../utils/constants";
 
 export const AppointmentsContext = createContext(null);
 const Appointment = () => {
@@ -15,6 +15,7 @@ const Appointment = () => {
   const [appointmentsList, setAppointmentsList] = useState([
     appointmentIsLoading,
   ]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -22,6 +23,8 @@ const Appointment = () => {
         const res = await fetch(`${backendURL}/appointments`);
         const data = await res.json();
         setAppointmentsList(data);
+        
+        console.log(data);
       } catch (error) {
         setAppointmentsList([
           {
