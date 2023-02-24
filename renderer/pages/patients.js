@@ -4,7 +4,7 @@ import { PatientListResults } from "../components/patient/patient-list-results";
 import { PatientListToolbar } from "../components/patient/patient-list-toolbar";
 import { DashboardLayout } from "../components/dashboard-layout";
 import { createContext, useState, useEffect } from "react";
-import { patientIsLoading,backendURL } from "../utils/constants";
+import { patientIsLoading, backendURL, patientNA } from "../utils/constants";
 export const PatientsContext = createContext(null);
 
 const Patients = () => {
@@ -20,22 +20,11 @@ const Patients = () => {
     const fetchData = async () => {
       try {
         setPatientsList([patientIsLoading]);
-        const res = await fetch(
-          `${backendURL}/patients`
-        );
+        const res = await fetch(`${backendURL}/patients`);
         const data = await res.json();
         setPatientsList(data);
       } catch (error) {
-        setPatientsList([
-          {
-            firstName: "N/A",
-            lastName: "",
-            address: "N/A",
-            age: "N/A",
-            email: "N/A",
-            phone: "N/A",
-          },
-        ]);
+        setPatientsList([patientNA]);
       }
     };
     fetchData();

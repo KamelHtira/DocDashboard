@@ -18,6 +18,15 @@ const patientIsLoading = {
   phone: "loading",
 };
 
+const patientNA = {
+  firstName: "N/A",
+  lastName: "",
+  address: "N/A",
+  birthday: "N/A",
+  email: "N/A",
+  phone: "N/A",
+};
+
 const transactionIsLoading = {
   amount: "loading..",
   type: "loading..",
@@ -30,33 +39,33 @@ const appointmentIsLoading = [
     id: "loading..",
     firstName: "loading..",
     lastName: "",
-    age: "loading..",
+    birthday: "loading..",
     createdAt: "loading..",
     appointmentDate: "loading..",
     description: "loading..",
-    phone: "loading..",
+    //phone: "loading..",
     type: "P",
   },
   {
     id: "loading..",
     firstName: "loading..",
     lastName: "",
-    age: "loading..",
+    birthday: "loading..",
     createdAt: "loading..",
     appointmentDate: "loading..",
     description: "loading..",
-    phone: "loading..",
+    //phone: "loading..",
     type: "C",
   },
   {
     id: "loading..",
     firstName: "loading..",
     lastName: "",
-    age: "loading..",
+    birthday: "loading..",
     createdAt: "loading..",
     appointmentDate: "loading..",
     description: "loading..",
-    phone: "loading..",
+    //phone: "loading..",
     type: "Q",
   },
 ];
@@ -69,4 +78,5 @@ export {
   patientIsLoading,
   transactionIsLoading,
   appointmentIsLoading,
+  patientNA,
 };

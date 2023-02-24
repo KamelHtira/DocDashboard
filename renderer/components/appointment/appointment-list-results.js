@@ -1,10 +1,11 @@
 import { Box, Grid, Tabs, Tab, Typography } from "@mui/material";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { products } from "../../__mocks__/products";
 import { AppointmentCardConfirmed } from "./appointment-card-confirmed";
 import PropTypes from "prop-types";
 import { AppointmentCardPending } from "./appointment-card-pending";
 import { AppointmentCardQueue } from "./appointment-card-queue";
+import { AppointmentsContext } from "../../pages/appointments";
 
 function a11yProps(index) {
   return {
@@ -40,6 +41,10 @@ TabPanel.propTypes = {
 };
 
 export const AppointmentListResults = (props) => {
+
+  const { appointmentsList } =
+  useContext(AppointmentsContext); 
+
   const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
@@ -61,7 +66,7 @@ export const AppointmentListResults = (props) => {
       <TabPanel value={value} index={0}>
         <Box sx={{ pt: 3 }}>
           <Grid container spacing={3}>
-            {products.map(
+            {appointmentsList.map(
               (appointment, index) =>
                 appointment.type == "Q" && (
                   <Grid key={index} item lg={4} md={6} xs={12}>
@@ -75,9 +80,9 @@ export const AppointmentListResults = (props) => {
       <TabPanel value={value} index={1}>
         <Box sx={{ pt: 3 }}>
           <Grid container spacing={3}>
-          {products.map(
+          {appointmentsList.map(
               (appointment, index) =>
-                appointment.type == "Q" && (
+                appointment.type == "C" && (
                   <Grid key={index} item lg={4} md={6} xs={12}>
                     <AppointmentCardConfirmed appointment={appointment} />
                   </Grid>
@@ -89,9 +94,9 @@ export const AppointmentListResults = (props) => {
       <TabPanel value={value} index={2}>
         <Box sx={{ pt: 3 }}>
           <Grid container spacing={3}>
-          {products.map(
+          {appointmentsList.map(
               (appointment, index) =>
-                appointment.type == "Q" && (
+                appointment.type == "P" && (
                   <Grid key={index} item lg={4} md={6} xs={12}>
                     <AppointmentCardPending appointment={appointment} />
                   </Grid>

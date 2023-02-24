@@ -16,14 +16,45 @@ const Appointment = () => {
     appointmentIsLoading,
   ]);
 
+  // Delete appointment API
+  async function deleteAppointment(id) {
+    try {
+      const res = await fetch(`${backendURL}/appointments/${id}`, {
+        method: "DELETE",
+        headers: { "content-Type": "application/json" },
+      });
+      if (res.ok) {
+        setDependencyValue(!dependencyValue);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  // Edit appointment API
+  async function EditAppointmentType(id, type) {
+    try {
+      const res = await fetch(`${backendURL}/appointments/${id}`, {
+        method: "PATCH",
+        headers: { "content-Type": "application/json" },
+        body: JSON.stringify({
+          type: type,
+        }),
+      });
+      if (res.ok) {
+        setDependencyValue(!dependencyValue);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setAppointmentsList([appointmentIsLoading]);
+        setAppointmentsList(appointmentIsLoading);
         const res = await fetch(`${backendURL}/appointments`);
         const data = await res.json();
         setAppointmentsList(data);
-        
+
         console.log(data);
       } catch (error) {
         setAppointmentsList([
@@ -50,7 +81,13 @@ const Appointment = () => {
       >
         <Container maxWidth={false}>
           <AppointmentsContext.Provider
-            value={{ dependencyValue, setDependencyValue, appointmentsList }}
+            value={{
+              dependencyValue,
+              setDependencyValue,
+              appointmentsList,
+              deleteAppointment,
+              EditAppointmentType,
+            }}
           >
             <AppointmentListToolbar />
             <br></br>

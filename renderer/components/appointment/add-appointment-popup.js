@@ -145,7 +145,21 @@ export const AddAppointmentPopup = () => {
     }
   }, [open]);
 
-  // Add Request
+  // Add Patient Request
+  async function addPatientAPI(data) {
+    try {
+      const body = JSON.stringify(data);
+      const res = await fetch(`${backendURL}/patients`, {
+        method: "POST",
+        headers: { "content-Type": "application/json" },
+        body: body,
+      });
+    } catch (err) {
+      //showAddPatientResponseUI("ERROR while adding patient : Check internet connection", null, null);
+      console.error(err);
+    }
+  }
+  // Add Appointment Request
   async function addAppointmentAPI(data) {
     try {
       const body = JSON.stringify(data);
@@ -194,15 +208,20 @@ export const AddAppointmentPopup = () => {
     },
     enableReinitialize: true,
     validationSchema: Yup.object({
-      firstName: Yup.string(),
-      lastName: Yup.string(),
+      firstName: valueRadioButton == "new" ? Yup.string().required() : "",
+      lastName: valueRadioButton == "new" ? Yup.string().required() : "",
       appointmentDate: Yup.date(),
       description: Yup.string(),
-      birthday: Yup.date().transform(parseDateString),
+      birthday:
+        valueRadioButton == "new"
+          ? Yup.date().transform(parseDateString).required()
+          : "",
       type: Yup.string().required("type is required"),
+      sexe: valueRadioButton == "new" ? Yup.string().required() : "",
     }),
     onSubmit: () => {
       const body = {
+        createdAt: moment(new Date()).format(),
         description: formik.values.description,
       };
 
@@ -217,7 +236,7 @@ export const AddAppointmentPopup = () => {
       } else {
         body = {
           ...body,
-          appointmentDate:null,
+          appointmentDate: moment(new Date()).format(),
           type: valueConsultation,
         };
       }
@@ -239,9 +258,17 @@ export const AddAppointmentPopup = () => {
           sexe: autoCompleteValue.sexe,
         };
       }
-      console.log(autoCompleteValue);
+      //console.log(autoCompleteValue);
       console.log(body);
-      formik.setSubmitting(false);
+      if (valueRadioButton == "new" && valueCheckBox == true) {
+        console.log("patient added");
+        addPatientAPI({
+          firstName: formik.values.firstName,
+          lastName: formik.values.lastName,
+          birthday: moment(formik.values.birthday).calendar(),
+          sexe: formik.values.sexe,
+        });
+      }
       addAppointmentAPI(body);
     },
   });
@@ -289,6 +316,7 @@ export const AddAppointmentPopup = () => {
                 >
                   <MenuItem value={"Q"}>Consultation Directe</MenuItem>
                   <MenuItem value={"C"}>Consultation Confirmee</MenuItem>
+                  <MenuItem value={"P"}>Consultation Demander (Test)</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -374,6 +402,7 @@ export const AddAppointmentPopup = () => {
                   onChange={handleAutoCompleteValue}
                   renderInput={(params) => (
                     <TextField
+                      required
                       {...params}
                       label="Chercher un patient.."
                       InputProps={{

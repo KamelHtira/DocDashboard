@@ -12,14 +12,14 @@ import {
   TablePagination,
   TableRow,
   Typography,
-  Button
+  Button,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { useRouter } from "next/router.js";
+import { patientNA } from "../../utils/constants.js";
 
 export const PatientListResults = ({ ...rest }) => {
-
-  const router = useRouter()
+  const router = useRouter();
 
   const { patientsList, selectedPatientIds, setSelectedPatientIds } =
     useContext(PatientsContext);
@@ -100,7 +100,7 @@ export const PatientListResults = ({ ...rest }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {patientsList.slice(0, limit).map((patient,index) => (
+              {patientsList.slice(0, limit).map((patient, index) => (
                 <TableRow
                   hover
                   key={index}
@@ -125,14 +125,16 @@ export const PatientListResults = ({ ...rest }) => {
                       </Typography>
                     </Box>
                   </TableCell>
-                  <TableCell>{patient.email}</TableCell>
-                  <TableCell>{patient.address}</TableCell>
-                  <TableCell>{patient.phone}</TableCell>
-                  <TableCell>{patient.birthday}</TableCell>
+                  <TableCell>{patient.email || patientNA.email}</TableCell>
+                  <TableCell>{patient.address || patientNA.address}</TableCell>
+                  <TableCell>{patient.phone || patientNA.phone}</TableCell>
+                  <TableCell>
+                    {patient.birthday || patientNA.birthday}
+                  </TableCell>
                   <TableCell padding="checkbox">
                     <Button
                       onClick={() => {
-                        router.push(`patient/${patient._id}`)
+                        router.push(`patient/${patient._id}`);
                       }}
                     >
                       <EditIcon></EditIcon>

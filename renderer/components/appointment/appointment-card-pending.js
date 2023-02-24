@@ -14,8 +14,12 @@ import CheckIcon from "@mui/icons-material/Check";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
 import { hoursAgo } from "../../utils/functions";
+import moment from "moment";
+import { useContext } from "react";
+import { AppointmentsContext } from "../../pages/appointments";
 
 export const AppointmentCardPending = ({ appointment, ...rest }) => {
+  const { deleteAppointment,EditAppointmentType } = useContext(AppointmentsContext);
   return (
     <Card
       sx={{
@@ -57,6 +61,7 @@ export const AppointmentCardPending = ({ appointment, ...rest }) => {
               style={{ marginRight: "5px" }}
               color="secondary"
               variant="contained"
+              onClick={()=>{EditAppointmentType(appointment._id,"C")}}
             >
               <CheckIcon />
             </IconButton>
@@ -76,7 +81,7 @@ export const AppointmentCardPending = ({ appointment, ...rest }) => {
               sx={{ pl: 1 }}
               variant="body2"
             >
-              {hoursAgo(appointment.createdAt)}
+              {moment(appointment.createdAt).fromNow()}
             </Typography>
           </Grid>
 
@@ -87,7 +92,7 @@ export const AppointmentCardPending = ({ appointment, ...rest }) => {
               display: "flex",
             }}
           >
-            <IconButton color="error">
+            <IconButton onClick={()=>{deleteAppointment(appointment._id)}} color="error">
               <DeleteIcon style={{ fontSize: "28px" }} />
             </IconButton>
           </Grid>

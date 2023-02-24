@@ -12,8 +12,12 @@ import { Clock as ClockIcon } from "../../icons/clock";
 import PaidIcon from "@mui/icons-material/Paid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IconButton } from "@mui/material";
+import moment from "moment";
+import { AppointmentsContext } from "../../pages/appointments";
+import { useContext } from "react";
 
 export const AppointmentCardQueue = ({ appointment, ...rest }) => {
+  const { deleteAppointment } = useContext(AppointmentsContext);
   return (
     <Card
       sx={{
@@ -24,13 +28,18 @@ export const AppointmentCardQueue = ({ appointment, ...rest }) => {
       {...rest}
     >
       <CardContent>
+      
+        <Typography align="center" color="textPrimary" variant="h5">
+          {appointment.firstName + " " + appointment.lastName}
+        </Typography>
+
         <Typography
           align="center"
           color="textPrimary"
+          variant="body1"
           gutterBottom
-          variant="h5"
         >
-          {appointment.firstName + " " + appointment.lastName}
+          {moment(appointment.appointmentDate).format("MMM Do YYYY, h:mm:ss a")}
         </Typography>
 
         <Typography align="center" color="textPrimary" variant="body1">
@@ -42,7 +51,7 @@ export const AppointmentCardQueue = ({ appointment, ...rest }) => {
       </CardContent>
       <Box sx={{ flexGrow: 1 }} />
       <Divider />
-      <Box sx={{ p: 2 }}>
+      <Box sx={{ p: 1 }}>
         <Grid container spacing={1} sx={{ justifyContent: "space-between" }}>
           <Grid
             item
@@ -74,7 +83,7 @@ export const AppointmentCardQueue = ({ appointment, ...rest }) => {
               sx={{ pl: 1 }}
               variant="body2"
             >
-              2hr ago
+              {moment(appointment.createdAt).fromNow()}
             </Typography>
           </Grid>
 
@@ -85,7 +94,7 @@ export const AppointmentCardQueue = ({ appointment, ...rest }) => {
               display: "flex",
             }}
           >
-            <IconButton color="error">
+            <IconButton onClick={()=>{deleteAppointment(appointment._id)}} color="error">
               <DeleteIcon style={{ fontSize: "28px" }} />
             </IconButton>
           </Grid>
