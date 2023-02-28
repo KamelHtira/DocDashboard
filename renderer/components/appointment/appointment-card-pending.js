@@ -38,7 +38,15 @@ export const AppointmentCardPending = ({ appointment, ...rest }) => {
         >
           {appointment.firstName + " " + appointment.lastName}
         </Typography>
-
+      
+        <Typography
+          align="center"
+          color="textPrimary"
+          variant="body1"
+          gutterBottom
+        >
+          {moment(appointment.appointmentDate).format("MMM Do YYYY, h:mm:ss a")}
+        </Typography>
         <Typography align="center" color="textPrimary" variant="body1">
           {appointment.phone}
         </Typography>

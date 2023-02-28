@@ -15,9 +15,14 @@ import { IconButton } from "@mui/material";
 import moment from "moment";
 import { AppointmentsContext } from "../../pages/appointments";
 import { useContext } from "react";
+import { PaidAppointmentsPopupContext } from "./appointment-list-results";
 
 export const AppointmentCardQueue = ({ appointment, ...rest }) => {
   const { deleteAppointment } = useContext(AppointmentsContext);
+
+  
+  const { showPaidAppointmentsPopup, setShowPaidAppointmentsPopup } =
+  useContext(PaidAppointmentsPopupContext);
   return (
     <Card
       sx={{
@@ -64,6 +69,7 @@ export const AppointmentCardQueue = ({ appointment, ...rest }) => {
               style={{ marginRight: "5px" }}
               color="secondary"
               variant="contained"
+              onClick={()=>{setShowPaidAppointmentsPopup(true)}}
             >
               <PaidIcon />
             </IconButton>
