@@ -1,4 +1,4 @@
-<p align="center"><img src="./resources/Capture.PNG"></p>
+
 
 ## Usage
 
