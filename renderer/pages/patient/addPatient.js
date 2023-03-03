@@ -18,8 +18,12 @@ import { backendURL } from "../../utils/constants";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
 import { parseDateString } from "../../utils/functions";
+import { useSnackbar } from "notistack";
 
 const AccountProfileDetails = (props) => {
+  // SnackBar 
+  const { enqueueSnackbar } = useSnackbar();
+
   // Back to patients page
   const router = useRouter();
 
@@ -33,23 +37,28 @@ const AccountProfileDetails = (props) => {
         body: body,
       });
       if (res.ok) {
-        const json = await res.json();
-
-        // Refresh list
-        //setDependencyValue(!dependencyValue);
-
         // Reset form
         formik.resetForm();
 
         // show success message
-        //showAddPatientResponseUI("success", json.firstName, json.lastName);
+        enqueueSnackbar(`Patient Added Successfully`, {
+          variant: "success",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "right",
+          },
+        });
       } else {
-        // show error message
-        //showAddPatientResponseUI("Iternal Server error 501", null, null);
-        throw new Error(`Failed to add patient: ${res.statusText}`);
+        throw new Error(`Failed to add patient`);
       }
     } catch (err) {
-      //showAddPatientResponseUI("ERROR while adding patient : Check internet connection", null, null);
+      enqueueSnackbar(`ERROR Adding Patient`, {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "right",
+        },
+      });
       console.error(err);
     }
   }
@@ -91,10 +100,10 @@ const AccountProfileDetails = (props) => {
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <Card>
+      <Card style={{ margin: "20px 70px" }}>
         <CardHeader title="Add Patient" align="center" />
         <Divider />
-        <CardContent style={{ margin: "0 20%" }}>
+        <CardContent style={{ margin: "0 19%" }}>
           <Grid container spacing={3}>
             <Grid item md={4} xs={12}>
               <TextField

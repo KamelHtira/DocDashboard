@@ -16,14 +16,14 @@ export const DeleteTransactionPopup = () => {
     transactionsList,
     dependencyValue,
     setDependencyValue,
+    enqueueSnackbar,
   } = useContext(TransactionsContext);
 
   /* [ContextAPI]
    getter and setter for "show" variable to handle closing and opening DeleteTransactionPopup from TransactionListToolbar
   */
-  const { showDeleteTransactionsPopup, setShowDeleteTransactionsPopup } = useContext(
-    DeleteTransactionsPopupContext
-  );
+  const { showDeleteTransactionsPopup, setShowDeleteTransactionsPopup } =
+    useContext(DeleteTransactionsPopupContext);
 
   // Delete Request
   async function deleteSelectedTransactionsAPI() {
@@ -35,12 +35,29 @@ export const DeleteTransactionPopup = () => {
         method: "DELETE",
         headers: { "content-Type": "application/json" },
         body: body,
-      }).then((res) => {
-        res.json();
-        setDependencyValue(!dependencyValue);
       });
+      if (data.ok) {
+        enqueueSnackbar(`Transactions Deleted Successfully`, {
+          variant: "success",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "right",
+          },
+        });
+        setDependencyValue(!dependencyValue);
+      } else {
+        throw new Error(`Failed to delete transaction: ${res.statusText}`);
+      }
+
       console.log(data);
     } catch (err) {
+      enqueueSnackbar(`ERROR Deleting Transactions`, {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "right",
+        },
+      });
       console.log(err);
     }
   }
@@ -68,14 +85,15 @@ export const DeleteTransactionPopup = () => {
               Are you sure you want to delete those Transactions? <br></br>
               <br></br>
               {selectedTransactionIds &&
-                getSelectedTransactionsIdsAmount(transactionsList,selectedTransactionIds).map(
-                  (transaction, key) => (
-                    <div key={key}>
-                      {transaction}
-                      <br></br>
-                    </div>
-                  )
-                )}
+                getSelectedTransactionsIdsAmount(
+                  transactionsList,
+                  selectedTransactionIds
+                ).map((transaction, key) => (
+                  <div key={key}>
+                    {transaction}
+                    <br></br>
+                  </div>
+                ))}
             </div>
           )
         }

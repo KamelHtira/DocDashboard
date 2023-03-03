@@ -21,7 +21,7 @@ export const AddTransactionPopup = () => {
   /* [ContextAPI]
     getter and setter for dependency value to refresh component after request sent
    */
-  const { dependencyValue, setDependencyValue } =
+  const { dependencyValue, setDependencyValue, enqueueSnackbar } =
     useContext(TransactionsContext);
 
   /* [ContextAPI]
@@ -30,35 +30,6 @@ export const AddTransactionPopup = () => {
   const { showAddTransactionsPopup, setShowAddTransactionsPopup } = useContext(
     AddTransactionsPopupContext
   );
-
-  const [addTransactionResponseUI, setAddTransactionResponseUI] = useState({
-    message: "",
-    color: "",
-    display: "none",
-  });
-
-  // Handle transaction response message 
-  function showAddTransactionResponseUI(message, firstName, lastName) {
-    if (message == "reset") {
-      setAddTransactionResponseUI({
-        display: "none",
-        message: "",
-        color: "",
-      });
-    } else if (message == "success") {
-      setAddTransactionResponseUI({
-        message: `Transaction ${firstName} ${lastName} added succefully`,
-        color: "success.main",
-        display: "block",
-      });
-    } else {
-      setAddTransactionResponseUI({
-        message: `${message}`,
-        color: "error",
-        display: "block",
-      });
-    }
-  }
 
   // Add Request
   async function addTransactionAPI(data) {
@@ -71,7 +42,6 @@ export const AddTransactionPopup = () => {
       });
       if (res.ok) {
         const json = await res.json();
-
         // Refresh list
         setDependencyValue(!dependencyValue);
 
@@ -79,18 +49,24 @@ export const AddTransactionPopup = () => {
         formik.resetForm();
 
         // show success message
-        showAddTransactionResponseUI("success", json.firstName, json.lastName);
+        enqueueSnackbar(`Transaction Added Successfully`, {
+          variant: "success",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "right",
+          },
+        });
       } else {
-        // show error message
-        showAddTransactionResponseUI("Iternal Server error 501", null, null);
         throw new Error(`Failed to add transaction: ${res.statusText}`);
       }
     } catch (err) {
-      showAddTransactionResponseUI(
-        "ERROR while adding transaction : Check internet connection",
-        null,
-        null
-      );
+      enqueueSnackbar(`ERROR Adding Transaction`, {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "right",
+        },
+      });
       console.error(err);
     }
   }
@@ -124,7 +100,6 @@ export const AddTransactionPopup = () => {
     <Modal
       open={showAddTransactionsPopup}
       onClose={() => {
-        showAddTransactionResponseUI("reset", null, null);
         formik.resetForm();
         setShowAddTransactionsPopup(false);
       }}
@@ -212,15 +187,6 @@ export const AddTransactionPopup = () => {
             >
               Add transaction
             </Button>
-
-            {addTransactionResponseUI.display == "block" ? (
-              <Typography color={addTransactionResponseUI.color} align="center">
-                <br></br>
-                {addTransactionResponseUI.message}
-              </Typography>
-            ) : (
-              ""
-            )}
           </Box>
         </form>
       </Box>

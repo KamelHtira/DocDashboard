@@ -21,8 +21,12 @@ export const EditTransactionPopup = () => {
   /* [ContextAPI]
     getter and setter for dependency value to refresh component after request sent
    */
-  const { dependencyValue, setDependencyValue, transactionsList } =
-    useContext(TransactionsContext);
+  const {
+    dependencyValue,
+    setDependencyValue,
+    transactionsList,
+    enqueueSnackbar,
+  } = useContext(TransactionsContext);
 
   /* [ContextAPI]
    getter and setter for "show" variable and selected ID to handle closing and opening EditTransactionPopup from
@@ -31,45 +35,19 @@ export const EditTransactionPopup = () => {
   const { showEditTransactionsPopup, setShowEditTransactionsPopup } =
     useContext(EditTransactionsPopupContext);
 
-  const [editTransactionResponseUI, setEditTransactionResponseUI] = useState({
-    message: "",
-    color: "",
-    display: "none",
-  });
-
-  // Handle transaction response message
-  function showEditTransactionResponseUI(message, amount, type) {
-    if (message == "reset") {
-      setEditTransactionResponseUI({
-        display: "none",
-        message: "",
-        color: "",
-      });
-    } else if (message == "success") {
-      setEditTransactionResponseUI({
-        message: `Transaction ${amount} ${type} edited succefully`,
-        color: "success.main",
-        display: "block",
-      });
-    } else {
-      setEditTransactionResponseUI({
-        message: `${message}`,
-        color: "error",
-        display: "block",
-      });
-    }
-  }
-
   // Edit Request
   async function editTransactionAPI(data) {
     try {
       const body = JSON.stringify(data);
       //`${backendURL}/transactions`
-      const res = await fetch(backendURL+"/transactions/"+showEditTransactionsPopup.id, {
-        method: "PATCH",
-        headers: { "content-Type": "application/json" },
-        body: body,
-      });
+      const res = await fetch(
+        backendURL + "/transactions/" + showEditTransactionsPopup.id,
+        {
+          method: "PATCH",
+          headers: { "content-Type": "application/json" },
+          body: body,
+        }
+      );
       if (res.ok) {
         const json = await res.json();
 
@@ -80,25 +58,34 @@ export const EditTransactionPopup = () => {
         formik.resetForm();
 
         // show success message
-        showEditTransactionResponseUI("success", json.amount, json.type);
+        enqueueSnackbar(`Transaction Edited Successfully`, {
+          variant: "success",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "right",
+          },
+        });
       } else {
-        // show error message
-        showEditTransactionResponseUI("Iternal Server error 501", null, null);
         throw new Error(`Failed to edit transaction: ${res.statusText}`);
       }
     } catch (err) {
-      showEditTransactionResponseUI(
-        "ERROR while editing transaction : Check internet connection",
-        null,
-        null
-      );
+      enqueueSnackbar(`ERROR Editing Transaction`, {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "right",
+        },
+      });
       console.error(err);
     }
   }
 
   // [Formik] edit transaction
   const formik = useFormik({
-    initialValues: getTransactionById(transactionsList, showEditTransactionsPopup.id),
+    initialValues: getTransactionById(
+      transactionsList,
+      showEditTransactionsPopup.id
+    ),
     validationSchema: Yup.object({
       amount: Yup.number().required("Amount is required"),
       description: Yup.string(),
@@ -120,7 +107,6 @@ export const EditTransactionPopup = () => {
     <Modal
       open={showEditTransactionsPopup.show}
       onClose={() => {
-        showEditTransactionResponseUI("reset", null, null);
         formik.resetForm();
         setShowEditTransactionsPopup({ show: false });
       }}
@@ -208,18 +194,6 @@ export const EditTransactionPopup = () => {
             >
               Edit transaction
             </Button>
-
-            {editTransactionResponseUI.display == "block" ? (
-              <Typography
-                color={editTransactionResponseUI.color}
-                align="center"
-              >
-                <br></br>
-                {editTransactionResponseUI.message}
-              </Typography>
-            ) : (
-              ""
-            )}
           </Box>
         </form>
       </Box>

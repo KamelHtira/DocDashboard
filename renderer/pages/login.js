@@ -13,21 +13,40 @@ import {
 import { Google as GoogleIcon } from "../icons/google";
 import { useEffect, useState } from "react";
 import { backendURL } from "../utils/constants";
+import { useSnackbar } from "notistack";
 
 const Login = () => {
-  const [errorMsg, setErrorMsg] = useState("");
+  // snackBar
+  const { enqueueSnackbar } = useSnackbar();
+
   //-------------------------------
-  const [checkServerState, setcheckServerState] = useState({
-    response: "Checking Server State.. ",
-  });
   useEffect(() => {
     const fetchData = async () => {
       try {
+        enqueueSnackbar("Checking Server State", {
+          variant: "info",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "right",
+          },
+        });
         const res = await fetch(`${backendURL}/`);
         const data = await res.json();
-        setcheckServerState(data);
+        enqueueSnackbar(data.response, {
+          variant: "success",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "right",
+          },
+        });
       } catch (error) {
-        setcheckServerState("ERROR while connecting to server");
+        enqueueSnackbar("ERROR connecting to the server", {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "right",
+          },
+        });
       }
     };
     fetchData();
@@ -36,7 +55,7 @@ const Login = () => {
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
-      email: "hedihmida2@gmail.com",
+      email: "hedihmida@gmail.com",
       password: "1234",
     },
     validationSchema: Yup.object({
@@ -59,14 +78,21 @@ const Login = () => {
           body: body,
         });
         const response = await data.json();
-        console.log(response);
-        setErrorMsg(response.msg)
+        enqueueSnackbar(response.msg, {
+          variant: data.ok ? "success" : "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "right",
+          },
+        });
         if (data.ok) {
+          localStorage.setItem(
+            "currentUser",
+            `${response.user._id}-${response.user.firstName}-${response.user.lastName}-${response.user.type}-${response.user.email}-${response.user.access.dashboard}-${response.user.access.patient}-${response.user.access.setting}-${response.user.access.transaction}-${response.user.access.appointment}-${response.user.state}`
+          );
           router.push("/");
         } else {
-          
         }
-        
       } catch (err) {
         console.log(err);
       }
@@ -159,11 +185,7 @@ const Login = () => {
                 Sign In Now
               </Button>
             </Box>
-            <Typography color={errorMsg!="Login successful"?"error":"success.main"} variant="body1" align="center">
-              {errorMsg}
-            </Typography>
           </form>
-          {checkServerState.response}
         </Container>
       </Box>
     </>

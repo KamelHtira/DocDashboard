@@ -71,7 +71,7 @@ export const AddAppointmentPopup = () => {
   /* [ContextAPI]
       getter and setter for dependency value to refresh component after request sent
      */
-  const { dependencyValue, setDependencyValue } =
+  const { dependencyValue, setDependencyValue, enqueueSnackbar } =
     useContext(AppointmentsContext);
 
   /* [ContextAPI]
@@ -80,35 +80,6 @@ export const AddAppointmentPopup = () => {
   const { showAddAppointmentsPopup, setShowAddAppointmentsPopup } = useContext(
     AddAppointmentsPopupContext
   );
-
-  const [addAppointmentResponseUI, setAddAppointmentResponseUI] = useState({
-    message: "",
-    color: "",
-    display: "none",
-  });
-
-  // Handle appointment response message
-  function showAddAppointmentResponseUI(message, firstName, lastName) {
-    if (message == "reset") {
-      setAddAppointmentResponseUI({
-        display: "none",
-        message: "",
-        color: "",
-      });
-    } else if (message == "success") {
-      setAddAppointmentResponseUI({
-        message: `Appointment ${firstName} ${lastName} added succefully`,
-        color: "success.main",
-        display: "block",
-      });
-    } else {
-      setAddAppointmentResponseUI({
-        message: `${message}`,
-        color: "error",
-        display: "block",
-      });
-    }
-  }
 
   // autoComplete fetch patient
   useEffect(() => {
@@ -178,18 +149,24 @@ export const AddAppointmentPopup = () => {
         formik.resetForm();
 
         // show success message
-        showAddAppointmentResponseUI("success", json.firstName, json.lastName);
+        enqueueSnackbar("Appointment Added Successfully", {
+          variant: "success",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "right",
+          },
+        });
       } else {
-        // show error message
-        showAddAppointmentResponseUI("Iternal Server error 501", null, null);
         throw new Error(`Failed to add appointment: ${res.statusText}`);
       }
     } catch (err) {
-      showAddAppointmentResponseUI(
-        "ERROR while adding appointment : Check internet connection",
-        null,
-        null
-      );
+      enqueueSnackbar("ERROR Adding Appointment", {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "right",
+        },
+      });
       console.error(err);
     }
   }
@@ -277,7 +254,6 @@ export const AddAppointmentPopup = () => {
     <Modal
       open={showAddAppointmentsPopup}
       onClose={() => {
-        showAddAppointmentResponseUI("reset", null, null);
         formik.resetForm();
         setShowAddAppointmentsPopup(false);
       }}
@@ -532,15 +508,6 @@ export const AddAppointmentPopup = () => {
             >
               Add appointment
             </Button>
-
-            {addAppointmentResponseUI.display == "block" ? (
-              <Typography color={addAppointmentResponseUI.color} align="center">
-                <br></br>
-                {addAppointmentResponseUI.message}
-              </Typography>
-            ) : (
-              ""
-            )}
           </Box>
         </form>
       </Box>

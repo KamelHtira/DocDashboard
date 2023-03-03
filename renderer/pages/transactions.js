@@ -5,9 +5,13 @@ import { TransactionListToolbar } from "../components/transaction/transaction-li
 import { DashboardLayout } from "../components/dashboard-layout";
 import { createContext, useState, useEffect } from "react";
 import { transactionIsLoading,backendURL } from "../utils/constants";
+import { useSnackbar } from "notistack";
 export const TransactionsContext = createContext(null);
 
 const Transactions = () => {
+  // Provide SnackBar function
+  const { enqueueSnackbar } = useSnackbar();
+
   // Create Dependency value to refresh list
   const [dependencyValue, setDependencyValue] = useState(1);
 
@@ -59,6 +63,7 @@ const Transactions = () => {
               setSelectedTransactionIds,
               dependencyValue,
               setDependencyValue,
+              enqueueSnackbar
             }}
           >
             <TransactionListToolbar />

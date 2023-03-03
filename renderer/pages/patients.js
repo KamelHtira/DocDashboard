@@ -5,9 +5,13 @@ import { PatientListToolbar } from "../components/patient/patient-list-toolbar";
 import { DashboardLayout } from "../components/dashboard-layout";
 import { createContext, useState, useEffect } from "react";
 import { patientIsLoading, backendURL, patientNA } from "../utils/constants";
+import { useSnackbar } from "notistack";
 export const PatientsContext = createContext(null);
 
 const Patients = () => {
+  // Provide SnackBar function
+  const { enqueueSnackbar } = useSnackbar();
+
   // Create Dependency value to refresh list
   const [dependencyValue, setDependencyValue] = useState(1);
 
@@ -50,6 +54,7 @@ const Patients = () => {
               setSelectedPatientIds,
               dependencyValue,
               setDependencyValue,
+              enqueueSnackbar,
             }}
           >
             <PatientListToolbar />

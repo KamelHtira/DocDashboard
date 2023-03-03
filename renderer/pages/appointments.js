@@ -5,9 +5,13 @@ import { AppointmentListResults } from "../components/appointment/appointment-li
 import { AppointmentListToolbar } from "../components/appointment/appointment-list-toolbar";
 import { createContext, useState, useEffect } from "react";
 import { appointmentIsLoading, backendURL } from "../utils/constants";
+import { useSnackbar } from "notistack";
 
 export const AppointmentsContext = createContext(null);
 const Appointment = () => {
+  // Provide SnackBar function
+  const { enqueueSnackbar } = useSnackbar();
+
   // Create Dependency value to refresh list
   const [dependencyValue, setDependencyValue] = useState(1);
 
@@ -87,6 +91,7 @@ const Appointment = () => {
               appointmentsList,
               deleteAppointment,
               EditAppointmentType,
+              enqueueSnackbar,
             }}
           >
             <AppointmentListToolbar />

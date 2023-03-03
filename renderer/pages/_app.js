@@ -4,7 +4,7 @@ import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { createEmotionCache } from "../utils/create-emotion-cache";
 import { theme } from "../theme";
-
+import { SnackbarProvider } from "notistack";
 const clientSideEmotionCache = createEmotionCache();
 
 const App = (props) => {
@@ -18,12 +18,12 @@ const App = (props) => {
         <title>Material Kit Pro</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
-
+      <SnackbarProvider>
         <ThemeProvider theme={theme}>
           <CssBaseline />
           {getLayout(<Component {...pageProps} />)}
         </ThemeProvider>
-
+      </SnackbarProvider>
     </CacheProvider>
   );
 };

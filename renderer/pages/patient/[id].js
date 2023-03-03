@@ -19,8 +19,10 @@ import * as Yup from "yup";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { parseDateString } from "../../utils/functions";
+import { useSnackbar } from "notistack";
 
 const AccountProfileDetails = (props) => {
+  const { enqueueSnackbar } = useSnackbar();
   // Back to patients page
   const router = useRouter();
   const [currentPatient, setCurrentPatient] = useState(patientIsLoading);
@@ -41,7 +43,6 @@ const AccountProfileDetails = (props) => {
             age: "N/A",
             email: "N/A",
             phone: "N/A",
-            
           },
         ]);
       }
@@ -53,23 +54,32 @@ const AccountProfileDetails = (props) => {
   async function editPatientAPI(data) {
     try {
       const body = JSON.stringify(data);
-      const res = await fetch(`${backendURL}/patients/${router.query.id}`, {
+      const data = await fetch(`${backendURL}/patients/${router.query.id}`, {
         method: "PATCH",
         headers: { "content-Type": "application/json" },
         body: body,
       });
-      if (res.ok) {
-        const json = await res.json();
-        setCurrentPatient(json);
+      if (data.ok) {
+        formik.setSubmitting(false)
         // show success message
-        // showEditPatientResponseUI("success", json.firstName, json.lastName);
+        enqueueSnackbar(`Patient Edited Successfully`, {
+          variant: "success",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "right",
+          },
+        });
       } else {
-        // show error message
-        // showEditPatientResponseUI("Iternal Server error 501", null, null);
-        throw new Error(`Failed to edit patient: ${res.statusText}`);
+        throw new Error(`Failed to add patient`);
       }
     } catch (err) {
-      //showEditPatientResponseUI("ERROR while editing patient : Check internet connection", null, null);
+      enqueueSnackbar(`ERROR Editing Patient`, {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "right",
+        },
+      });
       console.error(err);
     }
   }
@@ -104,10 +114,10 @@ const AccountProfileDetails = (props) => {
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <Card>
+      <Card style={{ margin: "20px 70px" }}>
         <CardHeader title={"Edit Patient " + router.query.id} align="center" />
         <Divider />
-        <CardContent style={{ margin: "0 20%" }}>
+        <CardContent style={{ margin: "0 19%" }}>
           <Grid container spacing={3}>
             <Grid item md={4} xs={12}>
               <TextField
@@ -144,7 +154,7 @@ const AccountProfileDetails = (props) => {
               />
             </Grid>
             <Grid item md={4} xs={12}>
-            <TextField
+              <TextField
                 size="meduim"
                 error={Boolean(
                   formik.touched.birthday && formik.errors.birthday
@@ -159,7 +169,6 @@ const AccountProfileDetails = (props) => {
                 value={formik.values.birthday}
                 variant="outlined"
               />
-            
             </Grid>
             <Grid item md={8} xs={12}>
               <TextField

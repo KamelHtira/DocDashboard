@@ -1,9 +1,4 @@
-import {
-  Box,
-  Button,
-  Typography,
-  Modal,
-} from "@mui/material";
+import { Box, Button, Typography, Modal } from "@mui/material";
 import { useContext } from "react";
 import { PatientsContext } from "../../pages/patients";
 import { DeletePatientsPopupContext } from "./patient-list-toolbar";
@@ -21,6 +16,7 @@ export const DeletePatientPopup = () => {
     patientsList,
     dependencyValue,
     setDependencyValue,
+    enqueueSnackbar,
   } = useContext(PatientsContext);
 
   /* [ContextAPI]
@@ -36,19 +32,31 @@ export const DeletePatientPopup = () => {
       const body = JSON.stringify({
         patientIds: selectedPatientIds,
       });
-      const data = await fetch(
-        `${backendURL}/patients`,
-        {
-          method: "DELETE",
-          headers: { "content-Type": "application/json" },
-          body: body,
-        }
-      ).then((res) => {
-        res.json();
-        setDependencyValue(!dependencyValue);
+      const data = await fetch(`${backendURL}/patients`, {
+        method: "DELETE",
+        headers: { "content-Type": "application/json" },
+        body: body,
       });
-      console.log(data);
+      if (data.ok) {
+        setDependencyValue(!dependencyValue);
+        enqueueSnackbar("Patients Deleted Successfully", {
+          variant: "success",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "right",
+          },
+        });
+      } else {
+        throw new Error(`Failed to add patient`);
+      }
     } catch (err) {
+      enqueueSnackbar("ERROR Deleting Patients", {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "right",
+        },
+      });
       console.log(err);
     }
   }
@@ -76,12 +84,14 @@ export const DeletePatientPopup = () => {
               Are you sure you want to delete those Patients? <br></br>
               <br></br>
               {selectedPatientIds &&
-                getSelectedPatientsEmails(patientsList,selectedPatientIds).map((patientEmail, key) => (
-                  <div key={key}>
-                    {patientEmail}
-                    <br></br>
-                  </div>
-                ))}
+                getSelectedPatientsEmails(patientsList, selectedPatientIds).map(
+                  (patientEmail, key) => (
+                    <div key={key}>
+                      {patientEmail}
+                      <br></br>
+                    </div>
+                  )
+                )}
             </div>
           )
         }

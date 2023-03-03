@@ -11,6 +11,7 @@ import { Users as UsersIcon } from '../icons/users';
 import { Logo } from './logo';
 import { NavItem } from './nav-item';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const items = [
   {
@@ -42,6 +43,11 @@ const items = [
     href: '/settings',
     icon: (<CogIcon fontSize="small" />),
     title: 'Settings'
+  },
+  {
+    href: '/login',
+    icon: (<LogoutIcon fontSize="small" />),
+    title: 'logout'
   },
 
 
