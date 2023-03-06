@@ -29,6 +29,13 @@ const Appointment = () => {
       });
       if (res.ok) {
         setDependencyValue(!dependencyValue);
+        enqueueSnackbar(`Appointment Deleted`, {
+          variant: "success",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "right",
+          },
+        });
       }
     } catch (error) {
       console.log(error);
@@ -46,6 +53,18 @@ const Appointment = () => {
       });
       if (res.ok) {
         setDependencyValue(!dependencyValue);
+        enqueueSnackbar(
+          `${
+            type == "Q" ? "Moved To Live Queue ◉" : "Appointment Confirmed ❯"
+          }`,
+          {
+            variant: "info",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "right",
+            },
+          }
+        );
       }
     } catch (error) {
       console.log(error);

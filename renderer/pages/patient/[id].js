@@ -14,7 +14,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import { DashboardLayout } from "../../components/dashboard-layout";
 import { useFormik } from "formik";
-import { backendURL, patientIsLoading } from "../../utils/constants";
+import { backendURL, patientIsLoading, patientNA } from "../../utils/constants";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -25,26 +25,23 @@ const AccountProfileDetails = (props) => {
   const { enqueueSnackbar } = useSnackbar();
   // Back to patients page
   const router = useRouter();
+
+  // Get current patient data
   const [currentPatient, setCurrentPatient] = useState(patientIsLoading);
   useEffect(() => {
     const fetchData = async () => {
       try {
         setCurrentPatient([patientIsLoading]);
         const res = await fetch(`${backendURL}/patients/${router.query.id}`);
-        const data = await res.json();
-        setCurrentPatient(data);
-        console.log(data);
+        if (res.ok) {
+          const data = await res.json();
+          setCurrentPatient(data);
+          console.log(data);
+        } else {
+          throw new Error("error getting patient");
+        }
       } catch (error) {
-        setCurrentPatient([
-          {
-            firstName: "N/A",
-            lastName: "",
-            address: "N/A",
-            age: "N/A",
-            email: "N/A",
-            phone: "N/A",
-          },
-        ]);
+        setCurrentPatient([patientNA]);
       }
     };
     fetchData();
@@ -60,7 +57,7 @@ const AccountProfileDetails = (props) => {
         body: body,
       });
       if (data.ok) {
-        formik.setSubmitting(false)
+        formik.setSubmitting(false);
         // show success message
         enqueueSnackbar(`Patient Edited Successfully`, {
           variant: "success",

@@ -33,7 +33,6 @@ export const AppointmentCardPending = ({ appointment, ...rest }) => {
         <Typography
           align="center"
           color="textPrimary"
-          gutterBottom
           variant="h5"
         >
           {appointment.firstName + " " + appointment.lastName}
@@ -56,7 +55,7 @@ export const AppointmentCardPending = ({ appointment, ...rest }) => {
       </CardContent>
       <Box sx={{ flexGrow: 1 }} />
       <Divider />
-      <Box sx={{ p: 2 }}>
+      <Box sx={{ p: 1 }}>
         <Grid container spacing={1} sx={{ justifyContent: "space-between" }}>
           <Grid
             item
