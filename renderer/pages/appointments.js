@@ -77,8 +77,6 @@ const Appointment = () => {
         const res = await fetch(`${backendURL}/appointments`);
         const data = await res.json();
         setAppointmentsList(data);
-
-        console.log(data);
       } catch (error) {
         setAppointmentsList([
           {

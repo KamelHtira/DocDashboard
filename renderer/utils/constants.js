@@ -70,6 +70,24 @@ const appointmentIsLoading = [
   },
 ];
 
+const accountIsLoading = {
+  firstName: "Loading..",
+  lastName: "Loading..",
+  email: "Loading..",
+  phone: "Loading..",
+  state: "ariana",
+  country: "Tunisia",
+};
+
+const accountNA = {
+  firstName: "N/A",
+  lastName: "N/A",
+  email: "N/A",
+  phone: "N/A",
+  state: "ariana",
+  country: "Tunisia",
+};
+
 const backendURL = "https://angry-gold-tam.cyclic.app";
 
 export {
@@ -79,4 +97,6 @@ export {
   transactionIsLoading,
   appointmentIsLoading,
   patientNA,
+  accountIsLoading,
+  accountNA,
 };

@@ -117,7 +117,7 @@ export const AddAppointmentPopup = () => {
   }, [open]);
 
   // Add Patient Request
-  async function addPatientAPI(data) {
+  async function addPatientAPI(data, appointmentBody) {
     try {
       const body = JSON.stringify(data);
       const res = await fetch(`${backendURL}/patients`, {
@@ -125,6 +125,10 @@ export const AddAppointmentPopup = () => {
         headers: { "content-Type": "application/json" },
         body: body,
       });
+      if (res.ok) {
+        data = await res.json();
+        addAppointmentAPI({ ...appointmentBody, patientId: data._id });
+      }
     } catch (err) {
       //showAddPatientResponseUI("ERROR while adding patient : Check internet connection", null, null);
       console.error(err);
@@ -140,8 +144,6 @@ export const AddAppointmentPopup = () => {
         body: body,
       });
       if (res.ok) {
-        const json = await res.json();
-
         // Refresh list
         setDependencyValue(!dependencyValue);
 
@@ -200,6 +202,8 @@ export const AddAppointmentPopup = () => {
       const body = {
         createdAt: moment(new Date()).format(),
         description: formik.values.description,
+        initialType: valueConsultation,
+        type: valueConsultation,
       };
 
       // add consultation type
@@ -208,13 +212,11 @@ export const AddAppointmentPopup = () => {
         body = {
           ...body,
           appointmentDate: moment(value).format(),
-          type: valueConsultation,
         };
       } else {
         body = {
           ...body,
           appointmentDate: moment(new Date()).format(),
-          type: valueConsultation,
         };
       }
 
@@ -233,20 +235,25 @@ export const AddAppointmentPopup = () => {
           lastName: autoCompleteValue.lastName,
           birthday: moment(autoCompleteValue.birthday).format(),
           sexe: autoCompleteValue.sexe,
+          patientId: autoCompleteValue._id,
         };
       }
-      //console.log(autoCompleteValue);
+
       console.log(body);
       if (valueRadioButton == "new" && valueCheckBox == true) {
         console.log("patient added");
-        addPatientAPI({
-          firstName: formik.values.firstName,
-          lastName: formik.values.lastName,
-          birthday: moment(formik.values.birthday).calendar(),
-          sexe: formik.values.sexe,
-        });
+        addPatientAPI(
+          {
+            firstName: formik.values.firstName,
+            lastName: formik.values.lastName,
+            birthday: moment(formik.values.birthday).calendar(),
+            sexe: formik.values.sexe,
+          },
+          body
+        );
+      } else {
+        addAppointmentAPI(body);
       }
-      addAppointmentAPI(body);
     },
   });
 

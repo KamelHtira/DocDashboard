@@ -20,6 +20,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { parseDateString } from "../../utils/functions";
 import { useSnackbar } from "notistack";
+import { MedicalFileListResults } from "../../components/medicalFile/medicalFile-list-results";
 
 const AccountProfileDetails = (props) => {
   const { enqueueSnackbar } = useSnackbar();
@@ -31,7 +32,7 @@ const AccountProfileDetails = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setCurrentPatient([patientIsLoading]);
+        setCurrentPatient(patientIsLoading);
         const res = await fetch(`${backendURL}/patients/${router.query.id}`);
         if (res.ok) {
           const data = await res.json();
@@ -41,7 +42,7 @@ const AccountProfileDetails = (props) => {
           throw new Error("error getting patient");
         }
       } catch (error) {
-        setCurrentPatient([patientNA]);
+        setCurrentPatient(patientNA);
       }
     };
     fetchData();
@@ -110,167 +111,177 @@ const AccountProfileDetails = (props) => {
   });
 
   return (
-    <form onSubmit={formik.handleSubmit}>
-      <Card style={{ margin: "20px 70px" }}>
-        <CardHeader title={"Edit Patient " + router.query.id} align="center" />
-        <Divider />
-        <CardContent style={{ margin: "0 19%" }}>
-          <Grid container spacing={3}>
-            <Grid item md={4} xs={12}>
-              <TextField
-                size="meduim"
-                error={Boolean(
-                  formik.touched.firstName && formik.errors.firstName
-                )}
-                fullWidth
-                helperText={formik.touched.firstName && formik.errors.firstName}
-                label="First name"
-                margin="normal"
-                name="firstName"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.firstName}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item md={4} xs={12}>
-              <TextField
-                size="meduim"
-                error={Boolean(
-                  formik.touched.lastName && formik.errors.lastName
-                )}
-                fullWidth
-                helperText={formik.touched.lastName && formik.errors.lastName}
-                label="Last name"
-                margin="normal"
-                name="lastName"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.lastName}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item md={4} xs={12}>
-              <TextField
-                size="meduim"
-                error={Boolean(
-                  formik.touched.birthday && formik.errors.birthday
-                )}
-                fullWidth
-                helperText={formik.touched.birthday && formik.errors.birthday}
-                label="Last name"
-                margin="normal"
-                name="birthday"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.birthday}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item md={8} xs={12}>
-              <TextField
-                size="meduim"
-                error={Boolean(formik.touched.email && formik.errors.email)}
-                fullWidth
-                helperText={formik.touched.email && formik.errors.email}
-                label="Email"
-                margin="normal"
-                name="email"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.email}
-                variant="outlined"
-              />
-            </Grid>
-
-            <Grid item md={4} xs={12}>
-              <FormControl margin="normal" fullWidth>
-                <InputLabel size="meduim" id="demo-simple-select-label">
-                  Sexe
-                </InputLabel>
-                <Select
+    <>
+      <form onSubmit={formik.handleSubmit}>
+        <Card style={{ margin: "20px 70px" }}>
+          <CardHeader
+            title={"Edit Patient " + router.query.id}
+            align="center"
+          />
+          <Divider />
+          <CardContent style={{ margin: "0 19%" }}>
+            <Grid container spacing={3}>
+              <Grid item md={4} xs={12}>
+                <TextField
                   size="meduim"
-                  error={Boolean(formik.touched.sexe && formik.errors.sexe)}
+                  error={Boolean(
+                    formik.touched.firstName && formik.errors.firstName
+                  )}
                   fullWidth
-                  label="Sexe"
-                  name="sexe"
+                  helperText={
+                    formik.touched.firstName && formik.errors.firstName
+                  }
+                  label="First name"
+                  margin="normal"
+                  name="firstName"
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
-                  value={formik.values.sexe || "H"}
+                  value={formik.values.firstName}
                   variant="outlined"
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                >
-                  <MenuItem value={"H"}>Homme</MenuItem>
-                  <MenuItem value={"F"}>Femme</MenuItem>
-                </Select>
-              </FormControl>
+                />
+              </Grid>
+              <Grid item md={4} xs={12}>
+                <TextField
+                  size="meduim"
+                  error={Boolean(
+                    formik.touched.lastName && formik.errors.lastName
+                  )}
+                  fullWidth
+                  helperText={formik.touched.lastName && formik.errors.lastName}
+                  label="Last name"
+                  margin="normal"
+                  name="lastName"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  value={formik.values.lastName}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item md={4} xs={12}>
+                <TextField
+                  size="meduim"
+                  error={Boolean(
+                    formik.touched.birthday && formik.errors.birthday
+                  )}
+                  fullWidth
+                  helperText={formik.touched.birthday && formik.errors.birthday}
+                  label="Last name"
+                  margin="normal"
+                  name="birthday"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  value={formik.values.birthday}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item md={8} xs={12}>
+                <TextField
+                  size="meduim"
+                  error={Boolean(formik.touched.email && formik.errors.email)}
+                  fullWidth
+                  helperText={formik.touched.email && formik.errors.email}
+                  label="Email"
+                  margin="normal"
+                  name="email"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  value={formik.values.email}
+                  variant="outlined"
+                />
+              </Grid>
+
+              <Grid item md={4} xs={12}>
+                <FormControl margin="normal" fullWidth>
+                  <InputLabel size="meduim" id="demo-simple-select-label">
+                    Sexe
+                  </InputLabel>
+                  <Select
+                    size="meduim"
+                    error={Boolean(formik.touched.sexe && formik.errors.sexe)}
+                    fullWidth
+                    label="Sexe"
+                    name="sexe"
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    value={formik.values.sexe || "H"}
+                    variant="outlined"
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                  >
+                    <MenuItem value={"H"}>Homme</MenuItem>
+                    <MenuItem value={"F"}>Femme</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <TextField
+                  size="meduim"
+                  error={Boolean(
+                    formik.touched.address && formik.errors.address
+                  )}
+                  fullWidth
+                  helperText={formik.touched.address && formik.errors.address}
+                  label="Address"
+                  margin="normal"
+                  name="address"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  value={formik.values.address}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <TextField
+                  size="meduim"
+                  error={Boolean(formik.touched.phone && formik.errors.phone)}
+                  fullWidth
+                  helperText={formik.touched.phone && formik.errors.phone}
+                  label="Phone"
+                  margin="normal"
+                  name="phone"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  value={formik.values.phone}
+                  variant="outlined"
+                />
+              </Grid>
             </Grid>
-            <Grid item md={6} xs={12}>
-              <TextField
-                size="meduim"
-                error={Boolean(formik.touched.address && formik.errors.address)}
-                fullWidth
-                helperText={formik.touched.address && formik.errors.address}
-                label="Address"
-                margin="normal"
-                name="address"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.address}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <TextField
-                size="meduim"
-                error={Boolean(formik.touched.phone && formik.errors.phone)}
-                fullWidth
-                helperText={formik.touched.phone && formik.errors.phone}
-                label="Phone"
-                margin="normal"
-                name="phone"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.phone}
-                variant="outlined"
-              />
-            </Grid>
-          </Grid>
-        </CardContent>
-        <Divider />
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "flex-end",
-            p: 2,
-          }}
-        >
-          <Button
-            onClick={() => {
-              router.push("/patients");
-            }}
-            variant="contained"
+          </CardContent>
+          <Divider />
+          <Box
             sx={{
-              background: "#9CA3AF",
-              "&:hover": {
-                background: "#6B7280",
-              },
+              display: "flex",
+              justifyContent: "flex-end",
+              p: 2,
             }}
           >
-            Back to patients
-          </Button>
-          <Button
-            style={{ marginLeft: "20px" }}
-            disabled={formik.isSubmitting}
-            type="submit"
-            variant="contained"
-          >
-            Edit patient
-          </Button>
-        </Box>
-      </Card>
-    </form>
+            <Button
+              onClick={() => {
+                router.push("/patients");
+              }}
+              variant="contained"
+              sx={{
+                background: "#9CA3AF",
+                "&:hover": {
+                  background: "#6B7280",
+                },
+              }}
+            >
+              Back to patients
+            </Button>
+            <Button
+              style={{ marginLeft: "20px" }}
+              disabled={formik.isSubmitting}
+              type="submit"
+              variant="contained"
+            >
+              Edit patient
+            </Button>
+          </Box>
+        </Card>
+      </form>
+      <MedicalFileListResults patientId={router.query.id} />
+    </>
   );
 };
 AccountProfileDetails.getLayout = (page) => (

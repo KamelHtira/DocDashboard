@@ -4,24 +4,23 @@ import {
   TextField,
   Typography,
   Modal,
-  FormControl,
-  Select,
+  Divider,
 } from "@mui/material";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import { useFormik } from "formik";
-import { useContext, useState } from "react";
+
+import { useContext, useEffect, useState } from "react";
 import { AppointmentsContext } from "../../pages/appointments";
 import { backendURL, style } from "../../utils/constants";
-import * as Yup from "yup";
-import { parseDateString } from "../../utils/functions";
 import { PaidAppointmentsPopupContext } from "./appointment-list-results";
+import { Grid } from "@material-ui/core";
 
-export const PaidAppointmentPopup = () => {
+export const PaidAppointmentPopup = ({ appointment }) => {
+  // set Disabled submit button
+  const [submitButton, setSubmitButton] = useState(false);
+
   /* [ContextAPI]
     getter and setter for dependency value to refresh component after request sent
    */
-  const { dependencyValue, setDependencyValue } =
+  const { dependencyValue, setDependencyValue, enqueueSnackbar } =
     useContext(AppointmentsContext);
 
   /* [ContextAPI]
@@ -30,152 +29,208 @@ export const PaidAppointmentPopup = () => {
   const { showPaidAppointmentsPopup, setShowPaidAppointmentsPopup } =
     useContext(PaidAppointmentsPopupContext);
 
-  // Paid Request
-  // async function paidAppointmentAPI(data) {
-  //   try {
-  //     const body = JSON.stringify(data);
-  //     const res = await fetch(`${backendURL}/appointments`, {
-  //       method: "POST",
-  //       headers: { "content-Type": "application/json" },
-  //       body: body,
-  //     });
-  //     if (res.ok) {
-  //       const json = await res.json();
+  // Custom fields
+  const [customFields, setCustomFields] = useState([]);
 
-  //       // Refresh list
-  //       setDependencyValue(!dependencyValue);
-
-  //       // Reset form
-  //       formik.resetForm();
-
-  //       // show success message
-
-  //     } else {
-  //       // show error message
-
-  //       throw new Error(`Failed to paid appointment: ${res.statusText}`);
-  //     }
-  //   } catch (err) {
-
-  //     console.error(err);
-  //   }
-  // }
-
-  // [Formik] paid appointment
-  const formik = useFormik({
-    initialValues: {
-      amount: "",
-      type: "",
-      date: new Date().toLocaleDateString(),
-      description: "",
-    },
-    validationSchema: Yup.object({
-      amount: Yup.number().required("Amount is required"),
-      description: Yup.string(),
-      date: Yup.date().transform(parseDateString),
-      type: Yup.string().required("type is required"),
-    }),
-    onSubmit: () => {
-      const body = {
-        amount: formik.values.amount,
-        description: formik.values.description,
-        date: formik.values.date,
-        type: formik.values.type,
-      };
-      //  paidAppointmentAPI(body);
-    },
+  // MedicalFile inputs values
+  const [values, setValues] = useState({
+    title: "",
+    amount: "",
+    description: "",
+    patientId: appointment.patientId,
   });
+
+  const handleChange = (event) => {
+    setValues({
+      ...values,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(
+          `${backendURL}/users/customFields/${
+            localStorage.getItem("currentUser").split("-")[0]
+          }`
+        );
+        if (res.ok) {
+          const data = await res.json();
+          setCustomFields(data.customFields);
+          const newValues = { ...values };
+          data.forEach((field) => {
+            newValues.customFields[field] = "";
+          });
+          setValues(newValues);
+        } else {
+          throw new Error("error getting customFields");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // Set Paid Request
+  async function setPaidAppointmentAPI() {
+    try {
+      setSubmitButton(true);
+      let customFieldsData = {};
+      customFields.map((field) => {
+        customFieldsData[field] = values[field];
+      });
+      const medicalFile = JSON.stringify({
+        title: values.title,
+        description: values.description,
+        amount: values.amount,
+        patientId: values.patientId,
+        customFields: customFieldsData,
+      });
+      const appointmentUpdatedFields = JSON.stringify({
+        isPaid: true,
+        amount: values.amount,
+      });
+      const resApp = await fetch(
+        `${backendURL}/appointments/${appointment._id}`,
+        {
+          method: "PATCH",
+          headers: { "content-Type": "application/json" },
+          body: appointmentUpdatedFields,
+        }
+      );
+      if (resApp.ok) {
+        const resMF = await fetch(`${backendURL}/medicalFiles`, {
+          method: "POST",
+          headers: { "content-Type": "application/json" },
+          body: medicalFile,
+        });
+        enqueueSnackbar("Appointment Paid", {
+          variant: "success",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "right",
+          },
+        });
+        if (resMF.ok) {
+          enqueueSnackbar("MedicalFile added successfully", {
+            variant: "success",
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "right",
+            },
+          });
+          setSubmitButton(false);
+          setShowPaidAppointmentsPopup(false);
+        } else {
+          throw new Error(`medicalFile`);
+        }
+        // Refresh list
+        setDependencyValue(!dependencyValue);
+
+        // show success message
+      } else {
+        // show error message
+        throw new Error(`appointment`);
+      }
+    } catch (err) {
+      enqueueSnackbar("ERROR adding" + err, {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "right",
+        },
+      });
+      console.error(err);
+    }
+  }
 
   return (
     <Modal
       open={showPaidAppointmentsPopup}
       onClose={() => {
-        formik.resetForm();
         setShowPaidAppointmentsPopup(false);
       }}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={style}>
+      <Box sx={{ ...style, width: "600px" }}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
           Paid Appointment
         </Typography>
-        <form onSubmit={formik.handleSubmit}>
-          <TextField
-            size="small"
-            error={Boolean(formik.touched.amount && formik.errors.amount)}
-            fullWidth
-            helperText={formik.touched.amount && formik.errors.amount}
-            label="Amount"
-            margin="normal"
-            name="amount"
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-            value={formik.values.amount}
-            variant="outlined"
-          />
-          <FormControl margin="normal" fullWidth>
-            <InputLabel size="small" id="demo-simple-select-label">
-              Type
-            </InputLabel>
-            <Select
-              size="small"
-              error={Boolean(formik.touched.type && formik.errors.type)}
-              fullWidth
-              label="Type"
-              name="type"
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-              value={formik.values.type}
-              variant="outlined"
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-            >
-              <MenuItem value={"Income"}>Income</MenuItem>
-              <MenuItem value={"Outcome"}>Outcome</MenuItem>
-            </Select>
-          </FormControl>
-          <TextField
-            size="small"
-            error={Boolean(formik.touched.date && formik.errors.date)}
-            fullWidth
-            helperText={formik.touched.date && formik.errors.date}
-            label="Date MM/DD/YYYY"
-            margin="normal"
-            name="date"
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-            value={formik.values.date}
-            variant="outlined"
-          ></TextField>
-          <TextField
-            size="small"
-            error={Boolean(
-              formik.touched.description && formik.errors.description
-            )}
-            fullWidth
-            helperText={formik.touched.description && formik.errors.description}
-            label="Description"
-            margin="normal"
-            name="description"
-            onBlur={formik.handleBlur}
-            onChange={formik.handleChange}
-            value={formik.values.description}
-            variant="outlined"
-            multiline
-            rows={3}
-          />
+        <form>
+          <Grid style={{ marginTop: "20px" }} container spacing={3}>
+            <Grid item xs={6}>
+              <TextField
+                size="small"
+                fullWidth
+                label="Title"
+                name="title"
+                variant="outlined"
+                required
+                value={values.title}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                size="small"
+                fullWidth
+                label="Amount"
+                name="amount"
+                variant="outlined"
+                type={"number"}
+                required
+                value={values.amount}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                size="small"
+                fullWidth
+                label="Description"
+                name="description"
+                variant="outlined"
+                multiline
+                rows={3}
+                value={values.description}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Divider textAlign="center">Custom informations</Divider>
+            </Grid>
+            {customFields
+              ? customFields.map((field, index) => (
+                  <Grid key={index} item xs={6}>
+                    <TextField
+                      size="small"
+                      fullWidth
+                      label={field}
+                      name={field}
+                      variant="outlined"
+                      value={values.customFields}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                ))
+              : "nothing here"}
+          </Grid>
 
           <Box sx={{ py: 2 }}>
             <Button
               color="primary"
-              disabled={formik.isSubmitting}
               fullWidth
               size="large"
-              type="submit"
               variant="contained"
+              onClick={() => {
+                setPaidAppointmentAPI();
+              }}
+              disabled={submitButton}
             >
-              Paid appointment
+              Finish appointment
             </Button>
           </Box>
         </form>

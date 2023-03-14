@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -7,63 +7,122 @@ import {
   CardHeader,
   Divider,
   Grid,
-  TextField
-} from '@mui/material';
+  TextField,
+} from "@mui/material";
+import { accountIsLoading, accountNA, backendURL } from "../../utils/constants";
+import { AccountContext } from "../../pages/account";
 
 const states = [
   {
-    value: 'alabama',
-    label: 'Alabama'
+    value: "ariana",
+    label: "Ariana",
   },
   {
-    value: 'new-york',
-    label: 'New York'
+    value: "sousse",
+    label: "Sousse",
   },
   {
-    value: 'san-francisco',
-    label: 'San Francisco'
-  }
+    value: "sfax",
+    label: "Sfax",
+  },
+  {
+    value: "tunis",
+    label: "Tunis",
+  },
 ];
 
 export const AccountProfileDetails = (props) => {
-  const [values, setValues] = useState({
-    firstName: 'Katarina',
-    lastName: 'Smith',
-    email: 'demo@devias.io',
-    phone: '',
-    state: 'Alabama',
-    country: 'USA'
-  });
+  /* [ContextAPI]
+      Get snackbar function
+     */
+  const { enqueueSnackbar } = useContext(AccountContext);
+
+  // set Disabled submit button
+  const [submitButton, setSubmitButton] = useState(false);
+
+  // Get current account data
+  const [currentAccount, setCurrentAccount] = useState(accountIsLoading);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setSubmitButton(true);
+        const res = await fetch(
+          `${backendURL}/users/${
+            localStorage.getItem("currentUser").split("-")[0]
+          }`
+        );
+        if (res.ok) {
+          setSubmitButton(false);
+          const data = await res.json();
+          setCurrentAccount(data);
+          console.log(data);
+        } else {
+          setSubmitButton(false);
+          throw new Error("error getting account");
+        }
+      } catch (error) {
+        setCurrentAccount(accountNA);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // Edit Request
+  async function editAccountAPI() {
+    try {
+      setSubmitButton(true);
+      const body = JSON.stringify(currentAccount);
+      const data = await fetch(
+        `${backendURL}/users/${
+          localStorage.getItem("currentUser").split("-")[0]
+        }`,
+        {
+          method: "PATCH",
+          headers: { "content-Type": "application/json" },
+          body: body,
+        }
+      );
+      if (data.ok) {
+        setSubmitButton(false);
+        // show success message
+        enqueueSnackbar(`Account Edited Successfully`, {
+          variant: "success",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "right",
+          },
+        });
+      } else {
+        setSubmitButton(false);
+        throw new Error(`Failed to add account`);
+      }
+    } catch (err) {
+      enqueueSnackbar(`ERROR Editing Account`, {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "right",
+        },
+      });
+      console.error(err);
+    }
+  }
 
   const handleChange = (event) => {
-    setValues({
-      ...values,
-      [event.target.name]: event.target.value
+    setCurrentAccount({
+      ...currentAccount,
+      [event.target.name]: event.target.value,
     });
   };
 
   return (
-    <form
-      autoComplete="off"
-      noValidate
-      {...props}
-    >
+    <form autoComplete="off" noValidate {...props}>
       <Card>
-        <CardHeader
-          subheader="The information can be edited"
-          title="Profile"
-        />
+        <CardHeader subheader="The information can be edited" title="Profile" />
         <Divider />
         <CardContent>
-          <Grid
-            container
-            spacing={3}
-          >
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
+          <Grid container spacing={3}>
+            <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
                 helperText="Please specify the first name"
@@ -71,75 +130,55 @@ export const AccountProfileDetails = (props) => {
                 name="firstName"
                 onChange={handleChange}
                 required
-                value={values.firstName}
+                value={currentAccount.firstName}
                 variant="outlined"
               />
             </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
+            <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
                 label="Last name"
                 name="lastName"
                 onChange={handleChange}
                 required
-                value={values.lastName}
+                value={currentAccount.lastName}
                 variant="outlined"
               />
             </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
+            <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
                 label="Email Address"
                 name="email"
                 onChange={handleChange}
                 required
-                value={values.email}
+                value={currentAccount.email}
                 variant="outlined"
               />
             </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
+            <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
                 label="Phone Number"
                 name="phone"
                 onChange={handleChange}
-                type="number"
-                value={values.phone}
+                value={currentAccount.phone}
                 variant="outlined"
               />
             </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
+            <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
                 label="Country"
                 name="country"
-                onChange={handleChange}
+                //onChange={handleChange}
                 required
-                value={values.country}
+                value={"Tunisia"}
+                //value={currentAccount.country}
                 variant="outlined"
               />
             </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
+            <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
                 label="Select State"
@@ -148,14 +187,11 @@ export const AccountProfileDetails = (props) => {
                 required
                 select
                 SelectProps={{ native: true }}
-                value={values.state}
+                value={currentAccount.state}
                 variant="outlined"
               >
                 {states.map((option) => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                  >
+                  <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
                 ))}
@@ -166,13 +202,17 @@ export const AccountProfileDetails = (props) => {
         <Divider />
         <Box
           sx={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            p: 2
+            display: "flex",
+            justifyContent: "flex-end",
+            p: 2,
           }}
         >
           <Button
             color="primary"
+            disabled={submitButton}
+            onClick={() => {
+              editAccountAPI();
+            }}
             variant="contained"
           >
             Save details

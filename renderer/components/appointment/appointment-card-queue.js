@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
 import {
-
   Box,
   Card,
   CardContent,
@@ -16,13 +15,13 @@ import moment from "moment";
 import { AppointmentsContext } from "../../pages/appointments";
 import { useContext } from "react";
 import { PaidAppointmentsPopupContext } from "./appointment-list-results";
+import { PaidAppointmentPopup } from "./set-paid-popup";
 
 export const AppointmentCardQueue = ({ appointment, ...rest }) => {
   const { deleteAppointment } = useContext(AppointmentsContext);
 
-  
   const { showPaidAppointmentsPopup, setShowPaidAppointmentsPopup } =
-  useContext(PaidAppointmentsPopupContext);
+    useContext(PaidAppointmentsPopupContext);
   return (
     <Card
       sx={{
@@ -33,7 +32,6 @@ export const AppointmentCardQueue = ({ appointment, ...rest }) => {
       {...rest}
     >
       <CardContent>
-      
         <Typography align="center" color="textPrimary" variant="h5">
           {appointment.firstName + " " + appointment.lastName}
         </Typography>
@@ -69,7 +67,9 @@ export const AppointmentCardQueue = ({ appointment, ...rest }) => {
               style={{ marginRight: "5px" }}
               color="secondary"
               variant="contained"
-              onClick={()=>{setShowPaidAppointmentsPopup(true)}}
+              onClick={() => {
+                setShowPaidAppointmentsPopup(true);
+              }}
             >
               <PaidIcon />
             </IconButton>
@@ -100,12 +100,20 @@ export const AppointmentCardQueue = ({ appointment, ...rest }) => {
               display: "flex",
             }}
           >
-            <IconButton onClick={()=>{deleteAppointment(appointment._id)}} color="error">
+            <IconButton
+              onClick={() => {
+                deleteAppointment(appointment._id);
+              }}
+              color="error"
+            >
               <DeleteIcon style={{ fontSize: "28px" }} />
             </IconButton>
           </Grid>
         </Grid>
       </Box>
+      {showPaidAppointmentsPopup && (
+        <PaidAppointmentPopup appointment={appointment} />
+      )}
     </Card>
   );
 };

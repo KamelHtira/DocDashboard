@@ -12,9 +12,118 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+  TableHead,
+  TextField,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { useSnackbar } from "notistack";
+import { useEffect, useState } from "react";
+import { addStringToArray, removeStringFromArray } from "../../utils/functions";
+import { backendURL } from "../../utils/constants";
+
 export const SettingsNotifications = (props) => {
+  // set Disabled submit button
+  const [submitButtonCustomFields, setSubmitButtonCustomFields] =
+    useState(false);
+
+  // The input of new field
+  const [fieldInput, setfieldInput] = useState("");
+
+  // Dependency value
+  const [dependency, setDependency] = useState(false);
+
+  // Get user customFields
+  const [currentCustomFields, setCurrentCustomFields] = useState(null);
+
+  function handleFieldInputChange(event) {
+    setfieldInput(event.target.value);
+  }
+
+  function removeField(field) {
+    const newFields = removeStringFromArray(currentCustomFields, field);
+    setCurrentCustomFields(newFields);
+    setDependency(!dependency);
+    setfieldInput("");
+  }
+
+  function addField(field) {
+    if (field) {
+      setCurrentCustomFields(addStringToArray(currentCustomFields, field));
+      setfieldInput("");
+    }
+  }
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setSubmitButtonCustomFields(true);
+        const res = await fetch(
+          `${backendURL}/users/customFields/${
+            localStorage.getItem("currentUser").split("-")[0]
+          }`
+        );
+        if (res.ok) {
+          setSubmitButtonCustomFields(false);
+          const data = await res.json();
+          setCurrentCustomFields(data.customFields);
+          console.log(data);
+        } else {
+          setSubmitButtonCustomFields(false);
+          throw new Error("error getting customFields");
+        }
+      } catch (error) {
+        setSubmitButtonCustomFields(false);
+        setCurrentCustomFields(["N/A"]);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // Edit Request
+  async function editCustomFieldsAPI() {
+    try {
+      setSubmitButtonCustomFields(true);
+      const body = JSON.stringify({ customFields: currentCustomFields });
+      const data = await fetch(
+        `${backendURL}/users/${
+          localStorage.getItem("currentUser").split("-")[0]
+        }`,
+        {
+          method: "PATCH",
+          headers: { "content-Type": "application/json" },
+          body: body,
+        }
+      );
+      if (data.ok) {
+        setSubmitButtonCustomFields(false);
+        // show success message
+        enqueueSnackbar(`Custom Fields Edited Successfully`, {
+          variant: "success",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "right",
+          },
+        });
+      } else {
+        setSubmitButtonCustomFields(false);
+        throw new Error(`Failed to add customFields`);
+      }
+    } catch (err) {
+      setSubmitButtonCustomFields(false);
+      enqueueSnackbar(`ERROR Editing CustomFields`, {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "right",
+        },
+      });
+      console.error(err);
+    }
+  }
+
   const { enqueueSnackbar } = useSnackbar();
   return (
     <form {...props}>
@@ -114,6 +223,87 @@ export const SettingsNotifications = (props) => {
             Save
           </Button>
         </Box>
+      </Card>
+      <Card sx={{ marginTop: "30px", width: "60%" }}>
+        <CardHeader
+          subheader="Manage the medical file settings"
+          title="Medical Files Settings"
+        />
+        <Divider />
+        <CardContent>
+          <Grid>
+            <Table sx={{ backgroundColor: "#FBFBFB" }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center">Fields</TableCell>
+                  <TableCell></TableCell>
+                </TableRow>
+              </TableHead>
+
+              <TableBody>
+                {currentCustomFields &&
+                  currentCustomFields.map((field, index) => (
+                    <TableRow hover key={index}>
+                      <TableCell>{field}</TableCell>
+
+                      <TableCell padding="checkbox">
+                        <Button
+                          onClick={() => {
+                            removeField(field);
+                          }}
+                        >
+                          <DeleteIcon color="error"></DeleteIcon>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </Grid>
+        </CardContent>
+        <Divider />
+
+        <Grid container spacing={2} sx={{ p: "20px" }}>
+          <Grid item xs={8}>
+            <TextField
+              fullWidth
+              size="small"
+              label="Add New Field"
+              name="firstName"
+              onChange={handleFieldInputChange}
+              value={fieldInput}
+              variant="outlined"
+            />
+          </Grid>
+
+          <Grid item xs={2}>
+            <Button
+              fullWidth
+              disabled={submitButtonCustomFields}
+              onClick={() => {
+                addField(fieldInput);
+              }}
+              color="primary"
+              variant="contained"
+            >
+              Add
+            </Button>
+          </Grid>
+
+          <Grid item xs={2}>
+            <Button
+              fullWidth
+              disabled={submitButtonCustomFields}
+              onClick={() => {
+                editCustomFieldsAPI();
+              }}
+              color="primary"
+              variant="contained"
+            >
+              Save
+            </Button>
+          </Grid>
+        </Grid>
       </Card>
     </form>
   );

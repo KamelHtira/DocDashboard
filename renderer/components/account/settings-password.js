@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   Grid,
   Box,
@@ -9,12 +9,22 @@ import {
   Divider,
   TextField,
 } from "@mui/material";
+import { AccountContext } from "../../pages/account";
+import { backendURL } from "../../utils/constants";
 
 export const SettingsPassword = (props) => {
+  /* [ContextAPI]
+      Get snackbar function
+     */
+  const { enqueueSnackbar } = useContext(AccountContext);
+
+  // set Disabled submit button
+  const [submitButton, setSubmitButton] = useState(false);
+
   const [values, setValues] = useState({
-    password: "",
-    confirm1: "",
-    confirm2: "",
+    currentPassword: "",
+    newPassword: "",
+    confirmNewPassword: "",
   });
 
   const handleChange = (event) => {
@@ -23,6 +33,61 @@ export const SettingsPassword = (props) => {
       [event.target.name]: event.target.value,
     });
   };
+
+  // Edit Request
+  async function editPasswordAPI() {
+    try {
+      if (values.confirmNewPassword != values.newPassword) {
+        return enqueueSnackbar(`Please Match Password `, {
+          variant: "error",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "right",
+          },
+        });
+      }
+      setSubmitButton(true);
+      const body = JSON.stringify(values);
+      const data = await fetch(
+        `${backendURL}/password/${
+          localStorage.getItem("currentUser").split("-")[0]
+        }`,
+        {
+          method: "PATCH",
+          headers: { "content-Type": "application/json" },
+          body: body,
+        }
+      );
+      if (data.ok) {
+        setSubmitButton(false);
+        // show success message
+        enqueueSnackbar(`Password Edited Successfully`, {
+          variant: "success",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "right",
+          },
+        });
+        setValues({
+          currentPassword: "",
+          newPassword: "",
+          confirmNewPassword: "",
+        });
+      } else {
+        setSubmitButton(false);
+        throw new Error(`Failed to add password`);
+      }
+    } catch (err) {
+      enqueueSnackbar(`ERROR Editing Password`, {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "right",
+        },
+      });
+      console.error(err);
+    }
+  }
 
   return (
     <form {...props}>
@@ -36,10 +101,10 @@ export const SettingsPassword = (props) => {
                 fullWidth
                 label="Current Password"
                 margin="normal"
-                name="password"
+                name="currentPassword"
                 onChange={handleChange}
                 type="password"
-                value={values.password}
+                value={values.currentPassword}
                 variant="outlined"
               />
             </Grid>
@@ -48,10 +113,10 @@ export const SettingsPassword = (props) => {
                 fullWidth
                 label="Confirm password"
                 margin="normal"
-                name="confirm"
+                name="newPassword"
                 onChange={handleChange}
                 type="password"
-                value={values.confirm1}
+                value={values.newPassword}
                 variant="outlined"
               />
             </Grid>
@@ -60,10 +125,10 @@ export const SettingsPassword = (props) => {
                 fullWidth
                 label="Confirm password"
                 margin="normal"
-                name="confirm"
+                name="confirmNewPassword"
                 onChange={handleChange}
                 type="password"
-                value={values.confirm2}
+                value={values.confirmNewPassword}
                 variant="outlined"
               />
             </Grid>
@@ -77,7 +142,14 @@ export const SettingsPassword = (props) => {
             p: 2,
           }}
         >
-          <Button color="primary" variant="contained">
+          <Button
+            onClick={() => {
+              editPasswordAPI();
+            }}
+            disabled={submitButton}
+            color="primary"
+            variant="contained"
+          >
             Update
           </Button>
         </Box>

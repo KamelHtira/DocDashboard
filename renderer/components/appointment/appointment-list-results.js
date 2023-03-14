@@ -68,13 +68,13 @@ export const AppointmentListResults = (props) => {
       <PaidAppointmentsPopupContext.Provider
         value={{ showPaidAppointmentsPopup, setShowPaidAppointmentsPopup }}
       >
-        {showPaidAppointmentsPopup && <PaidAppointmentPopup />}
         <TabPanel value={value} index={0}>
           <Box sx={{ pt: 3 }}>
             <Grid container spacing={3}>
               {appointmentsList.map(
                 (appointment, index) =>
-                  appointment.type == "Q" && (
+                  appointment.type == "Q" &&
+                  !appointment.isPaid && (
                     <Grid key={index} item lg={4} md={6} xs={12}>
                       <AppointmentCardQueue appointment={appointment} />
                     </Grid>
