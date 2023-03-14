@@ -31,7 +31,7 @@ if (isProd) {
       try {
         // Convert the JSON data to CSV format
         const csv = json2csv(data);
-    
+     
         // Open the "Save As" dialog
         dialog.showSaveDialog(mainWindow,{
           filters: [{ name: 'CSV Files', extensions: ['csv'] }]

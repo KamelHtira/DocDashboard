@@ -5,9 +5,9 @@ import { Budget } from '../components/dashboard/budget';
 
 import { Sales } from '../components/dashboard/sales';
 import { TasksProgress } from '../components/dashboard/tasks-progress';
-import { TotalCustomers } from '../components/dashboard/total-customers';
+import { TotalPatients } from '../components/dashboard/total-patients';
 import { TotalProfit } from '../components/dashboard/total-profit';
-import { TrafficByDevice } from '../components/dashboard/traffic-by-device';
+import { Demographics } from '../components/dashboard/demographics';
 import { DashboardLayout } from '../components/dashboard-layout';
 
 const Dashboard = () => (
@@ -45,7 +45,7 @@ const Dashboard = () => (
             sm={6}
             xs={12}
           >
-            <TotalCustomers />
+            <TotalPatients />
           </Grid>
           <Grid
             item
@@ -67,9 +67,9 @@ const Dashboard = () => (
           </Grid>
           <Grid
             item
-            lg={8}
+            lg={12}
             md={12}
-            xl={9}
+            xl={12}
             xs={12}
           >
             <Sales />
@@ -81,7 +81,7 @@ const Dashboard = () => (
             xl={3}
             xs={12}
           >
-            <TrafficByDevice sx={{ height: '100%' }} />
+            <Demographics sx={{ height: '100%' }} />
           </Grid>
 
       

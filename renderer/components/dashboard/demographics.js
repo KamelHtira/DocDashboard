@@ -1,24 +1,25 @@
 import { Doughnut } from 'react-chartjs-2';
+import { useEffect, useState } from 'react';
 import { Box, Card, CardContent, CardHeader, Divider, Typography, useTheme } from '@mui/material';
-import LaptopMacIcon from '@mui/icons-material/LaptopMac';
-import PhoneIcon from '@mui/icons-material/Phone';
-import TabletIcon from '@mui/icons-material/Tablet';
+import EscalatorWarningIcon from '@mui/icons-material/EscalatorWarning';
+import ElderlyIcon from '@mui/icons-material/Elderly';
+import ManIcon from '@mui/icons-material/Man';
+export const Demographics = (props) => {
 
-export const TrafficByDevice = (props) => {
   const theme = useTheme();
-
-  const data = {
+  const [data, setData] = useState({
     datasets: [
       {
-        data: [63, 15, 22],
+        data: [],
         backgroundColor: ['#3F51B5', '#e53935', '#FB8C00'],
         borderWidth: 8,
         borderColor: '#FFFFFF',
         hoverBorderColor: '#FFFFFF'
       }
     ],
-    labels: ['Desktop', 'Tablet', 'Mobile']
-  };
+    labels: []
+});
+
 
   const options = {
     animation: false,
@@ -41,31 +42,62 @@ export const TrafficByDevice = (props) => {
       titleFontColor: theme.palette.text.primary
     }
   };
-
-  const devices = [
-    {
-      title: 'Desktop',
-      value: 63,
-      icon: LaptopMacIcon,
-      color: '#3F51B5'
-    },
-    {
-      title: 'Tablet',
-      value: 15,
-      icon: TabletIcon,
-      color: '#E53935'
-    },
-    {
-      title: 'Mobile',
-      value: 23,
-      icon: PhoneIcon,
-      color: '#FB8C00'
-    }
-  ];
+  const [percentage, setPercentage] = useState([
+ 
+  ]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/patientsAge');
+        const result = await response.json();
+        const values = Object.values(result);
+        const labels = Object.keys(result);
+        const newData = {
+          datasets: [
+            {
+              ...data.datasets[0],
+              data: [values[0][0], values[1][0], values[2][0]]
+            }
+          ],
+          labels
+        };
+        setData(newData);
+        
+        // Only map percentages for available age groups
+        const newPercentage = [
+          {         
+            title: labels[0],
+            value: values[0][1],
+            icon: EscalatorWarningIcon,
+            color: '#3F51B5'
+          },
+          {
+            title: labels[1],
+            value: values[1][1],
+            icon: ManIcon,
+            color: '#E53935'
+          },
+          {
+            title: labels[2],
+            value: values[2][1],
+            icon: ElderlyIcon,
+            color: '#FB8C00'
+          }
+        ];
+        setPercentage(newPercentage);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    fetchData();
+  }, []);
+  
+  
 
   return (
     <Card {...props}>
-      <CardHeader title="Traffic by Device" />
+      <CardHeader title="Demographics" />
       <Divider />
       <CardContent>
         <Box
@@ -86,7 +118,7 @@ export const TrafficByDevice = (props) => {
             pt: 2
           }}
         >
-          {devices.map(({
+          {percentage.map(({
             color,
             icon: Icon,
             title,
