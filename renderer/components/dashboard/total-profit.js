@@ -1,46 +1,36 @@
-import { useState, useEffect } from 'react';
-import { Avatar, Card, CardContent, Grid, Typography } from '@mui/material';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import { useState, useEffect } from "react";
+import { Avatar, Card, CardContent, Grid, Typography } from "@mui/material";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import { backendURL } from "../../utils/constants";
 
 export const TotalProfit = (props) => {
   const [totalProfit, setTotalProfit] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:3001/totalprofit')
-      .then(response => response.json())
-      .then(data => setTotalProfit(data.gain))
-      .catch(error => console.log(error));
+    fetch(`${backendURL}/totalprofit`)
+      .then((response) => response.json())
+      .then((data) => setTotalProfit(data.gain))
+      .catch((error) => console.log(error));
   }, []);
 
   return (
     <Card {...props}>
       <CardContent>
-        <Grid
-          container
-          spacing={3}
-          sx={{ justifyContent: 'space-between' }}
-        >
+        <Grid container spacing={3} sx={{ justifyContent: "space-between" }}>
           <Grid item>
-            <Typography
-              color="textSecondary"
-              gutterBottom
-              variant="overline"
-            >
-              TOTAL PROFIT
+            <Typography color="textSecondary" gutterBottom variant="overline">
+              CURRENT MONTH INCOME
             </Typography>
-            <Typography
-              color="textPrimary"
-              variant="h4"
-            >
-              {totalProfit ? `$${totalProfit}` : 'Loading...'}
+            <Typography color="textPrimary" variant="h4">
+              {totalProfit ? `$${totalProfit}` : "Loading..."}
             </Typography>
           </Grid>
           <Grid item>
             <Avatar
               sx={{
-                backgroundColor: 'primary.main',
+                backgroundColor: "primary.main",
                 height: 56,
-                width: 56
+                width: 56,
               }}
             >
               <AttachMoneyIcon />
@@ -51,6 +41,3 @@ export const TotalProfit = (props) => {
     </Card>
   );
 };
-
-
-
