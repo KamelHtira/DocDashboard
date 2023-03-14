@@ -1,19 +1,23 @@
-import { useState, useEffect } from 'react';
-import { Avatar, Card, CardContent, Grid, Typography } from '@mui/material';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-
-export const TotalProfit = (props) => {
-  const [totalProfit, setTotalProfit] = useState(null);
+import { useEffect, useState } from 'react';
+import { Avatar, Box, Card, CardContent, Grid, Typography } from '@mui/material';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import PeopleIcon from '@mui/icons-material/PeopleOutlined';
+export const TotalPatients = (props) => {
+  const [patientsData, setPatientsData] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:3001/totalprofit')
-      .then(response => response.json())
-      .then(data => setTotalProfit(data.gain))
+    fetch('http://localhost:3001/currentmonthlypatients')
+      .then((response) => response.json())
+      .then((data) => setPatientsData(data.currentMonthPatients))
       .catch(error => console.log(error));
   }, []);
+  
 
   return (
-    <Card {...props}>
+    <Card
+      sx={{ height: '100%' }}
+      {...props}
+    >
       <CardContent>
         <Grid
           container
@@ -26,24 +30,24 @@ export const TotalProfit = (props) => {
               gutterBottom
               variant="overline"
             >
-              TOTAL PROFIT
+              TOTAL PATIENTS
             </Typography>
             <Typography
               color="textPrimary"
               variant="h4"
             >
-              {totalProfit ? `$${totalProfit}` : 'Loading...'}
+              {patientsData ? `${patientsData}` : 'Loading...'}
             </Typography>
           </Grid>
           <Grid item>
             <Avatar
               sx={{
-                backgroundColor: 'primary.main',
+                backgroundColor: 'error.main',
                 height: 56,
                 width: 56
               }}
             >
-              <AttachMoneyIcon />
+              <PeopleIcon />
             </Avatar>
           </Grid>
         </Grid>
@@ -51,6 +55,3 @@ export const TotalProfit = (props) => {
     </Card>
   );
 };
-
-
-
