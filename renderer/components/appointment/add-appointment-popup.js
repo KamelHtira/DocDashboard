@@ -248,6 +248,9 @@ export const AddAppointmentPopup = () => {
             lastName: formik.values.lastName,
             birthday: moment(formik.values.birthday).calendar(),
             sexe: formik.values.sexe,
+            email: "",
+            phone:"",
+            address:"",
           },
           body
         );

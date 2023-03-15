@@ -72,19 +72,19 @@ export const Demographics = (props) => {
         const newPercentage = [
           {
             title: labels[0],
-            value: values[0][1],
+            value: values[0][1].toFixed(2),
             icon: EscalatorWarningIcon,
             color: "#3F51B5",
           },
           {
             title: labels[1],
-            value: values[1][1],
+            value: values[1][1].toFixed(2),
             icon: ManIcon,
             color: "#E53935",
           },
           {
             title: labels[2],
-            value: values[2][1],
+            value: values[2][1].toFixed(2),
             icon: ElderlyIcon,
             color: "#FB8C00",
           },
