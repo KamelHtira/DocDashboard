@@ -45,7 +45,7 @@ export const Sales = (props) => {
   const [data, setData] = useState({
     datasets: [
       {
-        backgroundColor: "#3F51B5",
+        backgroundColor: "#0B745A",
         barPercentage: 0.5,
         barThickness: numberofMonths + 2,
         borderRadius: 4,

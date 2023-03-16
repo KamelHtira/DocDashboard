@@ -141,7 +141,7 @@ export const theme = createTheme({
       600: "#4B5563",
       700: "#374151",
       800: "#1F2937",
-      900: "#111827",
+      900: "#001712F5",
     },
     action: {
       active: "#6B7280",
@@ -152,20 +152,20 @@ export const theme = createTheme({
       disabled: "rgba(55, 65, 81, 0.26)",
     },
     background: {
-      default: "#F9FAFC",
+      default: "#F7FFFD",
       paper: "#FFFFFF",
     },
     divider: "#E6E8F0",
     primary: {
-      main: "#5048E5",
-      light: "#828DF8",
-      dark: "#3832A0",
+      main: "#0B745A",
+      light: "#7FC8B6",
+      dark: "#149F7C",
       contrastText: "#FFFFFF",
     },
     secondary: {
-      main: "#10B981",
-      light: "#3FC79A",
-      dark: "#0B815A",
+      main: "#149F7C",
+      light: "#D2E0DC",
+      dark: "#001712",
       contrastText: "#FFFFFF",
     },
     success: {

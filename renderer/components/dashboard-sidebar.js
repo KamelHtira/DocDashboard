@@ -85,14 +85,9 @@ export const DashboardSidebar = (props) => {
         <div>
           <Box sx={{ p: 3 }}>
             <NextLink href="/" passHref>
-              <a >
-                <Logo
-                  sx={{
-                    height: 100,
-                    width: 100,
-                  }}
-                />
-              </a>
+              <Typography align="center" variant="h1">
+                Doc. Logo
+              </Typography>
             </NextLink>
           </Box>
           <Box sx={{ px: 2 }}>

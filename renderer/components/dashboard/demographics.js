@@ -19,7 +19,7 @@ export const Demographics = (props) => {
     datasets: [
       {
         data: [],
-        backgroundColor: ["#3F51B5", "#e53935", "#FB8C00"],
+        backgroundColor: ["#0B745A", "#e53935", "#FB8C00"],
         borderWidth: 8,
         borderColor: "#FFFFFF",
         hoverBorderColor: "#FFFFFF",
@@ -74,7 +74,7 @@ export const Demographics = (props) => {
             title: labels[0],
             value: values[0][1].toFixed(2),
             icon: EscalatorWarningIcon,
-            color: "#3F51B5",
+            color: "#0B745A",
           },
           {
             title: labels[1],

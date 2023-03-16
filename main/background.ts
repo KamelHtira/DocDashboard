@@ -1,9 +1,10 @@
-import { app, ipcMain } from "electron";
+import { app, ipcMain, session } from "electron";
 import serve from "electron-serve";
 import { createWindow } from "./helpers";
 import { dialog } from 'electron';
 import { promises as fs } from 'fs';
 import { parse as json2csv } from 'json2csv';
+import Store from 'electron-store';
 
 const isProd = process.env.NODE_ENV === "production";
 
@@ -23,6 +24,8 @@ if (isProd) {
     height: 800,
     center: true,
   });
+
+  const store = new Store();
 
   if (isProd) {
     await mainWindow.loadURL("app://./login.html");
@@ -83,6 +86,23 @@ if (isProd) {
         console.error('Error exporting to CSV:', err);
       }
     });
+
+    ipcMain.on("setCookie", (event, data) => { 
+      console.log("this is setCookie Event");
+      console.log(data);
+      store.set("currentUser",data);
+      console.log(store.get("currentUser"));
+      })
+      
+    ipcMain.on("getCookie", (event, data) => {
+      console.log("this is getCookie Event");
+      let currentUser = store.get("currentUser");
+      console.log(currentUser);
+      event.returnValue = currentUser;
+    });
+
+
+      
     mainWindow.webContents.openDevTools();
   }
 })();

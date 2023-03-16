@@ -192,11 +192,13 @@ export const EditMedicalFilePopup = ({ medicalFilesList }) => {
               </Typography>
 
               {currentMedicalFile.customFields &&
-                Object.keys(currentMedicalFile.customFields).map((field) => (
-                  <Typography margin="20px" variant="body1">
-                    {`- ${field} : ${currentMedicalFile.customFields[field]}`}
-                  </Typography>
-                ))}
+                Object.keys(currentMedicalFile.customFields).map(
+                  (field, index) => (
+                    <Typography key={index} margin="20px" variant="body1">
+                      {`- ${field} : ${currentMedicalFile.customFields[field]}`}
+                    </Typography>
+                  )
+                )}
             </Grid>
           </Grid>
           <Box
