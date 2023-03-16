@@ -1,13 +1,11 @@
-import { Box, Grid, Tabs, Tab, Typography } from "@mui/material";
+import { Box, Grid, Tabs, Tab } from "@mui/material";
 import { useContext, useState } from "react";
-import { products } from "../../__mocks__/products";
 import { AppointmentCardConfirmed } from "./appointment-card-confirmed";
 import PropTypes from "prop-types";
 import { AppointmentCardPending } from "./appointment-card-pending";
 import { AppointmentCardQueue } from "./appointment-card-queue";
 import { AppointmentsContext } from "../../pages/appointments";
 import { createContext } from "react";
-import { PaidAppointmentPopup } from "./set-paid-popup";
 
 function a11yProps(index) {
   return {

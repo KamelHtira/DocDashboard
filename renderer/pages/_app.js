@@ -5,6 +5,8 @@ import { ThemeProvider } from "@mui/material/styles";
 import { createEmotionCache } from "../utils/create-emotion-cache";
 import { theme } from "../theme";
 import { SnackbarProvider } from "notistack";
+import "./globalStyles/scrollBar.css";
+
 const clientSideEmotionCache = createEmotionCache();
 
 const App = (props) => {

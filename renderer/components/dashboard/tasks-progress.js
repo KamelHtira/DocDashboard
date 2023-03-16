@@ -13,7 +13,7 @@ export const TasksProgress = (props) => (
   <Card sx={{ height: "100%" }} {...props}>
     <CardContent>
       <Grid container spacing={3} sx={{ justifyContent: "space-between" }}>
-        <Grid item>
+        <Grid item xs={9}>
           <Typography color="textSecondary" gutterBottom variant="overline">
             N/A
           </Typography>
@@ -21,7 +21,7 @@ export const TasksProgress = (props) => (
             75.0%
           </Typography>
         </Grid>
-        <Grid item>
+        <Grid item xs={3}>
           <Avatar
             sx={{
               backgroundColor: "warning.main",

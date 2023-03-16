@@ -47,7 +47,7 @@ export const Sales = (props) => {
       {
         backgroundColor: "#3F51B5",
         barPercentage: 0.5,
-        barThickness: 250 / numberofMonths,
+        barThickness: numberofMonths + 2,
         borderRadius: 4,
         categoryPercentage: 0.5,
         data: [],
@@ -57,7 +57,7 @@ export const Sales = (props) => {
       {
         backgroundColor: "#EEEEEE",
         barPercentage: 0.5,
-        barThickness: 250 / numberofMonths,
+        barThickness: numberofMonths + 2,
         borderRadius: 4,
         categoryPercentage: 0.5,
         data: [],

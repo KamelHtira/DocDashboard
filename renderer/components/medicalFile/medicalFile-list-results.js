@@ -26,6 +26,9 @@ import { backendURL } from "../../utils/constants";
 export const EditMedicalFilesPopupContext = createContext(null);
 
 export const MedicalFileListResults = ({ patientId }) => {
+  // Dependency Value
+  const [dependencyValue, setDependencyValue] = useState(false);
+  
   // Medicalfiles
   const [medicalFilesList, setMedicalFilesList] = useState([]);
   // Set "show" variable for EditMedicalFilePopup
@@ -108,7 +111,7 @@ export const MedicalFileListResults = ({ patientId }) => {
       }
     };
     fetchData();
-  }, []);
+  }, [dependencyValue]);
 
   return (
     <Card style={{ margin: "20px 70px" }}>
@@ -234,7 +237,12 @@ export const MedicalFileListResults = ({ patientId }) => {
         rowsPerPageOptions={[50, 100, 150]}
       />
       <EditMedicalFilesPopupContext.Provider
-        value={{ showEditMedicalFilesPopup, setShowEditMedicalFilesPopup }}
+        value={{
+          showEditMedicalFilesPopup,
+          setShowEditMedicalFilesPopup,
+          dependencyValue,
+          setDependencyValue,
+        }}
       >
         {showEditMedicalFilesPopup.show ? (
           <EditMedicalFilePopup medicalFilesList={medicalFilesList} />

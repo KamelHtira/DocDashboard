@@ -17,15 +17,15 @@ export const Budget = (props) => {
     <Card sx={{ height: "100%" }} {...props}>
       <CardContent>
         <Grid container spacing={3} sx={{ justifyContent: "space-between" }}>
-          <Grid item>
+          <Grid item xs={9}>
             <Typography color="textSecondary" gutterBottom variant="overline">
-             CURRENT MONTH GAIN
+              CURRENT MONTH GAIN
             </Typography>
             <Typography color="textPrimary" variant="h4">
               {budgetData != null ? `$${budgetData}` : "Loading..."}
             </Typography>
           </Grid>
-          <Grid item>
+          <Grid item xs={3}>
             <Avatar
               sx={{
                 backgroundColor: "error.main",

@@ -275,7 +275,7 @@ const AccountProfileDetails = (props) => {
               type="submit"
               variant="contained"
             >
-              Edit patient
+              Save patient
             </Button>
           </Box>
         </Card>

@@ -85,17 +85,17 @@ function getTransactionById(transactionsList, id) {
 
 function getMedicalFileById(medicalFilesList, id) {
   let matchedMedicalFile = {
+    title: "N/A",
     amount: "ID not found",
-    type: "N/A",
-    date: "N/A",
+    customFields: null,
     description: "N/A",
   };
   medicalFilesList.map((currentMedicalFile) => {
     if (currentMedicalFile._id === id) {
       matchedMedicalFile = {
         amount: currentMedicalFile.amount,
-        type: currentMedicalFile.type,
-        date: currentMedicalFile.date,
+        title: currentMedicalFile.title,
+        customFields: currentMedicalFile.customFields,
         description: currentMedicalFile.description,
       };
     }

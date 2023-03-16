@@ -1,64 +1,62 @@
-import { useEffect } from 'react';
-import NextLink from 'next/link';
-import { useRouter } from 'next/router';
-import PropTypes from 'prop-types';
-import { Box, Divider, Drawer, useMediaQuery } from '@mui/material';
-import { ChartBar as ChartBarIcon } from '../icons/chart-bar';
-import { Cog as CogIcon } from '../icons/cog';
-import PaymentsIcon from '@mui/icons-material/Payments';
-import { User as UserIcon } from '../icons/user';
-import { Users as UsersIcon } from '../icons/users';
-import { Logo } from './logo';
-import { NavItem } from './nav-item';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import LogoutIcon from '@mui/icons-material/Logout';
+import { useEffect } from "react";
+import NextLink from "next/link";
+import { useRouter } from "next/router";
+import PropTypes from "prop-types";
+import { Box, Divider, Drawer, Typography, useMediaQuery } from "@mui/material";
+import { ChartBar as ChartBarIcon } from "../icons/chart-bar";
+import { Cog as CogIcon } from "../icons/cog";
+import PaymentsIcon from "@mui/icons-material/Payments";
+import { User as UserIcon } from "../icons/user";
+import { Users as UsersIcon } from "../icons/users";
+import { Logo } from "./logo";
+import { NavItem } from "./nav-item";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 const items = [
   {
-    href: '/',
-    icon: (<ChartBarIcon fontSize="small" />),
-    title: 'Dashboard'
+    href: "/",
+    icon: <ChartBarIcon fontSize="small" />,
+    title: "Dashboard",
   },
   {
-    href: '/patients',
-    icon: (<UsersIcon fontSize="small" />),
-    title: 'Patients'
+    href: "/patients",
+    icon: <UsersIcon fontSize="small" />,
+    title: "Patients",
   },
   {
-    href: '/transactions',
-    icon: (<PaymentsIcon fontSize="small" />),
-    title: 'Transactions'
+    href: "/transactions",
+    icon: <PaymentsIcon fontSize="small" />,
+    title: "Transactions",
   },
   {
-    href: '/appointments',
-    icon: (<CalendarMonthIcon fontSize="small" />),
-    title: 'Rendez-vous'
+    href: "/appointments",
+    icon: <CalendarMonthIcon fontSize="small" />,
+    title: "Rendez-vous",
   },
   {
-    href: '/account',
-    icon: (<UserIcon fontSize="small" />),
-    title: 'Account'
+    href: "/account",
+    icon: <UserIcon fontSize="small" />,
+    title: "Account",
   },
   {
-    href: '/settings',
-    icon: (<CogIcon fontSize="small" />),
-    title: 'Settings'
+    href: "/settings",
+    icon: <CogIcon fontSize="small" />,
+    title: "Settings",
   },
   {
-    href: '/login',
-    icon: (<LogoutIcon fontSize="small" />),
-    title: 'logout'
+    href: "/login",
+    icon: <LogoutIcon fontSize="small" />,
+    title: "logout",
   },
-
-
 ];
 
 export const DashboardSidebar = (props) => {
   const { open, onClose } = props;
   const router = useRouter();
-  const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'), {
+  const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"), {
     defaultMatches: true,
-    noSsr: false
+    noSsr: false,
   });
 
   useEffect(
@@ -79,70 +77,51 @@ export const DashboardSidebar = (props) => {
     <>
       <Box
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          height: '100%',
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
         }}
       >
         <div>
           <Box sx={{ p: 3 }}>
-            <NextLink
-              href="/"
-              passHref
-            >
-              <a>
+            <NextLink href="/" passHref>
+              <a >
                 <Logo
                   sx={{
                     height: 100,
-                    width: 100
+                    width: 100,
                   }}
                 />
               </a>
             </NextLink>
           </Box>
-          {/* <Box sx={{ px: 2 }}>
+          <Box sx={{ px: 2 }}>
             <Box
               sx={{
-                alignItems: 'center',
-                backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                cursor: 'pointer',
-                display: 'flex',
-                justifyContent: 'space-between',
+                alignItems: "center",
+                backgroundColor: "rgba(255, 255, 255, 0.04)",
+                cursor: "pointer",
+                display: "flex",
+                justifyContent: "space-between",
                 px: 3,
-                py: '11px',
-                borderRadius: 1
+                py: "11px",
+                borderRadius: 1,
               }}
             >
               <div>
-                <Typography
-                  color="inherit"
-                  variant="subtitle1"
-                >
-                  Acme Inc
-                </Typography>
-                <Typography
-                  color="neutral.400"
-                  variant="body2"
-                >
-                  Your tier
-                  {' '}
-                  : Premium
+                <Typography color="inherit" align="center" variant="subtitle1">
+                  {localStorage.getItem("currentUser").split("-")[1] +
+                    " " +
+                    localStorage.getItem("currentUser").split("-")[2]}
                 </Typography>
               </div>
-              <SelectorIcon
-                sx={{
-                  color: 'neutral.500',
-                  width: 14,
-                  height: 14
-                }}
-              />
             </Box>
-          </Box> */}
+          </Box>
         </div>
         <Divider
           sx={{
-            borderColor: '#2D3748',
-            my: 3
+            borderColor: "#2D3748",
+            my: 3,
           }}
         />
         <Box sx={{ flexGrow: 1 }}>
@@ -155,7 +134,7 @@ export const DashboardSidebar = (props) => {
             />
           ))}
         </Box>
-        <Divider sx={{ borderColor: '#2D3748' }} />
+        <Divider sx={{ borderColor: "#2D3748" }} />
         {/* <Box
           sx={{
             px: 2,
@@ -202,10 +181,10 @@ export const DashboardSidebar = (props) => {
         open
         PaperProps={{
           sx: {
-            backgroundColor: 'neutral.900',
-            color: '#FFFFFF',
-            width: 250
-          }
+            backgroundColor: "neutral.900",
+            color: "#FFFFFF",
+            width: 250,
+          },
         }}
         variant="permanent"
       >
@@ -221,10 +200,10 @@ export const DashboardSidebar = (props) => {
       open={open}
       PaperProps={{
         sx: {
-          backgroundColor: 'neutral.900',
-          color: '#FFFFFF',
-          width: 250
-        }
+          backgroundColor: "neutral.900",
+          color: "#FFFFFF",
+          width: 250,
+        },
       }}
       sx={{ zIndex: (theme) => theme.zIndex.appBar + 100 }}
       variant="temporary"
@@ -236,5 +215,5 @@ export const DashboardSidebar = (props) => {
 
 DashboardSidebar.propTypes = {
   onClose: PropTypes.func,
-  open: PropTypes.bool
+  open: PropTypes.bool,
 };

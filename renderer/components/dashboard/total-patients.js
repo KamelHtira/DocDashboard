@@ -23,7 +23,7 @@ export const TotalPatients = (props) => {
     <Card sx={{ height: "100%" }} {...props}>
       <CardContent>
         <Grid container spacing={3} sx={{ justifyContent: "space-between" }}>
-          <Grid item>
+          <Grid item xs={9}>
             <Typography color="textSecondary" gutterBottom variant="overline">
               TOTAL PATIENTS
             </Typography>
@@ -31,7 +31,7 @@ export const TotalPatients = (props) => {
               {patientsData != null ? `${patientsData}` : "Loading..."}
             </Typography>
           </Grid>
-          <Grid item>
+          <Grid item xs={3}>
             <Avatar
               sx={{
                 backgroundColor: "error.main",
