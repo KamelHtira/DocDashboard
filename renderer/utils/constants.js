@@ -77,6 +77,7 @@ const accountIsLoading = {
   phone: "Loading..",
   state: "ariana",
   country: "Tunisia",
+  access: {},
 };
 
 const accountNA = {

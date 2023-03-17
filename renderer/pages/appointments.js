@@ -6,9 +6,12 @@ import { AppointmentListToolbar } from "../components/appointment/appointment-li
 import { createContext, useState, useEffect } from "react";
 import { appointmentIsLoading, backendURL } from "../utils/constants";
 import { useSnackbar } from "notistack";
+import { ipcRenderer } from "electron";
 
 export const AppointmentsContext = createContext(null);
 const Appointment = () => {
+  const [userId, setUserId] = useState("");
+
   // Provide SnackBar function
   const { enqueueSnackbar } = useSnackbar();
 
@@ -87,6 +90,12 @@ const Appointment = () => {
     };
     fetchData();
   }, [dependencyValue]);
+  useEffect(() => {
+    ipcRenderer.send("getUserId");
+    ipcRenderer.on("getUserIdResponse", (event, userId) => {
+      setUserId(userId);
+    });
+  }, []);
 
   return (
     <>
@@ -109,6 +118,7 @@ const Appointment = () => {
               deleteAppointment,
               EditAppointmentType,
               enqueueSnackbar,
+              userId,
             }}
           >
             <AppointmentListToolbar />

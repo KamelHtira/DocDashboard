@@ -60,19 +60,19 @@ export const SettingsNotifications = (props) => {
     const fetchData = async () => {
       try {
         setSubmitButtonCustomFields(true);
-        const res = await fetch(
-          `${backendURL}/users/customFields/${
-            localStorage.getItem("currentUser").split("-")[0]
-          }`
-        );
-        if (res.ok) {
-          setSubmitButtonCustomFields(false);
-          const data = await res.json();
-          setCurrentCustomFields(data.customFields);
-          console.log(data);
-        } else {
-          setSubmitButtonCustomFields(false);
-          throw new Error("error getting customFields");
+        if (props.userId) {
+          const res = await fetch(
+            `${backendURL}/users/customFields/${props.userId}`
+          );
+          if (res.ok) {
+            setSubmitButtonCustomFields(false);
+            const data = await res.json();
+            setCurrentCustomFields(data.customFields);
+            console.log(data);
+          } else {
+            setSubmitButtonCustomFields(false);
+            throw new Error("error getting customFields");
+          }
         }
       } catch (error) {
         setSubmitButtonCustomFields(false);
@@ -80,23 +80,18 @@ export const SettingsNotifications = (props) => {
       }
     };
     fetchData();
-  }, []);
+  }, [props.userId]);
 
   // Edit Request
   async function editCustomFieldsAPI() {
     try {
       setSubmitButtonCustomFields(true);
       const body = JSON.stringify({ customFields: currentCustomFields });
-      const data = await fetch(
-        `${backendURL}/users/${
-          localStorage.getItem("currentUser").split("-")[0]
-        }`,
-        {
-          method: "PATCH",
-          headers: { "content-Type": "application/json" },
-          body: body,
-        }
-      );
+      const data = await fetch(`${backendURL}/users/${props.userId}`, {
+        method: "PATCH",
+        headers: { "content-Type": "application/json" },
+        body: body,
+      });
       if (data.ok) {
         setSubmitButtonCustomFields(false);
         // show success message

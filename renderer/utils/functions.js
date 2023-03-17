@@ -117,6 +117,18 @@ function sendDownloadEvent(ids, data) {
   ipcRenderer.send("download", filterDataFromIds(data, ids));
 }
 
+async function getUserIdEvent() {
+  ipcRenderer.send('getUserId');
+  ipcRenderer.on('getUserIdResponse', (event, userId) => {
+    console.log(`User ID: ${userId}`);
+    return userId
+  });
+}
+
+function setUserIdEvent(id) {
+  ipcRenderer.send("setUserId", id);
+}
+
 function hoursAgo(dateStr) {
   var date = new Date(dateStr);
   var now = new Date();
@@ -157,4 +169,6 @@ export {
   getMedicalFileById,
   addStringToArray,
   removeStringFromArray,
+  getUserIdEvent,
+  setUserIdEvent,
 };

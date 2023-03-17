@@ -14,6 +14,7 @@ import { Google as GoogleIcon } from "../icons/google";
 import { useEffect, useState } from "react";
 import { backendURL } from "../utils/constants";
 import { useSnackbar } from "notistack";
+import { setUserIdEvent } from "../utils/functions";
 
 const Login = () => {
   // snackBar
@@ -86,10 +87,7 @@ const Login = () => {
           },
         });
         if (data.ok) {
-          localStorage.setItem(
-            "currentUser",
-            `${response.user._id}-${response.user.firstName}-${response.user.lastName}-${response.user.type}-${response.user.email}-${response.user.access.dashboard}-${response.user.access.patient}-${response.user.access.setting}-${response.user.access.transaction}-${response.user.access.appointment}-${response.user.state}`
-          );
+          setUserIdEvent(`${response.user._id}`);
           router.push("/");
         } else {
         }

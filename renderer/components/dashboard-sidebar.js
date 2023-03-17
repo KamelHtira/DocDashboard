@@ -105,9 +105,7 @@ export const DashboardSidebar = (props) => {
             >
               <div>
                 <Typography color="inherit" align="center" variant="subtitle1">
-                  {localStorage.getItem("currentUser").split("-")[1] +
-                    " " +
-                    localStorage.getItem("currentUser").split("-")[2]}
+                  {"Welcome"}
                 </Typography>
               </div>
             </Box>

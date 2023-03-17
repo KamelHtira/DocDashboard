@@ -2,9 +2,9 @@ import { app, ipcMain, session } from "electron";
 import serve from "electron-serve";
 import { createWindow } from "./helpers";
 import { dialog } from 'electron';
-import { promises as fs } from 'fs';
+import * as fs from 'fs';
 import { parse as json2csv } from 'json2csv';
-import Store from 'electron-store';
+
 
 const isProd = process.env.NODE_ENV === "production";
 
@@ -14,7 +14,30 @@ if (isProd) {
   app.setPath("userData", `${app.getPath("userData")} (development)`);
 }
 
-
+ipcMain.on("setUserId", (event, data) => { 
+  try {
+    let sData = JSON.stringify({_id:data})
+    fs.writeFileSync('data/data.json',sData)
+    console.log("data saved");
+  }catch (error) {
+    console.log("failed to save data");
+  }
+  
+  })
+  
+  ipcMain.on('getUserId', (event) => {
+    try {
+      let res = fs.existsSync('data/data.json');
+      if (res) {
+        let data = fs.readFileSync('data/data.json');
+        let sData = JSON.parse(data);
+        console.log('id: ' + sData._id);
+        event.reply('getUserIdResponse', sData._id);
+      }
+    } catch (error) {
+      console.log('failed to get id');
+    }
+  });
 
 (async () => {
   await app.whenReady();
@@ -24,8 +47,6 @@ if (isProd) {
     height: 800,
     center: true,
   });
-
-  const store = new Store();
 
   if (isProd) {
     await mainWindow.loadURL("app://./login.html");
@@ -38,12 +59,12 @@ if (isProd) {
         // Open the "Save As" dialog
         dialog.showSaveDialog(mainWindow,{
           filters: [{ name: 'CSV Files', extensions: ['csv'] }]
-        }).then(async (filename) => {
+        }).then((filename) => {
           console.log(filename);
           if (filename) {
             try {
               // If the user clicked "Save", write the CSV data to the file
-              await fs.writeFile(filename.filePath, csv);
+              fs.writeFileSync(filename.filePath, csv);
               console.log('File saved successfully!');
             } catch (err) {
               console.error('Error saving file:', err);
@@ -68,12 +89,12 @@ if (isProd) {
         // Open the "Save As" dialog
         dialog.showSaveDialog(mainWindow,{
           filters: [{ name: 'CSV Files', extensions: ['csv'] }]
-        }).then(async (filename) => {
+        }).then((filename) => {
           console.log(filename);
           if (filename) {
             try {
               // If the user clicked "Save", write the CSV data to the file
-              await fs.writeFile(filename.filePath, csv);
+              fs.writeFileSync(filename.filePath, csv);
               console.log('File saved successfully!');
             } catch (err) {
               console.error('Error saving file:', err);
@@ -87,22 +108,6 @@ if (isProd) {
       }
     });
 
-    ipcMain.on("setCookie", (event, data) => { 
-      console.log("this is setCookie Event");
-      console.log(data);
-      store.set("currentUser",data);
-      console.log(store.get("currentUser"));
-      })
-      
-    ipcMain.on("getCookie", (event, data) => {
-      console.log("this is getCookie Event");
-      let currentUser = store.get("currentUser");
-      console.log(currentUser);
-      event.returnValue = currentUser;
-    });
-
-
-      
     mainWindow.webContents.openDevTools();
   }
 })();

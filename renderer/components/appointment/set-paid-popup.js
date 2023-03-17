@@ -20,7 +20,7 @@ export const PaidAppointmentPopup = ({ appointment }) => {
   /* [ContextAPI]
     getter and setter for dependency value to refresh component after request sent
    */
-  const { dependencyValue, setDependencyValue, enqueueSnackbar } =
+  const { dependencyValue, setDependencyValue, enqueueSnackbar,userId } =
     useContext(AppointmentsContext);
 
   /* [ContextAPI]
@@ -52,7 +52,7 @@ export const PaidAppointmentPopup = ({ appointment }) => {
       try {
         const res = await fetch(
           `${backendURL}/users/customFields/${
-            localStorage.getItem("currentUser").split("-")[0]
+            userId
           }`
         );
         if (res.ok) {
@@ -71,7 +71,7 @@ export const PaidAppointmentPopup = ({ appointment }) => {
       }
     };
     fetchData();
-  }, []);
+  }, [userId]);
 
   // Set Paid Request
   async function setPaidAppointmentAPI() {

@@ -35,7 +35,7 @@ export const AccountProfileDetails = (props) => {
   /* [ContextAPI]
       Get snackbar function
      */
-  const { enqueueSnackbar } = useContext(AccountContext);
+  const { enqueueSnackbar, userId } = useContext(AccountContext);
 
   // set Disabled submit button
   const [submitButton, setSubmitButton] = useState(false);
@@ -46,11 +46,7 @@ export const AccountProfileDetails = (props) => {
     const fetchData = async () => {
       try {
         setSubmitButton(true);
-        const res = await fetch(
-          `${backendURL}/users/${
-            localStorage.getItem("currentUser").split("-")[0]
-          }`
-        );
+        const res = await fetch(`${backendURL}/users/${userId}`);
         if (res.ok) {
           setSubmitButton(false);
           const data = await res.json();
@@ -65,23 +61,18 @@ export const AccountProfileDetails = (props) => {
       }
     };
     fetchData();
-  }, []);
+  }, [userId]);
 
   // Edit Request
   async function editAccountAPI() {
     try {
       setSubmitButton(true);
       const body = JSON.stringify(currentAccount);
-      const data = await fetch(
-        `${backendURL}/users/${
-          localStorage.getItem("currentUser").split("-")[0]
-        }`,
-        {
-          method: "PATCH",
-          headers: { "content-Type": "application/json" },
-          body: body,
-        }
-      );
+      const data = await fetch(`${backendURL}/users/${userId}`, {
+        method: "PATCH",
+        headers: { "content-Type": "application/json" },
+        body: body,
+      });
       if (data.ok) {
         setSubmitButton(false);
         // show success message
@@ -120,85 +111,87 @@ export const AccountProfileDetails = (props) => {
       <Card>
         <CardHeader subheader="The information can be edited" title="Profile" />
         <Divider />
-        <CardContent>
-          <Grid container spacing={3}>
-            <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                helperText="Please specify the first name"
-                label="First name"
-                name="firstName"
-                onChange={handleChange}
-                required
-                value={currentAccount.firstName}
-                variant="outlined"
-              />
+        {userId && (
+          <CardContent>
+            <Grid container spacing={3}>
+              <Grid item md={6} xs={12}>
+                <TextField
+                  fullWidth
+                  helperText="Please specify the first name"
+                  label="First name"
+                  name="firstName"
+                  onChange={handleChange}
+                  required
+                  value={currentAccount.firstName}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <TextField
+                  fullWidth
+                  label="Last name"
+                  name="lastName"
+                  onChange={handleChange}
+                  required
+                  value={currentAccount.lastName}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <TextField
+                  fullWidth
+                  label="Email Address"
+                  name="email"
+                  onChange={handleChange}
+                  required
+                  value={currentAccount.email}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <TextField
+                  fullWidth
+                  label="Phone Number"
+                  name="phone"
+                  onChange={handleChange}
+                  value={currentAccount.phone}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <TextField
+                  fullWidth
+                  label="Country"
+                  name="country"
+                  //onChange={handleChange}
+                  required
+                  value={"Tunisia"}
+                  //value={currentAccount.country}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <TextField
+                  fullWidth
+                  label="Select State"
+                  name="state"
+                  onChange={handleChange}
+                  required
+                  select
+                  SelectProps={{ native: true }}
+                  value={currentAccount.state}
+                  variant="outlined"
+                >
+                  {states.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </TextField>
+              </Grid>
             </Grid>
-            <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                label="Last name"
-                name="lastName"
-                onChange={handleChange}
-                required
-                value={currentAccount.lastName}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                label="Email Address"
-                name="email"
-                onChange={handleChange}
-                required
-                value={currentAccount.email}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                label="Phone Number"
-                name="phone"
-                onChange={handleChange}
-                value={currentAccount.phone}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                label="Country"
-                name="country"
-                //onChange={handleChange}
-                required
-                value={"Tunisia"}
-                //value={currentAccount.country}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                label="Select State"
-                name="state"
-                onChange={handleChange}
-                required
-                select
-                SelectProps={{ native: true }}
-                value={currentAccount.state}
-                variant="outlined"
-              >
-                {states.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
-            </Grid>
-          </Grid>
-        </CardContent>
+          </CardContent>
+        )}
         <Divider />
         <Box
           sx={{

@@ -8,24 +8,32 @@ import {
   Divider,
   Typography,
 } from "@mui/material";
-
-const userArray = localStorage.getItem("currentUser").split("-");
-const user = {
-  email: userArray[4],
-  firstName: userArray[1],
-  lastName: userArray[2],
-  type: userArray[3],
-  access: {
-    dashboard: userArray[5] == "true",
-    patient: userArray[6] == "true",
-    transaction: userArray[7] == "true",
-    setting: userArray[8] == "true",
-    appointment: userArray[9] == "true",
-  },
-  state: userArray[10],
-};
+import { useContext, useEffect, useState } from "react";
+import { AccountContext } from "../../pages/account";
+import { backendURL } from "../../utils/constants";
 
 export const AccountProfile = (props) => {
+  const { userId } = useContext(AccountContext);
+  // Get current account data
+  const [currentAccount, setCurrentAccount] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`${backendURL}/users/${userId}`);
+        if (res.ok) {
+          const data = await res.json();
+          setCurrentAccount(data);
+          console.log(data.access);
+        } else {
+          throw new Error("error getting account");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, [userId]);
   return (
     <Card {...props}>
       <CardContent>
@@ -43,107 +51,111 @@ export const AccountProfile = (props) => {
               width: 64,
             }}
           />
-          <Typography color="textPrimary" gutterBottom variant="h5">
-            {`${user.firstName} ${user.lastName}`}
-          </Typography>
-          <Typography gutterBottom variant="h6" color="primary">
-            {user.type}
-          </Typography>
-          <Box>
-            <Typography gutterBottom color="textSecondary" variant="body2">
-              {user.email}
-            </Typography>
+          {currentAccount?.access && (
+            <>
+              <Typography color="textPrimary" gutterBottom variant="h5">
+                {`${currentAccount.firstName} ${currentAccount.lastName}`}
+              </Typography>
+              <Typography gutterBottom variant="h6" color="primary">
+                {currentAccount.type}
+              </Typography>
+              <Box>
+                <Typography gutterBottom color="textSecondary" variant="body2">
+                  {currentAccount.email}
+                </Typography>
 
-            <Typography gutterBottom color="text" variant="body1">
-              Granted access:
-            </Typography>
-            <Typography
-              noWrap={true}
-              gutterBottom
-              color="textSecondary"
-              variant="body2"
-            >
-              Dashboard :&nbsp;&nbsp;
-              {user.access.dashboard ? (
-                <Typography component={"span"} color="success.main">
-                  YES
+                <Typography gutterBottom color="text" variant="body1">
+                  Granted access:
                 </Typography>
-              ) : (
-                <Typography component={"span"} color="error.main">
-                  NO
+                <Typography
+                  noWrap={true}
+                  gutterBottom
+                  color="textSecondary"
+                  variant="body2"
+                >
+                  Dashboard :&nbsp;&nbsp;
+                  {currentAccount.access.dashboard ? (
+                    <Typography component={"span"} color="success.main">
+                      YES
+                    </Typography>
+                  ) : (
+                    <Typography component={"span"} color="error.main">
+                      NO
+                    </Typography>
+                  )}
                 </Typography>
-              )}
-            </Typography>
-            <Typography
-              noWrap={true}
-              gutterBottom
-              color="textSecondary"
-              variant="body2"
-            >
-              Patient :&nbsp;&nbsp;
-              {user.access.patient ? (
-                <Typography component={"span"} color="success.main">
-                  YES
+                <Typography
+                  noWrap={true}
+                  gutterBottom
+                  color="textSecondary"
+                  variant="body2"
+                >
+                  Patient :&nbsp;&nbsp;
+                  {currentAccount.access.patient ? (
+                    <Typography component={"span"} color="success.main">
+                      YES
+                    </Typography>
+                  ) : (
+                    <Typography component={"span"} color="error.main">
+                      NO
+                    </Typography>
+                  )}
                 </Typography>
-              ) : (
-                <Typography component={"span"} color="error.main">
-                  NO
-                </Typography>
-              )}
-            </Typography>
 
-            <Typography
-              noWrap={true}
-              gutterBottom
-              color="textSecondary"
-              variant="body2"
-            >
-              Settings :&nbsp;&nbsp;
-              {user.access.setting ? (
-                <Typography component={"span"} color="success.main">
-                  YES
+                <Typography
+                  noWrap={true}
+                  gutterBottom
+                  color="textSecondary"
+                  variant="body2"
+                >
+                  Settings :&nbsp;&nbsp;
+                  {currentAccount.access.setting ? (
+                    <Typography component={"span"} color="success.main">
+                      YES
+                    </Typography>
+                  ) : (
+                    <Typography component={"span"} color="error.main">
+                      NO
+                    </Typography>
+                  )}
                 </Typography>
-              ) : (
-                <Typography component={"span"} color="error.main">
-                  NO
+                <Typography
+                  noWrap={true}
+                  gutterBottom
+                  color="textSecondary"
+                  variant="body2"
+                >
+                  Transactions :&nbsp;&nbsp;
+                  {currentAccount.access.transaction ? (
+                    <Typography component={"span"} color="success.main">
+                      YES
+                    </Typography>
+                  ) : (
+                    <Typography component={"span"} color="error.main">
+                      NO
+                    </Typography>
+                  )}
                 </Typography>
-              )}
-            </Typography>
-            <Typography
-              noWrap={true}
-              gutterBottom
-              color="textSecondary"
-              variant="body2"
-            >
-              Transactions :&nbsp;&nbsp;
-              {user.access.transaction ? (
-                <Typography component={"span"} color="success.main">
-                  YES
+                <Typography
+                  noWrap={true}
+                  gutterBottom
+                  color="textSecondary"
+                  variant="body2"
+                >
+                  Appointment :&nbsp;&nbsp;
+                  {currentAccount.access.appointment ? (
+                    <Typography component={"span"} color="success.main">
+                      YES
+                    </Typography>
+                  ) : (
+                    <Typography component={"span"} color="error.main">
+                      NO
+                    </Typography>
+                  )}
                 </Typography>
-              ) : (
-                <Typography component={"span"} color="error.main">
-                  NO
-                </Typography>
-              )}
-            </Typography>
-            <Typography
-              noWrap={true}
-              gutterBottom
-              color="textSecondary"
-              variant="body2"
-            >
-              Appointment :&nbsp;&nbsp;
-              {user.access.appointment ? (
-                <Typography component={"span"} color="success.main">
-                  YES
-                </Typography>
-              ) : (
-                <Typography component={"span"} color="error.main">
-                  NO
-                </Typography>
-              )}
-            </Typography>
-          </Box>
+              </Box>
+            </>
+          )}
         </Box>
       </CardContent>
     </Card>

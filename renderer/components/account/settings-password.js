@@ -16,7 +16,7 @@ export const SettingsPassword = (props) => {
   /* [ContextAPI]
       Get snackbar function
      */
-  const { enqueueSnackbar } = useContext(AccountContext);
+  const { enqueueSnackbar, userId } = useContext(AccountContext);
 
   // set Disabled submit button
   const [submitButton, setSubmitButton] = useState(false);
@@ -48,16 +48,11 @@ export const SettingsPassword = (props) => {
       }
       setSubmitButton(true);
       const body = JSON.stringify(values);
-      const data = await fetch(
-        `${backendURL}/password/${
-          localStorage.getItem("currentUser").split("-")[0]
-        }`,
-        {
-          method: "PATCH",
-          headers: { "content-Type": "application/json" },
-          body: body,
-        }
-      );
+      const data = await fetch(`${backendURL}/password/${userId}`, {
+        method: "PATCH",
+        headers: { "content-Type": "application/json" },
+        body: body,
+      });
       if (data.ok) {
         setSubmitButton(false);
         // show success message

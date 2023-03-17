@@ -4,15 +4,22 @@ import { AccountProfileDetails } from "../components/account/account-profile-det
 import { DashboardLayout } from "../components/dashboard-layout";
 import { SettingsPassword } from "../components/account/settings-password";
 import { AccountProfile } from "../components/account/account-profile";
-import { createContext } from "react";
+import { createContext, useEffect, useState } from "react";
 import { useSnackbar } from "notistack";
+import { ipcRenderer } from "electron";
 
 export const AccountContext = createContext(null);
 
 const Account = () => {
   // Provide SnackBar function
   const { enqueueSnackbar } = useSnackbar();
-
+  const [userId, setUserId] = useState("");
+  useEffect(() => {
+    ipcRenderer.send("getUserId");
+    ipcRenderer.on("getUserIdResponse", (event, userId) => {
+      setUserId(userId);
+    });
+  }, []);
   return (
     <>
       <Head>
@@ -28,6 +35,7 @@ const Account = () => {
         <AccountContext.Provider
           value={{
             enqueueSnackbar,
+            userId
           }}
         >
           <Container maxWidth="lg">
@@ -39,10 +47,10 @@ const Account = () => {
                 <AccountProfileDetails />
               </Grid>
               <Grid item xs={8}>
-                <SettingsPassword />
+                <SettingsPassword  />
               </Grid>
               <Grid item xs={4}>
-                <AccountProfile />
+                <AccountProfile  />
               </Grid>
             </Grid>
           </Container>
