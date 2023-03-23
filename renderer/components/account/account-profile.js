@@ -168,20 +168,32 @@ export const AccountProfile = (props) => {
               />
               <Skeleton
                 variant="rectangular"
-                width={"80%"}
-                height={40}
+                width={"40%"}
+                height={35}
                 sx={{ margin: "5px" }}
               />
               <Skeleton
                 variant="rectangular"
                 width={"80%"}
-                height={40}
+                height={20}
                 sx={{ margin: "5px" }}
               />
               <Skeleton
                 variant="rectangular"
                 width={"80%"}
-                height={40}
+                height={20}
+                sx={{ margin: "5px" }}
+              />
+              <Skeleton
+                variant="rectangular"
+                width={"80%"}
+                height={20}
+                sx={{ margin: "5px" }}
+              />
+              <Skeleton
+                variant="rectangular"
+                width={"80%"}
+                height={20}
                 sx={{ margin: "5px" }}
               />
               <Skeleton

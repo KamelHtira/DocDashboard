@@ -60,26 +60,27 @@ export const SettingsNotifications = (props) => {
     const fetchData = async () => {
       try {
         setSubmitButtonCustomFields(true);
-        if (props.userId) {
-          const res = await fetch(
-            `${backendURL}/users/customFields/${props.userId}`
-          );
-          if (res.ok) {
-            setSubmitButtonCustomFields(false);
-            const data = await res.json();
-            setCurrentCustomFields(data.customFields);
-            console.log(data);
-          } else {
-            setSubmitButtonCustomFields(false);
-            throw new Error("error getting customFields");
-          }
+
+        const res = await fetch(
+          `${backendURL}/users/customFields/${props.userId}`
+        );
+        if (res.ok) {
+          setSubmitButtonCustomFields(false);
+          const data = await res.json();
+          setCurrentCustomFields(data.customFields);
+          console.log(data);
+        } else {
+          setSubmitButtonCustomFields(false);
+          throw new Error("error getting customFields");
         }
       } catch (error) {
         setSubmitButtonCustomFields(false);
         setCurrentCustomFields(["N/A"]);
       }
     };
-    fetchData();
+    if (props.userId) {
+      fetchData();
+    }
   }, [props.userId]);
 
   // Edit Request

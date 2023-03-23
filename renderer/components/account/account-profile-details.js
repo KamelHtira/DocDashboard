@@ -114,7 +114,7 @@ export const AccountProfileDetails = (props) => {
       <Card>
         <CardHeader subheader="The information can be edited" title="Profile" />
         <Divider />
-        {currentAccount ? (
+        {currentAccount && false ? (
           <CardContent>
             <Grid container spacing={3}>
               <Grid item md={6} xs={12}>
@@ -195,28 +195,64 @@ export const AccountProfileDetails = (props) => {
             </Grid>
           </CardContent>
         ) : (
-          <>
-            <Skeleton
-              variant="rectangular"
-              height={50}
-              sx={{ margin: "20px 20px" }}
-            />
-            <Skeleton
-              variant="rectangular"
-              height={50}
-              sx={{ margin: "20px 20px" }}
-            />
-            <Skeleton
-              variant="rectangular"
-              height={50}
-              sx={{ margin: "20px 20px" }}
-            />
-            <Skeleton
-              variant="rectangular"
-              height={50}
-              sx={{ margin: "20px 20px" }}
-            />
-          </>
+          <Grid container>
+            <Grid item xs={6}>
+              <Skeleton
+                variant="rectangular"
+                height={50}
+                sx={{ margin: "20px 20px" }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Skeleton
+                variant="rectangular"
+                height={50}
+                sx={{ margin: "20px 20px" }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Skeleton
+                variant="rectangular"
+                height={50}
+                sx={{ margin: "20px 20px" }}
+              />
+            </Grid>{" "}
+            <Grid item xs={6}>
+              <Skeleton
+                variant="rectangular"
+                height={50}
+                sx={{ margin: "20px 20px" }}
+              />
+            </Grid>{" "}
+            <Grid item xs={6}>
+              <Skeleton
+                variant="rectangular"
+                height={50}
+                sx={{ margin: "20px 20px" }}
+              />
+            </Grid>{" "}
+            <Grid item xs={6}>
+              <Skeleton
+                variant="rectangular"
+                height={50}
+                sx={{ margin: "20px 20px" }}
+              />
+            </Grid>{" "}
+            <Grid item xs={6}>
+              <Skeleton
+                variant="rectangular"
+                height={50}
+                sx={{ margin: "20px 20px" }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Skeleton
+                variant="rectangular"
+                height={50}
+                sx={{ margin: "20px 20px" }}
+              />
+            </Grid>
+          </Grid>
         )}
         <Divider />
         <Box
