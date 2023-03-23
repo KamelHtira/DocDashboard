@@ -19,13 +19,20 @@ import * as Yup from "yup";
 import { useRouter } from "next/router";
 import { parseDateString } from "../../utils/functions";
 import { useSnackbar } from "notistack";
+import { DesktopDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import moment from "moment";
+import { useState } from "react";
 
 const AccountProfileDetails = (props) => {
-  // SnackBar 
+  // SnackBar
   const { enqueueSnackbar } = useSnackbar();
 
   // Back to patients page
   const router = useRouter();
+
+  // Date picker
+  const [valueBirthday, setValueBirthday] = useState(moment(new Date()));
 
   // Add Request
   async function addPatientAPI(data) {
@@ -69,7 +76,6 @@ const AccountProfileDetails = (props) => {
       firstName: "",
       lastName: "",
       email: "",
-      birthday: "",
       address: "",
       phone: "",
       sexe: "",
@@ -81,7 +87,6 @@ const AccountProfileDetails = (props) => {
         .required("Email is required"),
       firstName: Yup.string().max(255).required("First Name is required"),
       lastName: Yup.string().max(255).required("Last Name is required"),
-      birthday: Yup.date().transform(parseDateString).required("MM/DD/YYYY"),
       sexe: Yup.string().required("sexe is required"),
     }),
     onSubmit: () => {
@@ -89,7 +94,7 @@ const AccountProfileDetails = (props) => {
         firstName: formik.values.firstName,
         lastName: formik.values.lastName,
         email: formik.values.email,
-        birthday: formik.values.birthday,
+        birthday: valueBirthday,
         address: formik.values.address,
         phone: formik.values.phone,
         sexe: formik.values.sexe,
@@ -140,21 +145,17 @@ const AccountProfileDetails = (props) => {
               />
             </Grid>
             <Grid item md={4} xs={12}>
-              <TextField
-                size="meduim"
-                error={Boolean(
-                  formik.touched.birthday && formik.errors.birthday
-                )}
-                fullWidth
-                helperText={formik.touched.birthday && formik.errors.birthday}
-                label="Birthday"
-                margin="normal"
-                name="birthday"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.birthday}
-                variant="outlined"
-              />
+              <LocalizationProvider dateAdapter={AdapterMoment}>
+                <DesktopDatePicker
+                  value={valueBirthday}
+                  onChange={(newValue) => {
+                    setValueBirthday(moment(newValue).format("l"));
+                  }}
+                  renderInput={(params) => (
+                    <TextField fullWidth margin="normal" {...params} />
+                  )}
+                />
+              </LocalizationProvider>
             </Grid>
             <Grid item md={8} xs={12}>
               <TextField

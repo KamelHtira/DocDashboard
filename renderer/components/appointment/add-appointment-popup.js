@@ -29,6 +29,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
+import DatePicker from "@mui/lab/DatePicker";
+import { DesktopDatePicker, StaticDatePicker } from "@mui/x-date-pickers";
 
 export const AddAppointmentPopup = () => {
   // Radio Button value
@@ -67,6 +69,9 @@ export const AddAppointmentPopup = () => {
     console.log(newValue);
     setValue(newValue);
   };
+
+  // Date picker
+  const [valueBirthday, setValueBirthday] = useState(moment(new Date()));
 
   /* [ContextAPI]
       getter and setter for dependency value to refresh component after request sent
@@ -178,7 +183,6 @@ export const AddAppointmentPopup = () => {
     initialValues: {
       firstName: "",
       lastName: "",
-      birthday: "",
       appointmentDate: value,
       description: "",
       phone: "",
@@ -191,10 +195,6 @@ export const AddAppointmentPopup = () => {
       lastName: valueRadioButton == "new" ? Yup.string().required() : "",
       appointmentDate: Yup.date(),
       description: Yup.string(),
-      birthday:
-        valueRadioButton == "new"
-          ? Yup.date().transform(parseDateString).required()
-          : "",
       type: Yup.string().required("type is required"),
       sexe: valueRadioButton == "new" ? Yup.string().required() : "",
     }),
@@ -225,7 +225,7 @@ export const AddAppointmentPopup = () => {
           ...body,
           firstName: formik.values.firstName,
           lastName: formik.values.lastName,
-          birthday: moment(formik.values.birthday).format(),
+          birthday: valueBirthday,
           sexe: formik.values.sexe,
         };
       } else if (valueRadioButton == "exist") {
@@ -246,11 +246,11 @@ export const AddAppointmentPopup = () => {
           {
             firstName: formik.values.firstName,
             lastName: formik.values.lastName,
-            birthday: moment(formik.values.birthday).calendar(),
+            birthday: valueBirthday,
             sexe: formik.values.sexe,
             email: "",
-            phone:"",
-            address:"",
+            phone: "",
+            address: "",
           },
           body
         );
@@ -390,7 +390,7 @@ export const AddAppointmentPopup = () => {
                     <TextField
                       required
                       {...params}
-                      label="Chercher un patient.."
+                      label="Find Patient.."
                       InputProps={{
                         ...params.InputProps,
                         endAdornment: (
@@ -445,22 +445,17 @@ export const AddAppointmentPopup = () => {
                       ></TextField>
                     </Grid>
                     <Grid item xs={6}>
-                      <TextField
-                        fullWidth
-                        size="small"
-                        error={Boolean(
-                          formik.touched.birthday && formik.errors.birthday
-                        )}
-                        helperText={
-                          formik.touched.birthday && formik.errors.birthday
-                        }
-                        label="Date de Naissance"
-                        name="birthday"
-                        onBlur={formik.handleBlur}
-                        onChange={formik.handleChange}
-                        value={formik.values.birthday}
-                        variant="outlined"
-                      ></TextField>
+                      <LocalizationProvider dateAdapter={AdapterMoment}>
+                        <DesktopDatePicker
+                          value={valueBirthday}
+                          onChange={(newValue) => {
+                            setValueBirthday(moment(newValue).format("l"));
+                          }}
+                          renderInput={(params) => (
+                            <TextField fullWidth size="small" {...params} />
+                          )}
+                        />
+                      </LocalizationProvider>
                     </Grid>
                     <Grid item xs={6}>
                       <FormControl fullWidth>

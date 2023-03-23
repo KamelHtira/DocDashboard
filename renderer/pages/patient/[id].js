@@ -18,14 +18,19 @@ import { backendURL, patientIsLoading, patientNA } from "../../utils/constants";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { parseDateString } from "../../utils/functions";
 import { useSnackbar } from "notistack";
 import { MedicalFileListResults } from "../../components/medicalFile/medicalFile-list-results";
+import moment from "moment";
+import { DesktopDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 
 const AccountProfileDetails = (props) => {
   const { enqueueSnackbar } = useSnackbar();
   // Back to patients page
   const router = useRouter();
+
+  // Date picker
+  const [valueBirthday, setValueBirthday] = useState(moment(new Date()));
 
   // Get current patient data
   const [currentPatient, setCurrentPatient] = useState(patientIsLoading);
@@ -37,6 +42,7 @@ const AccountProfileDetails = (props) => {
         if (res.ok) {
           const data = await res.json();
           setCurrentPatient(data);
+          setValueBirthday(moment(data.birthday));
           console.log(data);
         } else {
           throw new Error("error getting patient");
@@ -52,12 +58,12 @@ const AccountProfileDetails = (props) => {
   async function editPatientAPI(data) {
     try {
       const body = JSON.stringify(data);
-      const data = await fetch(`${backendURL}/patients/${router.query.id}`, {
+      const res = await fetch(`${backendURL}/patients/${router.query.id}`, {
         method: "PATCH",
         headers: { "content-Type": "application/json" },
         body: body,
       });
-      if (data.ok) {
+      if (res.ok) {
         formik.setSubmitting(false);
         // show success message
         enqueueSnackbar(`Patient Edited Successfully`, {
@@ -93,7 +99,6 @@ const AccountProfileDetails = (props) => {
         .required("Email is required"),
       firstName: Yup.string().max(255).required("First Name is required"),
       lastName: Yup.string().max(255).required("Last Name is required"),
-      birthday: Yup.date().transform(parseDateString),
       sexe: Yup.string().required("sexe is required"),
     }),
     onSubmit: () => {
@@ -101,11 +106,12 @@ const AccountProfileDetails = (props) => {
         firstName: formik.values.firstName,
         lastName: formik.values.lastName,
         email: formik.values.email,
-        birthday: formik.values.birthday,
+        birthday: valueBirthday,
         address: formik.values.address,
         phone: formik.values.phone,
         sexe: formik.values.sexe,
       };
+      console.log(body);
       editPatientAPI(body);
     },
   });
@@ -158,21 +164,17 @@ const AccountProfileDetails = (props) => {
                 />
               </Grid>
               <Grid item md={4} xs={12}>
-                <TextField
-                  size="meduim"
-                  error={Boolean(
-                    formik.touched.birthday && formik.errors.birthday
-                  )}
-                  fullWidth
-                  helperText={formik.touched.birthday && formik.errors.birthday}
-                  label="Last name"
-                  margin="normal"
-                  name="birthday"
-                  onBlur={formik.handleBlur}
-                  onChange={formik.handleChange}
-                  value={formik.values.birthday}
-                  variant="outlined"
-                />
+                <LocalizationProvider dateAdapter={AdapterMoment}>
+                  <DesktopDatePicker
+                    value={valueBirthday}
+                    onChange={(newValue) => {
+                      setValueBirthday(moment(newValue).format("l"));
+                    }}
+                    renderInput={(params) => (
+                      <TextField fullWidth margin="normal" {...params} />
+                    )}
+                  />
+                </LocalizationProvider>
               </Grid>
               <Grid item md={8} xs={12}>
                 <TextField
