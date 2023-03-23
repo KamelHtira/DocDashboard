@@ -147,6 +147,7 @@ const AccountProfileDetails = (props) => {
             <Grid item md={4} xs={12}>
               <LocalizationProvider dateAdapter={AdapterMoment}>
                 <DesktopDatePicker
+                  label="Birthday"
                   value={valueBirthday}
                   onChange={(newValue) => {
                     setValueBirthday(moment(newValue).format("l"));

@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Google as GoogleIcon } from "../icons/google";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { backendURL } from "../utils/constants";
 import { useSnackbar } from "notistack";
 import { setUserIdEvent } from "../utils/functions";
@@ -105,13 +105,21 @@ const Login = () => {
       <Box
         component="main"
         sx={{
+          backgroundImage: "linear-gradient(0deg, #7FC8B6, #DBFFF6, #F3FFFC)",
           alignItems: "center",
           display: "flex",
           flexGrow: 1,
           minHeight: "100%",
         }}
       >
-        <Container maxWidth="sm">
+        <Container
+          maxWidth="sm"
+          sx={{
+            p: 5,
+            borderRadius: "2%",
+            backgroundColor: "white",
+          }}
+        >
           <form onSubmit={formik.handleSubmit}>
             <Box sx={{ my: 3 }}>
               <Typography color="textPrimary" variant="h4">
