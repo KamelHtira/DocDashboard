@@ -6,6 +6,7 @@ import {
   CardActions,
   CardContent,
   Divider,
+  Skeleton,
   Typography,
 } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
@@ -32,7 +33,9 @@ export const AccountProfile = (props) => {
         console.log(error);
       }
     };
-    fetchData();
+    if (userId) {
+      fetchData();
+    }
   }, [userId]);
   return (
     <Card {...props}>
@@ -51,7 +54,7 @@ export const AccountProfile = (props) => {
               width: 64,
             }}
           />
-          {currentAccount?.access && (
+          {currentAccount?.access ? (
             <>
               <Typography color="textPrimary" gutterBottom variant="h5">
                 {`${currentAccount.firstName} ${currentAccount.lastName}`}
@@ -154,6 +157,51 @@ export const AccountProfile = (props) => {
                   )}
                 </Typography>
               </Box>
+            </>
+          ) : (
+            <>
+              <Skeleton
+                variant="rectangular"
+                width={"80%"}
+                height={50}
+                sx={{ margin: "5px" }}
+              />
+              <Skeleton
+                variant="rectangular"
+                width={"80%"}
+                height={40}
+                sx={{ margin: "5px" }}
+              />
+              <Skeleton
+                variant="rectangular"
+                width={"80%"}
+                height={40}
+                sx={{ margin: "5px" }}
+              />
+              <Skeleton
+                variant="rectangular"
+                width={"80%"}
+                height={40}
+                sx={{ margin: "5px" }}
+              />
+              <Skeleton
+                variant="rectangular"
+                width={"80%"}
+                height={20}
+                sx={{ margin: "5px" }}
+              />
+              <Skeleton
+                variant="rectangular"
+                width={"80%"}
+                height={20}
+                sx={{ margin: "5px" }}
+              />
+              <Skeleton
+                variant="rectangular"
+                width={"80%"}
+                height={20}
+                sx={{ margin: "5px" }}
+              />
             </>
           )}
         </Box>

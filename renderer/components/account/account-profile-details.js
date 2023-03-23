@@ -7,9 +7,10 @@ import {
   CardHeader,
   Divider,
   Grid,
+  Skeleton,
   TextField,
 } from "@mui/material";
-import { accountIsLoading, accountNA, backendURL } from "../../utils/constants";
+import { accountNA, backendURL } from "../../utils/constants";
 import { AccountContext } from "../../pages/account";
 
 const states = [
@@ -41,7 +42,7 @@ export const AccountProfileDetails = (props) => {
   const [submitButton, setSubmitButton] = useState(false);
 
   // Get current account data
-  const [currentAccount, setCurrentAccount] = useState(accountIsLoading);
+  const [currentAccount, setCurrentAccount] = useState(null);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -60,7 +61,9 @@ export const AccountProfileDetails = (props) => {
         setCurrentAccount(accountNA);
       }
     };
-    fetchData();
+    if (userId) {
+      fetchData();
+    }
   }, [userId]);
 
   // Edit Request
@@ -111,7 +114,7 @@ export const AccountProfileDetails = (props) => {
       <Card>
         <CardHeader subheader="The information can be edited" title="Profile" />
         <Divider />
-        {userId && (
+        {currentAccount ? (
           <CardContent>
             <Grid container spacing={3}>
               <Grid item md={6} xs={12}>
@@ -191,6 +194,29 @@ export const AccountProfileDetails = (props) => {
               </Grid>
             </Grid>
           </CardContent>
+        ) : (
+          <>
+            <Skeleton
+              variant="rectangular"
+              height={50}
+              sx={{ margin: "20px 20px" }}
+            />
+            <Skeleton
+              variant="rectangular"
+              height={50}
+              sx={{ margin: "20px 20px" }}
+            />
+            <Skeleton
+              variant="rectangular"
+              height={50}
+              sx={{ margin: "20px 20px" }}
+            />
+            <Skeleton
+              variant="rectangular"
+              height={50}
+              sx={{ margin: "20px 20px" }}
+            />
+          </>
         )}
         <Divider />
         <Box
