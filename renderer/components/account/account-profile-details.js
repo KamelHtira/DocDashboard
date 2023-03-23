@@ -114,7 +114,7 @@ export const AccountProfileDetails = (props) => {
       <Card>
         <CardHeader subheader="The information can be edited" title="Profile" />
         <Divider />
-        {currentAccount && false ? (
+        {currentAccount ? (
           <CardContent>
             <Grid container spacing={3}>
               <Grid item md={6} xs={12}>
