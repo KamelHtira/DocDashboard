@@ -4,7 +4,7 @@ import { TransactionListResults } from "../components/transaction/transaction-li
 import { TransactionListToolbar } from "../components/transaction/transaction-list-toolbar";
 import { DashboardLayout } from "../components/dashboard-layout";
 import { createContext, useState, useEffect } from "react";
-import { transactionIsLoading,backendURL } from "../utils/constants";
+import { backendURL } from "../utils/constants";
 import { useSnackbar } from "notistack";
 export const TransactionsContext = createContext(null);
 
@@ -19,11 +19,11 @@ const Transactions = () => {
   const [selectedTransactionIds, setSelectedTransactionIds] = useState([]);
 
   // Fetch transactions data
-  const [transactionsList, setTransactionsList] = useState([transactionIsLoading]);
+  const [transactionsList, setTransactionsList] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setTransactionsList([transactionIsLoading]);
+        setTransactionsList([]);
         const res = await fetch(
           `${backendURL}/transactions`
         );

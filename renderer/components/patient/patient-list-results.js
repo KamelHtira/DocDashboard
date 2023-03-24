@@ -13,6 +13,7 @@ import {
   TableRow,
   Typography,
   Button,
+  Skeleton,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { useRouter } from "next/router.js";
@@ -77,41 +78,112 @@ export const PatientListResults = ({ ...rest }) => {
     <Card {...rest}>
       <PerfectScrollbar>
         <Box sx={{ minWidth: 1050 }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={selectedPatientIds.length === patientsList.length}
-                    color="primary"
-                    indeterminate={
-                      selectedPatientIds.length > 0 &&
-                      selectedPatientIds.length < patientsList.length
-                    }
-                    onChange={handleSelectAll}
-                  />
-                </TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Address</TableCell>
-                <TableCell>Phone</TableCell>
-                <TableCell>Age</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {patientsList.slice(0, limit).map((patient, index) => (
-                <TableRow
-                  hover
-                  key={index}
-                  selected={selectedPatientIds.indexOf(patient._id) !== -1}
-                >
+          {patientsList ? (
+            <>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        checked={
+                          selectedPatientIds.length === patientsList.length
+                        }
+                        color="primary"
+                        indeterminate={
+                          selectedPatientIds.length > 0 &&
+                          selectedPatientIds.length < patientsList.length
+                        }
+                        onChange={handleSelectAll}
+                      />
+                    </TableCell>
+                    <TableCell>Name</TableCell>
+                    <TableCell>Email</TableCell>
+                    <TableCell>Address</TableCell>
+                    <TableCell>Phone</TableCell>
+                    <TableCell>Age</TableCell>
+                    <TableCell></TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {patientsList.slice(0, limit).map((patient, index) => (
+                    <TableRow
+                      hover
+                      key={index}
+                      selected={selectedPatientIds.indexOf(patient._id) !== -1}
+                    >
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          checked={
+                            selectedPatientIds.indexOf(patient._id) !== -1
+                          }
+                          onChange={(event) =>
+                            handleSelectOne(event, patient._id)
+                          }
+                          value="true"
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            alignItems: "center",
+                            display: "flex",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            {patient.firstName + " " + patient.lastName}
+                          </Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell>{patient.email || patientNA.email}</TableCell>
+                      <TableCell>
+                        {patient.address || patientNA.address}
+                      </TableCell>
+                      <TableCell>{patient.phone || patientNA.phone}</TableCell>
+                      <TableCell>
+                        {patient.birthday || patientNA.birthday}
+                      </TableCell>
+                      <TableCell padding="checkbox">
+                        <Button
+                          onClick={() => {
+                            router.push(`patient/${patient._id}`);
+                          }}
+                        >
+                          <EditIcon></EditIcon>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              <TablePagination
+                component="div"
+                count={patientsList.length}
+                onPageChange={handlePageChange}
+                onRowsPerPageChange={handleLimitChange}
+                page={page}
+                rowsPerPage={limit}
+                rowsPerPageOptions={[50, 100, 150]}
+              />
+            </>
+          ) : (
+            <Table>
+              <TableHead>
+                <TableRow>
                   <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={selectedPatientIds.indexOf(patient._id) !== -1}
-                      onChange={(event) => handleSelectOne(event, patient._id)}
-                      value="true"
-                    />
+                    <Checkbox />
+                  </TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Email</TableCell>
+                  <TableCell>Address</TableCell>
+                  <TableCell>Phone</TableCell>
+                  <TableCell>Age</TableCell>
+                  <TableCell></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow hover>
+                  <TableCell padding="checkbox">
+                    <Checkbox />
                   </TableCell>
                   <TableCell>
                     <Box
@@ -121,40 +193,33 @@ export const PatientListResults = ({ ...rest }) => {
                       }}
                     >
                       <Typography color="textPrimary" variant="body1">
-                        {patient.firstName + " " + patient.lastName}
+                        <Skeleton height="35px" width="120px"></Skeleton>
                       </Typography>
                     </Box>
                   </TableCell>
-                  <TableCell>{patient.email || patientNA.email}</TableCell>
-                  <TableCell>{patient.address || patientNA.address}</TableCell>
-                  <TableCell>{patient.phone || patientNA.phone}</TableCell>
                   <TableCell>
-                    {patient.birthday || patientNA.birthday}
+                    <Skeleton height="35px" width="120px"></Skeleton>
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton height="35px" width="120px"></Skeleton>
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton height="35px" width="120px"></Skeleton>
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton height="35px" width="120px"></Skeleton>
                   </TableCell>
                   <TableCell padding="checkbox">
-                    <Button
-                      onClick={() => {
-                        router.push(`patient/${patient._id}`);
-                      }}
-                    >
+                    <Button>
                       <EditIcon></EditIcon>
                     </Button>
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableBody>
+            </Table>
+          )}
         </Box>
       </PerfectScrollbar>
-      <TablePagination
-        component="div"
-        count={patientsList.length}
-        onPageChange={handlePageChange}
-        onRowsPerPageChange={handleLimitChange}
-        page={page}
-        rowsPerPage={limit}
-        rowsPerPageOptions={[50, 100, 150]}
-      />
     </Card>
   );
 };

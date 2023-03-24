@@ -85,6 +85,7 @@ export const DeleteTransactionPopup = () => {
               Are you sure you want to delete those Transactions? <br></br>
               <br></br>
               {selectedTransactionIds &&
+                transactionsList &&
                 getSelectedTransactionsIdsAmount(
                   transactionsList,
                   selectedTransactionIds

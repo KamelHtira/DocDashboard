@@ -19,11 +19,11 @@ const Patients = () => {
   const [selectedPatientIds, setSelectedPatientIds] = useState([]);
 
   // Fetch patients data
-  const [patientsList, setPatientsList] = useState([patientIsLoading]);
+  const [patientsList, setPatientsList] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setPatientsList([patientIsLoading]);
+        setPatientsList([]);
         const res = await fetch(`${backendURL}/patients`);
         const data = await res.json();
         setPatientsList(data);

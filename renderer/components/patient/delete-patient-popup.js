@@ -84,6 +84,7 @@ export const DeletePatientPopup = () => {
               Are you sure you want to delete those Patients? <br></br>
               <br></br>
               {selectedPatientIds &&
+                patientsList &&
                 getSelectedPatientsEmails(patientsList, selectedPatientIds).map(
                   (patientEmail, key) => (
                     <div key={key}>

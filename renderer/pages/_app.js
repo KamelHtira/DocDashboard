@@ -5,7 +5,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import { createEmotionCache } from "../utils/create-emotion-cache";
 import { theme } from "../theme";
 import { SnackbarProvider } from "notistack";
-import "./globalStyles/scrollBar.css";
+import "./globalStyles/global.css";
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -17,7 +17,7 @@ const App = (props) => {
   return (
     <CacheProvider value={emotionCache}>
       <Head>
-        <title>Material Kit Pro</title>
+        <title>Doc Dashboard</title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <SnackbarProvider>

@@ -21,3 +21,7 @@
   background: #001712;
   
 }
+
+.MuiSkeleton-root {
+  border-radius: 8px;
+}

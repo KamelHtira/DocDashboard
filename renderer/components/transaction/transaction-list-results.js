@@ -6,6 +6,7 @@ import {
   Button,
   Card,
   Checkbox,
+  Skeleton,
   Table,
   TableBody,
   TableCell,
@@ -22,8 +23,10 @@ export const EditTransactionsPopupContext = createContext(null);
 
 export const TransactionListResults = ({ ...rest }) => {
   // Set "show" variable for EditTransactionPopup
-  const [showEditTransactionsPopup, setShowEditTransactionsPopup] =
-    useState({show:false,id:null});
+  const [showEditTransactionsPopup, setShowEditTransactionsPopup] = useState({
+    show: false,
+    id: null,
+  });
 
   const {
     transactionsList,
@@ -86,49 +89,134 @@ export const TransactionListResults = ({ ...rest }) => {
     <Card {...rest}>
       <PerfectScrollbar>
         <Box sx={{ minWidth: 1050 }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={
-                      selectedTransactionIds.length === transactionsList.length
-                    }
-                    color="primary"
-                    indeterminate={
-                      selectedTransactionIds.length > 0 &&
-                      selectedTransactionIds.length < transactionsList.length
-                    }
-                    onChange={handleSelectAll}
-                  />
-                </TableCell>
-                <TableCell>Amount</TableCell>
-                <TableCell>Type</TableCell>
-                <TableCell>Date</TableCell>
-                <TableCell>Description</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-            </TableHead>
+          {transactionsList ? (
+            <>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        checked={
+                          selectedTransactionIds.length ===
+                          transactionsList.length
+                        }
+                        color="primary"
+                        indeterminate={
+                          selectedTransactionIds.length > 0 &&
+                          selectedTransactionIds.length <
+                            transactionsList.length
+                        }
+                        onChange={handleSelectAll}
+                      />
+                    </TableCell>
+                    <TableCell>Amount</TableCell>
+                    <TableCell>Type</TableCell>
+                    <TableCell>Date</TableCell>
+                    <TableCell>Description</TableCell>
+                    <TableCell></TableCell>
+                  </TableRow>
+                </TableHead>
 
-            <TableBody>
-              {transactionsList.slice(0, limit).map((transaction, index) => (
-                <TableRow
-                  hover
-                  key={index}
-                  selected={
-                    selectedTransactionIds.indexOf(transaction._id) !== -1
-                  }
-                >
+                <TableBody>
+                  {transactionsList
+                    .slice(0, limit)
+                    .map((transaction, index) => (
+                      <TableRow
+                        hover
+                        key={index}
+                        selected={
+                          selectedTransactionIds.indexOf(transaction._id) !== -1
+                        }
+                      >
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            checked={
+                              selectedTransactionIds.indexOf(
+                                transaction._id
+                              ) !== -1
+                            }
+                            onChange={(event) =>
+                              handleSelectOne(event, transaction._id)
+                            }
+                            value="true"
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <Box
+                            sx={{
+                              alignItems: "center",
+                              display: "flex",
+                            }}
+                          >
+                            <Typography color="textPrimary" variant="body1">
+                              {transaction.amount}
+                              {isNaN(transaction.amount) ? "" : " dt"}
+                            </Typography>
+                          </Box>
+                        </TableCell>
+                        <TableCell>
+                          <Typography
+                            style={generateTransactionsTypeStype(
+                              transaction.type
+                            )}
+                          >
+                            {transaction.type}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>{transaction.date}</TableCell>
+                        <TableCell
+                          sx={{
+                            width: "40%",
+                            whiteSpace: "normal",
+                            wordWrap: "break-word",
+                          }}
+                        >
+                          {transaction.description}
+                        </TableCell>
+                        <TableCell padding="checkbox">
+                          <Button
+                            onClick={() => {
+                              setShowEditTransactionsPopup({
+                                show: true,
+                                id: transaction._id,
+                              });
+                            }}
+                          >
+                            <EditIcon></EditIcon>
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+              <TablePagination
+                component="div"
+                count={transactionsList.length}
+                onPageChange={handlePageChange}
+                onRowsPerPageChange={handleLimitChange}
+                page={page}
+                rowsPerPage={limit}
+                rowsPerPageOptions={[50, 100, 150]}
+              />
+            </>
+          ) : (
+            <Table>
+              <TableHead>
+                <TableRow>
                   <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={
-                        selectedTransactionIds.indexOf(transaction._id) !== -1
-                      }
-                      onChange={(event) =>
-                        handleSelectOne(event, transaction._id)
-                      }
-                      value="true"
-                    />
+                    <Checkbox />
+                  </TableCell>
+                  <TableCell>Amount</TableCell>
+                  <TableCell>Type</TableCell>
+                  <TableCell>Date</TableCell>
+                  <TableCell>Description</TableCell>
+                  <TableCell></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow hover>
+                  <TableCell padding="checkbox">
+                    <Checkbox />
                   </TableCell>
                   <TableCell>
                     <Box
@@ -138,40 +226,29 @@ export const TransactionListResults = ({ ...rest }) => {
                       }}
                     >
                       <Typography color="textPrimary" variant="body1">
-                        {transaction.amount}{isNaN(transaction.amount)?"":" dt"}
+                        <Skeleton height="35px" width="120px"></Skeleton>
                       </Typography>
                     </Box>
                   </TableCell>
                   <TableCell>
-                    <Typography
-                      style={generateTransactionsTypeStype(transaction.type)}
-                    >
-                      {transaction.type}
-                    </Typography>
+                    <Skeleton height="35px" width="120px"></Skeleton>
                   </TableCell>
-                  <TableCell>{transaction.date}</TableCell>
-                  <TableCell
-                    sx={{
-                      width: "40%",
-                      whiteSpace: "normal",
-                      wordWrap: "break-word",
-                    }}
-                  >
-                    {transaction.description}
+                  <TableCell>
+                    <Skeleton height="35px" width="120px"></Skeleton>
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton height="35px" width="120px"></Skeleton>
                   </TableCell>
                   <TableCell padding="checkbox">
-                    <Button
-                      onClick={() => {
-                        setShowEditTransactionsPopup({show:true,id:transaction._id});
-                      }}
-                    >
+                    <Button>
                       <EditIcon></EditIcon>
                     </Button>
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableBody>
+            </Table>
+          )}
+
           <EditTransactionsPopupContext.Provider
             value={{ showEditTransactionsPopup, setShowEditTransactionsPopup }}
           >
@@ -179,15 +256,6 @@ export const TransactionListResults = ({ ...rest }) => {
           </EditTransactionsPopupContext.Provider>
         </Box>
       </PerfectScrollbar>
-      <TablePagination
-        component="div"
-        count={transactionsList.length}
-        onPageChange={handlePageChange}
-        onRowsPerPageChange={handleLimitChange}
-        page={page}
-        rowsPerPage={limit}
-        rowsPerPageOptions={[50, 100, 150]}
-      />
     </Card>
   );
 };
