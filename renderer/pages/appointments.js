@@ -19,9 +19,7 @@ const Appointment = () => {
   const [dependencyValue, setDependencyValue] = useState(1);
 
   // Fetch appointments data
-  const [appointmentsList, setAppointmentsList] = useState([
-    appointmentIsLoading,
-  ]);
+  const [appointmentsList, setAppointmentsList] = useState(null);
 
   // Delete appointment API
   async function deleteAppointment(id) {
@@ -76,7 +74,7 @@ const Appointment = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setAppointmentsList(appointmentIsLoading);
+        setAppointmentsList(null);
         const res = await fetch(`${backendURL}/appointments`);
         const data = await res.json();
         setAppointmentsList(data);

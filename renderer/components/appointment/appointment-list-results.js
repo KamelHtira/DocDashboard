@@ -1,4 +1,4 @@
-import { Box, Grid, Tabs, Tab } from "@mui/material";
+import { Box, Grid, Tabs, Tab, Skeleton, Card } from "@mui/material";
 import { useContext, useState } from "react";
 import { AppointmentCardConfirmed } from "./appointment-card-confirmed";
 import PropTypes from "prop-types";
@@ -6,6 +6,7 @@ import { AppointmentCardPending } from "./appointment-card-pending";
 import { AppointmentCardQueue } from "./appointment-card-queue";
 import { AppointmentsContext } from "../../pages/appointments";
 import { createContext } from "react";
+import { AppointmentCardSkeleton } from "./skeleton-appointment";
 
 function a11yProps(index) {
   return {
@@ -69,14 +70,20 @@ export const AppointmentListResults = (props) => {
         <TabPanel value={value} index={0}>
           <Box sx={{ pt: 3 }}>
             <Grid container spacing={3}>
-              {appointmentsList.map(
-                (appointment, index) =>
-                  appointment.type == "Q" &&
-                  !appointment.isPaid && (
-                    <Grid key={index} item lg={4} md={6} xs={12}>
-                      <AppointmentCardQueue appointment={appointment} />
-                    </Grid>
-                  )
+              {appointmentsList ? (
+                appointmentsList.map(
+                  (appointment, index) =>
+                    appointment.type == "Q" &&
+                    !appointment.isPaid && (
+                      <Grid key={index} item lg={4} md={6} xs={12}>
+                        <AppointmentCardQueue appointment={appointment} />
+                      </Grid>
+                    )
+                )
+              ) : (
+                <Grid item lg={4} md={6} xs={12}>
+                  <AppointmentCardSkeleton />
+                </Grid>
               )}
             </Grid>
           </Box>
@@ -84,13 +91,19 @@ export const AppointmentListResults = (props) => {
         <TabPanel value={value} index={1}>
           <Box sx={{ pt: 3 }}>
             <Grid container spacing={3}>
-              {appointmentsList.map(
-                (appointment, index) =>
-                  appointment.type == "C" && (
-                    <Grid key={index} item lg={4} md={6} xs={12}>
-                      <AppointmentCardConfirmed appointment={appointment} />
-                    </Grid>
-                  )
+              {appointmentsList ? (
+                appointmentsList.map(
+                  (appointment, index) =>
+                    appointment.type == "C" && (
+                      <Grid key={index} item lg={4} md={6} xs={12}>
+                        <AppointmentCardConfirmed appointment={appointment} />
+                      </Grid>
+                    )
+                )
+              ) : (
+                <Grid item lg={4} md={6} xs={12}>
+                  <AppointmentCardSkeleton />
+                </Grid>
               )}
             </Grid>
           </Box>
@@ -98,13 +111,19 @@ export const AppointmentListResults = (props) => {
         <TabPanel value={value} index={2}>
           <Box sx={{ pt: 3 }}>
             <Grid container spacing={3}>
-              {appointmentsList.map(
-                (appointment, index) =>
-                  appointment.type == "P" && (
-                    <Grid key={index} item lg={4} md={6} xs={12}>
-                      <AppointmentCardPending appointment={appointment} />
-                    </Grid>
-                  )
+              {appointmentsList ? (
+                appointmentsList.map(
+                  (appointment, index) =>
+                    appointment.type == "P" && (
+                      <Grid key={index} item lg={4} md={6} xs={12}>
+                        <AppointmentCardPending appointment={appointment} />
+                      </Grid>
+                    )
+                )
+              ) : (
+                <Grid item lg={4} md={6} xs={12}>
+                  <AppointmentCardSkeleton />
+                </Grid>
               )}
             </Grid>
           </Box>

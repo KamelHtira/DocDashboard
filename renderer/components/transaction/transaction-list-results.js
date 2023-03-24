@@ -89,7 +89,7 @@ export const TransactionListResults = ({ ...rest }) => {
     <Card {...rest}>
       <PerfectScrollbar>
         <Box sx={{ minWidth: 1050 }}>
-          {transactionsList ? (
+          {transactionsList.length ? (
             <>
               <Table>
                 <TableHead>

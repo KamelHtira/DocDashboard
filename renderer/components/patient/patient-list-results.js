@@ -78,7 +78,7 @@ export const PatientListResults = ({ ...rest }) => {
     <Card {...rest}>
       <PerfectScrollbar>
         <Box sx={{ minWidth: 1050 }}>
-          {patientsList ? (
+          {patientsList.length ? (
             <>
               <Table>
                 <TableHead>
