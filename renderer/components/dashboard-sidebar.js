@@ -120,6 +120,7 @@ export const DashboardSidebar = (props) => {
         <Box sx={{ flexGrow: 1 }}>
           {items.map((item) => (
             <NavItem
+            sx={{padding:"5px 20px 0 20px"}}
               key={item.title}
               icon={item.icon}
               href={item.href}
@@ -176,7 +177,7 @@ export const DashboardSidebar = (props) => {
           sx: {
             backgroundColor: "neutral.900",
             color: "#FFFFFF",
-            width: 250,
+            width: 270,
           },
         }}
         variant="permanent"

@@ -5,6 +5,7 @@ import {
   Typography,
   Modal,
   Divider,
+  Skeleton,
 } from "@mui/material";
 
 import { useContext, useEffect, useState } from "react";
@@ -20,7 +21,7 @@ export const PaidAppointmentPopup = ({ appointment }) => {
   /* [ContextAPI]
     getter and setter for dependency value to refresh component after request sent
    */
-  const { dependencyValue, setDependencyValue, enqueueSnackbar,userId } =
+  const { dependencyValue, setDependencyValue, enqueueSnackbar, userId } =
     useContext(AppointmentsContext);
 
   /* [ContextAPI]
@@ -30,7 +31,7 @@ export const PaidAppointmentPopup = ({ appointment }) => {
     useContext(PaidAppointmentsPopupContext);
 
   // Custom fields
-  const [customFields, setCustomFields] = useState([]);
+  const [customFields, setCustomFields] = useState(null);
 
   // MedicalFile inputs values
   const [values, setValues] = useState({
@@ -50,11 +51,7 @@ export const PaidAppointmentPopup = ({ appointment }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(
-          `${backendURL}/users/customFields/${
-            userId
-          }`
-        );
+        const res = await fetch(`${backendURL}/users/customFields/${userId}`);
         if (res.ok) {
           const data = await res.json();
           setCustomFields(data.customFields);
@@ -202,24 +199,33 @@ export const PaidAppointmentPopup = ({ appointment }) => {
             <Grid item xs={12}>
               <Divider textAlign="center">Custom informations</Divider>
             </Grid>
-            {customFields
-              ? customFields.map((field, index) => (
-                  <Grid key={index} item xs={6}>
-                    <TextField
-                      size="small"
-                      fullWidth
-                      label={field}
-                      name={field}
-                      variant="outlined"
-                      value={values.customFields}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                ))
-              : "nothing here"}
+            {customFields ? (
+              customFields.map((field, index) => (
+                <Grid key={index} item xs={6}>
+                  <TextField
+                    size="small"
+                    fullWidth
+                    label={field}
+                    name={field}
+                    variant="outlined"
+                    value={values.customFields}
+                    onChange={handleChange}
+                  />
+                </Grid>
+              ))
+            ) : (
+              <>
+                <Grid item xs={6}>
+                  <Skeleton height={"65px"} />
+                </Grid>
+                <Grid item xs={6}>
+                  <Skeleton height={"65px"} />
+                </Grid>
+              </>
+            )}
           </Grid>
 
-          <Box sx={{ py: 2 }}>
+          <Box sx={{ padding: "25px 0 0 0" }}>
             <Button
               color="primary"
               fullWidth

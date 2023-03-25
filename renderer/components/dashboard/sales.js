@@ -188,7 +188,7 @@ export const Sales = (props) => {
             </Select>
           </FormControl>
         }
-        title="Latest Sales"
+        title="Monthly Income and Outcome "
       />
       <Divider />
       <CardContent>

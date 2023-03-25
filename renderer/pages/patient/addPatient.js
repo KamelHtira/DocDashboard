@@ -32,7 +32,9 @@ const AccountProfileDetails = (props) => {
   const router = useRouter();
 
   // Date picker
-  const [valueBirthday, setValueBirthday] = useState(moment(new Date()));
+  const [valueBirthday, setValueBirthday] = useState(
+    moment(new Date()).format("l")
+  );
 
   // Add Request
   async function addPatientAPI(data) {
@@ -81,10 +83,7 @@ const AccountProfileDetails = (props) => {
       sexe: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string()
-        .email("Must be a valid email")
-        .max(255)
-        .required("Email is required"),
+      email: Yup.string().email("Must be a valid email").max(255),
       firstName: Yup.string().max(255).required("First Name is required"),
       lastName: Yup.string().max(255).required("Last Name is required"),
       sexe: Yup.string().required("sexe is required"),
