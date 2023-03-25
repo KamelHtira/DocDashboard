@@ -15,6 +15,7 @@ import {
   Button,
   CardHeader,
   Divider,
+  Skeleton,
 } from "@mui/material";
 import FolderSharedIcon from "@mui/icons-material/FolderShared";
 import { useRouter } from "next/router.js";
@@ -28,9 +29,9 @@ export const EditMedicalFilesPopupContext = createContext(null);
 export const MedicalFileListResults = ({ patientId }) => {
   // Dependency Value
   const [dependencyValue, setDependencyValue] = useState(false);
-  
+
   // Medicalfiles
-  const [medicalFilesList, setMedicalFilesList] = useState([]);
+  const [medicalFilesList, setMedicalFilesList] = useState(null);
   // Set "show" variable for EditMedicalFilePopup
   const [showEditMedicalFilesPopup, setShowEditMedicalFilesPopup] = useState({
     show: false,
@@ -119,54 +120,150 @@ export const MedicalFileListResults = ({ patientId }) => {
       <Divider />
       <PerfectScrollbar>
         <Box sx={{ minWidth: 1050 }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={
-                      selectedMedicalFileIds.length === medicalFilesList.length
-                    }
-                    color="primary"
-                    indeterminate={
-                      selectedMedicalFileIds.length > 0 &&
-                      selectedMedicalFileIds.length < medicalFilesList.length
-                    }
-                    onChange={handleSelectAll}
-                  />
-                </TableCell>
-                <TableCell>Date</TableCell>
-                <TableCell>Time</TableCell>
-                <TableCell>From Now</TableCell>
-                <TableCell>Title</TableCell>
-                <TableCell></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {medicalFilesList.slice(0, limit).map((medicalFile, index) => (
-                <TableRow
-                  hover
-                  key={index}
-                  selected={
-                    selectedMedicalFileIds.indexOf(medicalFile._id) !== -1
-                  }
-                >
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={
-                        selectedMedicalFileIds.indexOf(medicalFile._id) !== -1
-                      }
-                      onChange={(event) =>
-                        handleSelectOne(event, medicalFile._id)
-                      }
-                      value="true"
-                    />
-                  </TableCell>
-                  <TableCell
-                    sx={{
-                      width: "30%",
-                    }}
-                  >
+          {medicalFilesList ? (
+            <>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    {/* <TableCell padding="checkbox">
+                      <Checkbox
+                        checked={
+                          selectedMedicalFileIds.length ===
+                          medicalFilesList.length
+                        }
+                        color="primary"
+                        indeterminate={
+                          selectedMedicalFileIds.length > 0 &&
+                          selectedMedicalFileIds.length <
+                            medicalFilesList.length
+                        }
+                        onChange={handleSelectAll}
+                      />
+                    </TableCell> */}
+                    <TableCell>Date</TableCell>
+                    <TableCell>Time</TableCell>
+                    <TableCell>From Now</TableCell>
+                    <TableCell>Title</TableCell>
+                    <TableCell></TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {medicalFilesList
+                    .slice(0, limit)
+                    .map((medicalFile, index) => (
+                      <TableRow
+                        hover
+                        key={index}
+                        selected={
+                          selectedMedicalFileIds.indexOf(medicalFile._id) !== -1
+                        }
+                      >
+                        {/* <TableCell padding="checkbox">
+                          <Checkbox
+                            checked={
+                              selectedMedicalFileIds.indexOf(
+                                medicalFile._id
+                              ) !== -1
+                            }
+                            onChange={(event) =>
+                              handleSelectOne(event, medicalFile._id)
+                            }
+                            value="true"
+                          />
+                        </TableCell> */}
+                        <TableCell
+                          sx={{
+                            width: "30%",
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              alignItems: "center",
+                              display: "flex",
+                            }}
+                          >
+                            <Typography color="textPrimary" variant="body1">
+                              {moment(medicalFile.createdAt).format(
+                                "MMMM Do (dddd) YYYY"
+                              )}
+                            </Typography>
+                          </Box>
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            width: "15%",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            {moment(medicalFile.createdAt).format("h:mm:ss a")}
+                          </Typography>
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            width: "15%",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            {moment(medicalFile.createdAt).fromNow()}
+                          </Typography>
+                        </TableCell>
+                        <TableCell
+                          sx={{
+                            width: "30%",
+                            whiteSpace: "normal",
+                            wordWrap: "break-word",
+                          }}
+                        >
+                          <Typography color="textPrimary" variant="body1">
+                            {medicalFile.title}
+                          </Typography>
+                        </TableCell>
+                        <TableCell padding="checkbox">
+                          <Button
+                            onClick={() => {
+                              setShowEditMedicalFilesPopup({
+                                show: true,
+                                id: medicalFile._id,
+                              });
+                            }}
+                          >
+                            <FolderSharedIcon></FolderSharedIcon>
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+              <TablePagination
+                component="div"
+                count={medicalFilesList.length}
+                onPageChange={handlePageChange}
+                onRowsPerPageChange={handleLimitChange}
+                page={page}
+                rowsPerPage={limit}
+                rowsPerPageOptions={[50, 100, 150]}
+              />
+            </>
+          ) : (
+            <Table>
+              <TableHead>
+                <TableRow>
+                  {/* <TableCell padding="checkbox">
+                    <Checkbox />
+                  </TableCell> */}
+                  <TableCell>Date</TableCell>
+                  <TableCell>Time</TableCell>
+                  <TableCell>From Now</TableCell>
+                  <TableCell>Title</TableCell>
+                  <TableCell></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow hover>
+                  {/* <TableCell padding="checkbox">
+                    <Checkbox />
+                  </TableCell> */}
+                  <TableCell>
                     <Box
                       sx={{
                         alignItems: "center",
@@ -174,68 +271,31 @@ export const MedicalFileListResults = ({ patientId }) => {
                       }}
                     >
                       <Typography color="textPrimary" variant="body1">
-                        {moment(medicalFile.createdAt).format(
-                          "MMMM Do (dddd) YYYY"
-                        )}
+                        <Skeleton height="35px" width="120px"></Skeleton>
                       </Typography>
                     </Box>
                   </TableCell>
-                  <TableCell
-                    sx={{
-                      width: "15%",
-                    }}
-                  >
-                    <Typography color="textPrimary" variant="body1">
-                      {moment(medicalFile.createdAt).format("h:mm:ss a")}
-                    </Typography>
+                  <TableCell>
+                    <Skeleton height="35px" width="120px"></Skeleton>
                   </TableCell>
-                  <TableCell
-                    sx={{
-                      width: "15%",
-                    }}
-                  >
-                    <Typography color="textPrimary" variant="body1">
-                      {moment(medicalFile.createdAt).fromNow()}
-                    </Typography>
+                  <TableCell>
+                    <Skeleton height="35px" width="120px"></Skeleton>
                   </TableCell>
-                  <TableCell
-                    sx={{
-                      width: "30%",
-                      whiteSpace: "normal",
-                      wordWrap: "break-word",
-                    }}
-                  >
-                    <Typography color="textPrimary" variant="body1">
-                      {medicalFile.title}
-                    </Typography>
+                  <TableCell>
+                    <Skeleton height="35px" width="120px"></Skeleton>
                   </TableCell>
                   <TableCell padding="checkbox">
-                    <Button
-                      onClick={() => {
-                        setShowEditMedicalFilesPopup({
-                          show: true,
-                          id: medicalFile._id,
-                        });
-                      }}
-                    >
+                    <Button>
                       <FolderSharedIcon></FolderSharedIcon>
                     </Button>
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableBody>
+            </Table>
+          )}
         </Box>
       </PerfectScrollbar>
-      <TablePagination
-        component="div"
-        count={medicalFilesList.length}
-        onPageChange={handlePageChange}
-        onRowsPerPageChange={handleLimitChange}
-        page={page}
-        rowsPerPage={limit}
-        rowsPerPageOptions={[50, 100, 150]}
-      />
+
       <EditMedicalFilesPopupContext.Provider
         value={{
           showEditMedicalFilesPopup,

@@ -120,7 +120,6 @@ export const AccountProfileDetails = (props) => {
               <Grid item md={6} xs={12}>
                 <TextField
                   fullWidth
-                  helperText="Please specify the first name"
                   label="First name"
                   name="firstName"
                   onChange={handleChange}
@@ -199,56 +198,42 @@ export const AccountProfileDetails = (props) => {
             <Grid item xs={6}>
               <Skeleton
                 variant="rectangular"
-                height={50}
+                height={55}
                 sx={{ margin: "20px 20px" }}
               />
             </Grid>
             <Grid item xs={6}>
               <Skeleton
                 variant="rectangular"
-                height={50}
+                height={55}
                 sx={{ margin: "20px 20px" }}
               />
             </Grid>
             <Grid item xs={6}>
               <Skeleton
                 variant="rectangular"
-                height={50}
-                sx={{ margin: "20px 20px" }}
-              />
-            </Grid>{" "}
-            <Grid item xs={6}>
-              <Skeleton
-                variant="rectangular"
-                height={50}
-                sx={{ margin: "20px 20px" }}
-              />
-            </Grid>{" "}
-            <Grid item xs={6}>
-              <Skeleton
-                variant="rectangular"
-                height={50}
-                sx={{ margin: "20px 20px" }}
-              />
-            </Grid>{" "}
-            <Grid item xs={6}>
-              <Skeleton
-                variant="rectangular"
-                height={50}
-                sx={{ margin: "20px 20px" }}
-              />
-            </Grid>{" "}
-            <Grid item xs={6}>
-              <Skeleton
-                variant="rectangular"
-                height={50}
+                height={55}
                 sx={{ margin: "20px 20px" }}
               />
             </Grid>
             <Grid item xs={6}>
               <Skeleton
                 variant="rectangular"
-                height={50}
+                height={55}
+                sx={{ margin: "20px 20px" }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Skeleton
+                variant="rectangular"
+                height={55}
+                sx={{ margin: "20px 20px" }}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Skeleton
+                variant="rectangular"
+                height={55}
                 sx={{ margin: "20px 20px" }}
               />
             </Grid>

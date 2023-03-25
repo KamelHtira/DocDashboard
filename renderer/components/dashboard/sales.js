@@ -13,8 +13,6 @@ import {
   Select,
   useTheme,
 } from "@mui/material";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import { backendURL } from "../../utils/constants";
 
 function getMonthName(monthIndex) {
@@ -55,7 +53,7 @@ export const Sales = (props) => {
         maxBarThickness: 150,
       },
       {
-        backgroundColor: "#EEEEEE",
+        backgroundColor: "#D7D7D7",
         barPercentage: 0.5,
         barThickness: numberofMonths + 2,
         borderRadius: 4,
@@ -203,22 +201,6 @@ export const Sales = (props) => {
           <Bar data={data} options={options} />
         </Box>
       </CardContent>
-      <Divider />
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "flex-end",
-          p: 2,
-        }}
-      >
-        <Button
-          color="primary"
-          endIcon={<ArrowRightIcon fontSize="small" />}
-          size="small"
-        >
-          Overview
-        </Button>
-      </Box>
     </Card>
   );
 };
