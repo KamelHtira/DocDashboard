@@ -123,6 +123,7 @@ export const AddTransactionPopup = () => {
             onChange={formik.handleChange}
             value={formik.values.amount}
             variant="outlined"
+            type="number"
           />
           <FormControl margin="normal" fullWidth>
             <InputLabel size="small" id="demo-simple-select-label">
