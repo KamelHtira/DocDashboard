@@ -116,43 +116,22 @@ const Login = () => {
           maxWidth="sm"
           sx={{
             p: 5,
+
             borderRadius: "2%",
             backgroundColor: "white",
           }}
         >
+          <Typography color="textPrimary" align="center" variant="h4">
+            Sign In
+          </Typography>{" "}
           <form onSubmit={formik.handleSubmit}>
-            <Box sx={{ my: 3 }}>
-              <Typography color="textPrimary" variant="h4">
-                Sign in
-              </Typography>
-              <Typography color="textSecondary" gutterBottom variant="body2">
-                Sign in on the internal platform
+            <Box sx={{ my: 2 }}>
+              <Typography color="textSecondary" gutterBottom align="center" variant="body2">
+                "where knowledge meets care, seamlessly guiding the path to
+                healing."
               </Typography>
             </Box>
 
-            <Grid item xs={12} md={6}>
-              <Button
-                fullWidth
-                color="error"
-                startIcon={<GoogleIcon />}
-                onClick={formik.handleSubmit}
-                size="large"
-                variant="contained"
-              >
-                Login with Google
-              </Button>
-            </Grid>
-
-            <Box
-              sx={{
-                pb: 1,
-                pt: 3,
-              }}
-            >
-              <Typography align="center" color="textSecondary" variant="body1">
-                or login with email address
-              </Typography>
-            </Box>
             <TextField
               error={Boolean(formik.touched.email && formik.errors.email)}
               fullWidth

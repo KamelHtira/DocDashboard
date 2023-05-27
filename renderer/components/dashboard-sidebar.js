@@ -12,6 +12,7 @@ import { Logo } from "./logo";
 import { NavItem } from "./nav-item";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import LogoutIcon from "@mui/icons-material/Logout";
+import Image from "next/image";
 
 const items = [
   {
@@ -83,11 +84,9 @@ export const DashboardSidebar = (props) => {
         }}
       >
         <div>
-          <Box sx={{ p: 3 }}>
+          <Box sx={{ p: 4 }}>
             <NextLink href="/" passHref>
-              <Typography align="center" variant="h1">
-                Doc. Logo
-              </Typography>
+              <Image width={200} height={200} src="/images/logo_2.png"></Image>
             </NextLink>
           </Box>
           <Box sx={{ px: 2 }}>
@@ -105,7 +104,7 @@ export const DashboardSidebar = (props) => {
             >
               <div>
                 <Typography color="inherit" align="center" variant="subtitle1">
-                  {"Welcome"}
+                  {"Welcome  "} Kamel Htira
                 </Typography>
               </div>
             </Box>
@@ -120,7 +119,7 @@ export const DashboardSidebar = (props) => {
         <Box sx={{ flexGrow: 1 }}>
           {items.map((item) => (
             <NavItem
-            sx={{padding:"5px 20px 0 20px"}}
+              sx={{ padding: "5px 20px 0 20px" }}
               key={item.title}
               icon={item.icon}
               href={item.href}
