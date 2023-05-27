@@ -56,7 +56,7 @@ function getSelectedTransactionsIdsAmount(
   transactionsList.map((transaction) => {
     if (selectedTransactionIds.includes(transaction._id)) {
       ArrayOfSelectedTransactionAmounts.push(
-        `ID ${transaction._id}: ${transaction.amount}dt`
+        `${transaction.description}: ${transaction.amount}dt`
       );
     }
   });
@@ -118,10 +118,10 @@ function sendDownloadEvent(ids, data) {
 }
 
 async function getUserIdEvent() {
-  ipcRenderer.send('getUserId');
-  ipcRenderer.on('getUserIdResponse', (event, userId) => {
+  ipcRenderer.send("getUserId");
+  ipcRenderer.on("getUserIdResponse", (event, userId) => {
     console.log(`User ID: ${userId}`);
-    return userId
+    return userId;
   });
 }
 

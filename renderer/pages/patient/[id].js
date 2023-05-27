@@ -121,7 +121,7 @@ const AccountProfileDetails = (props) => {
       <form onSubmit={formik.handleSubmit}>
         <Card style={{ margin: "20px 70px" }}>
           <CardHeader
-            title={"Edit Patient " + router.query.id}
+            title={"Edit Patient"}
             align="center"
           />
           <Divider />

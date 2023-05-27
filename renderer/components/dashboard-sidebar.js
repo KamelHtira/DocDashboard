@@ -8,11 +8,9 @@ import { Cog as CogIcon } from "../icons/cog";
 import PaymentsIcon from "@mui/icons-material/Payments";
 import { User as UserIcon } from "../icons/user";
 import { Users as UsersIcon } from "../icons/users";
-import { Logo } from "./logo";
 import { NavItem } from "./nav-item";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import LogoutIcon from "@mui/icons-material/Logout";
-import Image from "next/image";
 
 const items = [
   {
@@ -86,7 +84,7 @@ export const DashboardSidebar = (props) => {
         <div>
           <Box sx={{ p: 4 }}>
             <NextLink href="/" passHref>
-              <Image width={200} height={200} src="/images/logo_2.png"></Image>
+              <img width={200} height={200} src="/images/logo_2.png"></img>
             </NextLink>
           </Box>
           <Box sx={{ px: 2 }}>
@@ -103,8 +101,8 @@ export const DashboardSidebar = (props) => {
               }}
             >
               <div>
-                <Typography color="inherit" align="center" variant="subtitle1">
-                  {"Welcome  "} Kamel Htira
+                <Typography color="inherit" align="center" variant="subtitle2">
+                  {"Welcome to DocDashboard"}
                 </Typography>
               </div>
             </Box>
@@ -128,25 +126,22 @@ export const DashboardSidebar = (props) => {
           ))}
         </Box>
         <Divider sx={{ borderColor: "#2D3748" }} />
-        {/* <Box
+        <Box
           sx={{
             px: 2,
-            py: 3
+            py: 1,
           }}
         >
-          <Typography
+          {/* <Typography
             color="neutral.100"
             variant="subtitle2"
           >
             Need more help?
+          </Typography> */}
+          <Typography color="neutral.500" align="center" variant="body2">
+            DocDashboard v1.0.0
           </Typography>
-          <Typography
-            color="neutral.500"
-            variant="body2"
-          >
-            Check out our website and docs.
-          </Typography>
-          
+          {/*           
           <NextLink
             href="#"
             passHref
@@ -161,8 +156,8 @@ export const DashboardSidebar = (props) => {
             >
               MedDashboard.com
             </Button>
-          </NextLink>
-        </Box> */}
+          </NextLink> */}
+        </Box>
       </Box>
     </>
   );
