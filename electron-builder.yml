@@ -4,9 +4,10 @@ copyright: Copyright © 2023 Kamel Htira
 directories:
   output: dist
   buildResources: resources
+extraResources:
+  - from: ./data
+    to: ./data
 files:
-  - from: .
-    filter:
-      - package.json
-      - app
+  - package.json
+  - app/**
 publish: null

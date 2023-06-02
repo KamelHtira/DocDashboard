@@ -18,6 +18,7 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import { useRouter } from "next/router.js";
 import { patientNA } from "../../utils/constants.js";
+import moment from "moment";
 
 export const PatientListResults = ({ ...rest }) => {
   const router = useRouter();
@@ -100,7 +101,7 @@ export const PatientListResults = ({ ...rest }) => {
                     <TableCell>Email</TableCell>
                     <TableCell>Address</TableCell>
                     <TableCell>Phone</TableCell>
-                    <TableCell>Age</TableCell>
+                    <TableCell>Birthday</TableCell>
                     <TableCell></TableCell>
                   </TableRow>
                 </TableHead>
@@ -140,7 +141,8 @@ export const PatientListResults = ({ ...rest }) => {
                       </TableCell>
                       <TableCell>{patient.phone || patientNA.phone}</TableCell>
                       <TableCell>
-                        {patient.birthday || patientNA.birthday}
+                        {moment(patient.birthday).format("l") ||
+                          patientNA.birthday}
                       </TableCell>
                       <TableCell padding="checkbox">
                         <Button

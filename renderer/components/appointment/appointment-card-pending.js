@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
 import {
-
   Box,
   Card,
   CardContent,
@@ -17,9 +16,24 @@ import { hoursAgo } from "../../utils/functions";
 import moment from "moment";
 import { useContext } from "react";
 import { AppointmentsContext } from "../../pages/appointments";
+import { backendURL } from "../../utils/constants";
 
 export const AppointmentCardPending = ({ appointment, ...rest }) => {
-  const { deleteAppointment,EditAppointmentType } = useContext(AppointmentsContext);
+  const { deleteAppointment, EditAppointmentType } =
+    useContext(AppointmentsContext);
+  async function addPatientAPI(data) {
+    try {
+      const body = JSON.stringify(data);
+      const res = await fetch(`${backendURL}/patients`, {
+        method: "POST",
+        headers: { "content-Type": "application/json" },
+        body: body,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   return (
     <Card
       sx={{
@@ -30,14 +44,10 @@ export const AppointmentCardPending = ({ appointment, ...rest }) => {
       {...rest}
     >
       <CardContent>
-        <Typography
-          align="center"
-          color="textPrimary"
-          variant="h5"
-        >
+        <Typography align="center" color="textPrimary" variant="h5">
           {appointment.firstName + " " + appointment.lastName}
         </Typography>
-      
+
         <Typography
           align="center"
           color="textPrimary"
@@ -68,7 +78,19 @@ export const AppointmentCardPending = ({ appointment, ...rest }) => {
               style={{ marginRight: "5px" }}
               color="secondary"
               variant="contained"
-              onClick={()=>{EditAppointmentType(appointment._id,"C")}}
+              onClick={() => {
+                EditAppointmentType(appointment._id, "C");
+                addPatientAPI({
+                  _id: appointment.patientId,
+                  firstName: appointment.firstName,
+                  lastName: appointment.lastName,
+                  birthday: appointment.birthday,
+                  phone: appointment.phone,
+                  sexe: appointment.sexe,
+                  address: "",
+                  email: "",
+                });
+              }}
             >
               <CheckIcon />
             </IconButton>
@@ -99,7 +121,12 @@ export const AppointmentCardPending = ({ appointment, ...rest }) => {
               display: "flex",
             }}
           >
-            <IconButton onClick={()=>{deleteAppointment(appointment._id)}} color="error">
+            <IconButton
+              onClick={() => {
+                deleteAppointment(appointment._id);
+              }}
+              color="error"
+            >
               <DeleteIcon style={{ fontSize: "28px" }} />
             </IconButton>
           </Grid>

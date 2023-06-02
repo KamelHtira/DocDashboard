@@ -48,6 +48,20 @@ export const PaidAppointmentPopup = ({ appointment }) => {
     });
   };
 
+  // Add Request
+  async function addTransactionAPI(data) {
+    try {
+      const body = JSON.stringify(data);
+      const res = await fetch(`${backendURL}/transactions`, {
+        method: "POST",
+        headers: { "content-Type": "application/json" },
+        body: body,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -97,6 +111,12 @@ export const PaidAppointmentPopup = ({ appointment }) => {
           body: appointmentUpdatedFields,
         }
       );
+      addTransactionAPI({
+        amount: values.amount,
+        description: "Consultation",
+        date: new Date().toLocaleDateString(),
+        type: "Income",
+      });
       if (resApp.ok) {
         const resMF = await fetch(`${backendURL}/medicalFiles`, {
           method: "POST",

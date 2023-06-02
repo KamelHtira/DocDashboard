@@ -66,6 +66,13 @@ const Appointment = () => {
             },
           }
         );
+        enqueueSnackbar(`Patient Added Successfully`, {
+          variant: "info",
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "right",
+          },
+        });
       }
     } catch (error) {
       console.log(error);

@@ -56,8 +56,8 @@ const Login = () => {
   const router = useRouter();
   const formik = useFormik({
     initialValues: {
-      email: "user007@gmail.com",
-      password: "1234",
+      email: "",
+      password: "",
     },
     validationSchema: Yup.object({
       email: Yup.string()
@@ -108,6 +108,7 @@ const Login = () => {
           backgroundImage: "linear-gradient(0deg, #7FC8B6, #DBFFF6, #F3FFFC)",
           alignItems: "center",
           display: "flex",
+
           flexGrow: 1,
           minHeight: "100%",
         }}
@@ -115,9 +116,10 @@ const Login = () => {
         <Container
           maxWidth="sm"
           sx={{
+            height: "450px",
             p: 5,
-
-            borderRadius: "2%",
+            mr: "0",
+            borderRadius: "2% 0% 0% 2%",
             backgroundColor: "white",
           }}
         >
@@ -126,7 +128,12 @@ const Login = () => {
           </Typography>{" "}
           <form onSubmit={formik.handleSubmit}>
             <Box sx={{ my: 2 }}>
-              <Typography color="textSecondary" gutterBottom align="center" variant="body2">
+              <Typography
+                color="textSecondary"
+                gutterBottom
+                align="center"
+                variant="body2"
+              >
                 "where knowledge meets care, seamlessly guiding the path to
                 healing."
               </Typography>
@@ -158,7 +165,7 @@ const Login = () => {
               value={formik.values.password}
               variant="outlined"
             />
-            <Box sx={{ py: 2 }}>
+            <Box sx={{ py: 4 }}>
               <Button
                 color="primary"
                 disabled={formik.isSubmitting}
@@ -171,6 +178,19 @@ const Login = () => {
               </Button>
             </Box>
           </form>
+        </Container>
+        <Container
+          maxWidth="sm"
+          sx={{
+            py: 9,
+            width: "470px",
+            ml: "0",
+            height: "450px",
+            borderRadius: "0% 2% 2% 0%",
+            backgroundColor: "white",
+          }}
+        >
+          <img height="300" src="/images/undraw_medicine_b-1-ol.svg"></img>
         </Container>
       </Box>
     </>
