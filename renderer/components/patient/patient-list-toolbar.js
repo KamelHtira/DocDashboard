@@ -30,7 +30,29 @@ export const PatientListToolbar = (props) => {
   //  Set "show" variable for DeletePatientPopup
   //  const [showAddPatientsPopup, setShowAddPatientsPopup] = useState(false);
 
-  const { patientsList, selectedPatientIds } = useContext(PatientsContext);
+  const { patientsList, selectedPatientIds, setPatientsFilter } =
+    useContext(PatientsContext);
+
+  function searchArrayForSimilarString(inputString, array) {
+    const results = [];
+
+    for (let i = 0; i < array.length; i++) {
+      if (
+        array[i].firstName.includes(inputString) ||
+        inputString.includes(array[i].firstName)
+      ) {
+        results.push(array[i]);
+      }
+    }
+    console.log(results);
+
+    return results;
+  }
+
+  const handleSearshChange = (event) => {
+    const res = searchArrayForSimilarString(event.target.value, patientsList);
+    setPatientsFilter(res);
+  };
 
   return (
     <Box {...props}>
@@ -111,6 +133,7 @@ export const PatientListToolbar = (props) => {
                     </InputAdornment>
                   ),
                 }}
+                onChange={handleSearshChange}
                 placeholder="Search patient"
                 variant="outlined"
               />

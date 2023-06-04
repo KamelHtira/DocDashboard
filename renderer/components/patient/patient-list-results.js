@@ -23,8 +23,12 @@ import moment from "moment";
 export const PatientListResults = ({ ...rest }) => {
   const router = useRouter();
 
-  const { patientsList, selectedPatientIds, setSelectedPatientIds } =
-    useContext(PatientsContext);
+  const {
+    patientsFilter,
+    patientsList,
+    selectedPatientIds,
+    setSelectedPatientIds,
+  } = useContext(PatientsContext);
   const [limit, setLimit] = useState(50);
   const [page, setPage] = useState(0);
 
@@ -106,55 +110,117 @@ export const PatientListResults = ({ ...rest }) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {patientsList.slice(0, limit).map((patient, index) => (
-                    <TableRow
-                      hover
-                      key={index}
-                      selected={selectedPatientIds.indexOf(patient._id) !== -1}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={
+                  {!patientsFilter
+                    ? patientsList.slice(0, limit).map((patient, index) => (
+                        <TableRow
+                          hover
+                          key={index}
+                          selected={
                             selectedPatientIds.indexOf(patient._id) !== -1
                           }
-                          onChange={(event) =>
-                            handleSelectOne(event, patient._id)
+                        >
+                          <TableCell padding="checkbox">
+                            <Checkbox
+                              checked={
+                                selectedPatientIds.indexOf(patient._id) !== -1
+                              }
+                              onChange={(event) =>
+                                handleSelectOne(event, patient._id)
+                              }
+                              value="true"
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <Box
+                              sx={{
+                                alignItems: "center",
+                                display: "flex",
+                              }}
+                            >
+                              <Typography color="textPrimary" variant="body1">
+                                {patient.firstName + " " + patient.lastName}
+                              </Typography>
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            {patient.email || patientNA.email}
+                          </TableCell>
+                          <TableCell>
+                            {patient.address || patientNA.address}
+                          </TableCell>
+                          <TableCell>
+                            {patient.phone || patientNA.phone}
+                          </TableCell>
+                          <TableCell>
+                            {moment(patient.birthday).format("l") ||
+                              patientNA.birthday}
+                          </TableCell>
+                          <TableCell padding="checkbox">
+                            <Button
+                              onClick={() => {
+                                router.push(`patient/${patient._id}`);
+                              }}
+                            >
+                              <EditIcon></EditIcon>
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    : patientsFilter.slice(0, limit).map((patient, index) => (
+                        <TableRow
+                          hover
+                          key={index}
+                          selected={
+                            selectedPatientIds.indexOf(patient._id) !== -1
                           }
-                          value="true"
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: "center",
-                            display: "flex",
-                          }}
                         >
-                          <Typography color="textPrimary" variant="body1">
-                            {patient.firstName + " " + patient.lastName}
-                          </Typography>
-                        </Box>
-                      </TableCell>
-                      <TableCell>{patient.email || patientNA.email}</TableCell>
-                      <TableCell>
-                        {patient.address || patientNA.address}
-                      </TableCell>
-                      <TableCell>{patient.phone || patientNA.phone}</TableCell>
-                      <TableCell>
-                        {moment(patient.birthday).format("l") ||
-                          patientNA.birthday}
-                      </TableCell>
-                      <TableCell padding="checkbox">
-                        <Button
-                          onClick={() => {
-                            router.push(`patient/${patient._id}`);
-                          }}
-                        >
-                          <EditIcon></EditIcon>
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                          <TableCell padding="checkbox">
+                            <Checkbox
+                              checked={
+                                selectedPatientIds.indexOf(patient._id) !== -1
+                              }
+                              onChange={(event) =>
+                                handleSelectOne(event, patient._id)
+                              }
+                              value="true"
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <Box
+                              sx={{
+                                alignItems: "center",
+                                display: "flex",
+                              }}
+                            >
+                              <Typography color="textPrimary" variant="body1">
+                                {patient.firstName + " " + patient.lastName}
+                              </Typography>
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            {patient.email || patientNA.email}
+                          </TableCell>
+                          <TableCell>
+                            {patient.address || patientNA.address}
+                          </TableCell>
+                          <TableCell>
+                            {patient.phone || patientNA.phone}
+                          </TableCell>
+                          <TableCell>
+                            {moment(patient.birthday).format("l") ||
+                              patientNA.birthday}
+                          </TableCell>
+                          <TableCell padding="checkbox">
+                            <Button
+                              onClick={() => {
+                                router.push(`patient/${patient._id}`);
+                              }}
+                            >
+                              <EditIcon></EditIcon>
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
                 </TableBody>
               </Table>
               <TablePagination

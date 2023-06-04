@@ -20,6 +20,7 @@ const Patients = () => {
 
   // Fetch patients data
   const [patientsList, setPatientsList] = useState([]);
+  const [patientsFilter, setPatientsFilter] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -55,6 +56,8 @@ const Patients = () => {
               dependencyValue,
               setDependencyValue,
               enqueueSnackbar,
+              patientsFilter,
+              setPatientsFilter
             }}
           >
             <PatientListToolbar />
