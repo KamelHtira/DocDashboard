@@ -20,7 +20,7 @@ const Patients = () => {
 
   // Fetch patients data
   const [patientsList, setPatientsList] = useState([]);
-  const [patientsFilter, setPatientsFilter] = useState([]);
+  const [patientsFilter, setPatientsFilter] = useState(null);
   useEffect(() => {
     const fetchData = async () => {
       try {

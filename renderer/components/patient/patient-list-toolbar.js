@@ -39,7 +39,9 @@ export const PatientListToolbar = (props) => {
     for (let i = 0; i < array.length; i++) {
       if (
         array[i].firstName.includes(inputString) ||
-        inputString.includes(array[i].firstName)
+        inputString.includes(array[i].firstName) || 
+        array[i].lastName.includes(inputString) ||
+        inputString.includes(array[i].lastName)
       ) {
         results.push(array[i]);
       }
