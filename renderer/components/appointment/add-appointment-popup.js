@@ -302,7 +302,7 @@ export const AddAppointmentPopup = () => {
                 >
                   <MenuItem value={"Q"}>Consultation Directe</MenuItem>
                   <MenuItem value={"C"}>Consultation Confirmee</MenuItem>
-                  <MenuItem value={"P"}>Consultation Demander (Test)</MenuItem>
+                  {/* <MenuItem value={"P"}>Consultation Demander (Test)</MenuItem> */}
                 </Select>
               </FormControl>
             </Grid>
